@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="PerfumeStore.API/PerfumeStore.API.csproj" />
+  <Project Path="PerfumeStore.Application/PerfumeStore.Application.csproj" Id="e51cf95e-20bc-42ba-b1dd-609a0e048f65" />
+  <Project Path="PerfumeStore.Domain/PerfumeStore.Domain.csproj" Id="f351f2c5-2989-42f1-974d-e527cf754e7a" />
+  <Project Path="PerfumeStore.Infrastructure/PerfumeStore.Infrastructure.csproj" Id="01556b92-2c2e-4700-8e72-64843552f02c" />
+</Solution>
