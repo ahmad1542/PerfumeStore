@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PerfumeStore.Infrastructure.Persistence.Entities;
+namespace PerfumeStore.Domain.Entities;
 
-public partial class SalesInvoiceItems
-{
+public class SalesInvoiceItem {
     public long SalesInvoiceItemID { get; set; }
 
     public int Quantity { get; set; }
@@ -15,7 +14,7 @@ public partial class SalesInvoiceItems
 
     public int ProductID { get; set; }
 
-    public virtual Products Product { get; set; } = null!;
+    public Product Product { get; set; } = null!;
 
-    public virtual SalesInvoices SalesInvoice { get; set; } = null!;
+    public SalesInvoice SalesInvoice { get; set; } = null!;
 }

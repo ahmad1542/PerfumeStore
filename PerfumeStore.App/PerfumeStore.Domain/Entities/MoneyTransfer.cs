@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PerfumeStore.Infrastructure.Persistence.Entities;
+namespace PerfumeStore.Domain.Entities;
 
-public partial class MoneyTransfers
-{
+public class MoneyTransfer {
     public long MoneyTransferID { get; set; }
 
-    public DateTime TransferDate { get; set; }
+    public DateTime TransferDate { get; set; } = DateTime.Now;
 
     public int FromMoneyAccountID { get; set; }
 
@@ -17,7 +16,7 @@ public partial class MoneyTransfers
 
     public string? Notes { get; set; }
 
-    public virtual MoneyAccounts FromMoneyAccount { get; set; } = null!;
+    public MoneyAccount FromMoneyAccount { get; set; } = null!;
 
-    public virtual MoneyAccounts ToMoneyAccount { get; set; } = null!;
+    public MoneyAccount ToMoneyAccount { get; set; } = null!;
 }

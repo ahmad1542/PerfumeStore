@@ -1,53 +1,49 @@
-﻿using Microsoft.EntityFrameworkCore;
-using PerfumeStore.Infrastructure.Persistence.Entities;
+﻿using System;
+using System.Collections.Generic;
+using Microsoft.EntityFrameworkCore;
+using PerfumeStore.Domain.Entities;
 
 namespace PerfumeStore.Infrastructure.Persistence;
 
-public partial class PerfumeStoreDbContext : DbContext
-{
-    public PerfumeStoreDbContext()
-    {
+public partial class PerfumeStoreDbContext : DbContext {
+    public PerfumeStoreDbContext() {
     }
 
-    public PerfumeStoreDbContext(DbContextOptions<PerfumeStoreDbContext> options)
-        : base(options)
-    {
+    public PerfumeStoreDbContext(DbContextOptions<PerfumeStoreDbContext> options) : base(options) {
     }
 
-    public virtual DbSet<Brands> Brands { get; set; }
+    public virtual DbSet<Brand> Brands { get; set; }
 
-    public virtual DbSet<Customers> Customers { get; set; }
+    public virtual DbSet<Customer> Customers { get; set; }
 
-    public virtual DbSet<Expenses> Expenses { get; set; }
+    public virtual DbSet<Expense> Expenses { get; set; }
 
     public virtual DbSet<Inventory> Inventory { get; set; }
 
-    public virtual DbSet<MoneyAccounts> MoneyAccounts { get; set; }
+    public virtual DbSet<MoneyAccount> MoneyAccounts { get; set; }
 
-    public virtual DbSet<MoneyTransfers> MoneyTransfers { get; set; }
+    public virtual DbSet<MoneyTransfer> MoneyTransfers { get; set; }
 
-    public virtual DbSet<PaymentVouchers> PaymentVouchers { get; set; }
+    public virtual DbSet<PaymentVoucher> PaymentVouchers { get; set; }
 
-    public virtual DbSet<ProductCategories> ProductCategories { get; set; }
+    public virtual DbSet<ProductCategory> ProductCategories { get; set; }
 
-    public virtual DbSet<Products> Products { get; set; }
+    public virtual DbSet<Product> Products { get; set; }
 
-    public virtual DbSet<PurchaseInvoiceItems> PurchaseInvoiceItems { get; set; }
+    public virtual DbSet<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set; }
 
-    public virtual DbSet<PurchaseInvoices> PurchaseInvoices { get; set; }
+    public virtual DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
 
-    public virtual DbSet<ReceiptVouchers> ReceiptVouchers { get; set; }
+    public virtual DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
 
-    public virtual DbSet<SalesInvoiceItems> SalesInvoiceItems { get; set; }
+    public virtual DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
 
-    public virtual DbSet<SalesInvoices> SalesInvoices { get; set; }
+    public virtual DbSet<SalesInvoice> SalesInvoices { get; set; }
 
-    public virtual DbSet<Suppliers> Suppliers { get; set; }
+    public virtual DbSet<Supplier> Suppliers { get; set; }
 
-    protected override void OnModelCreating(ModelBuilder modelBuilder)
-    {
-        modelBuilder.Entity<Brands>(entity =>
-        {
+    protected override void OnModelCreating(ModelBuilder modelBuilder) {
+        modelBuilder.Entity<Brand>(entity => {
             entity.HasKey(e => e.BrandID);
 
             entity.HasIndex(e => e.BrandName, "IX_Brands").IsUnique();
@@ -58,8 +54,7 @@ public partial class PerfumeStoreDbContext : DbContext
             entity.Property(e => e.BrandName).HasMaxLength(150);
         });
 
-        modelBuilder.Entity<Customers>(entity =>
-        {
+        modelBuilder.Entity<Customer>(entity => {
             entity.HasKey(e => e.CustomerPhone);
 
             entity.Property(e => e.CustomerPhone).HasMaxLength(30);
@@ -69,8 +64,7 @@ public partial class PerfumeStoreDbContext : DbContext
             entity.Property(e => e.CustomerName).HasMaxLength(150);
         });
 
-        modelBuilder.Entity<Expenses>(entity =>
-        {
+        modelBuilder.Entity<Expense>(entity => {
             entity.HasKey(e => e.ExpenseID);
 
             entity.Property(e => e.ExpenseAmount).HasColumnType("decimal(18, 2)");
@@ -86,8 +80,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_Expenses_MoneyAccounts1");
         });
 
-        modelBuilder.Entity<Inventory>(entity =>
-        {
+        modelBuilder.Entity<Inventory>(entity => {
             entity.HasKey(e => e.ProductID);
 
             entity.Property(e => e.ProductID).ValueGeneratedNever();
@@ -98,8 +91,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_Inventory_Products1");
         });
 
-        modelBuilder.Entity<MoneyAccounts>(entity =>
-        {
+        modelBuilder.Entity<MoneyAccount>(entity => {
             entity.HasKey(e => e.MoneyAccountID);
 
             entity.Property(e => e.AccountName).HasMaxLength(50);
@@ -107,8 +99,7 @@ public partial class PerfumeStoreDbContext : DbContext
             entity.Property(e => e.Notes).HasMaxLength(250);
         });
 
-        modelBuilder.Entity<MoneyTransfers>(entity =>
-        {
+        modelBuilder.Entity<MoneyTransfer>(entity => {
             entity.HasKey(e => e.MoneyTransferID);
 
             entity.Property(e => e.Notes).HasMaxLength(250);
@@ -128,8 +119,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_MoneyTransfers_MoneyAccounts");
         });
 
-        modelBuilder.Entity<PaymentVouchers>(entity =>
-        {
+        modelBuilder.Entity<PaymentVoucher>(entity => {
             entity.HasKey(e => e.PaymentVoucherID);
 
             entity.Property(e => e.PaymentVoucherID).ValueGeneratedNever();
@@ -149,22 +139,20 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasForeignKey(d => d.PurchaseInvoiceID)
                 .HasConstraintName("FK_PaymentVouchers_PurchaseInvoices1");
 
-            entity.HasOne(d => d.SupplierPhoneNavigation).WithMany(p => p.PaymentVouchers)
+            entity.HasOne(d => d.Supplier).WithMany(p => p.PaymentVouchers)
                 .HasForeignKey(d => d.SupplierPhone)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PaymentVouchers_Suppliers1");
         });
 
-        modelBuilder.Entity<ProductCategories>(entity =>
-        {
+        modelBuilder.Entity<ProductCategory>(entity => {
             entity.HasKey(e => e.ProductCategoryID);
 
             entity.Property(e => e.CategoryName).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(250);
         });
 
-        modelBuilder.Entity<Products>(entity =>
-        {
+        modelBuilder.Entity<Product>(entity => {
             entity.HasKey(e => e.ProductID);
 
             entity.Property(e => e.CostPrice).HasColumnType("decimal(18, 2)");
@@ -182,8 +170,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_Products_ProductCategories1");
         });
 
-        modelBuilder.Entity<PurchaseInvoiceItems>(entity =>
-        {
+        modelBuilder.Entity<PurchaseInvoiceItem>(entity => {
             entity.HasKey(e => e.PurchaseInvoiceItemID);
 
             entity.Property(e => e.UnitCost).HasColumnType("decimal(18, 2)");
@@ -199,8 +186,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_PurchaseInvoiceItems_PurchaseInvoices1");
         });
 
-        modelBuilder.Entity<PurchaseInvoices>(entity =>
-        {
+        modelBuilder.Entity<PurchaseInvoice>(entity => {
             entity.HasKey(e => e.PurchaseInvoiceID);
 
             entity.Property(e => e.InvoiceDate)
@@ -209,14 +195,13 @@ public partial class PerfumeStoreDbContext : DbContext
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.SupplierPhone).HasMaxLength(30);
 
-            entity.HasOne(d => d.SupplierPhoneNavigation).WithMany(p => p.PurchaseInvoices)
+            entity.HasOne(d => d.Supplier).WithMany(p => p.PurchaseInvoices)
                 .HasForeignKey(d => d.SupplierPhone)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PurchaseInvoices_Suppliers1");
         });
 
-        modelBuilder.Entity<ReceiptVouchers>(entity =>
-        {
+        modelBuilder.Entity<ReceiptVoucher>(entity => {
             entity.HasKey(e => e.ReceiptVoucherID);
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
@@ -226,7 +211,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_ReceiptVouchers_ReceiptVoucherDate");
 
-            entity.HasOne(d => d.CustomerPhoneNavigation).WithMany(p => p.ReceiptVouchers)
+            entity.HasOne(d => d.Customer).WithMany(p => p.ReceiptVouchers)
                 .HasForeignKey(d => d.CustomerPhone)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReceiptVouchers_Customers1");
@@ -241,8 +226,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_ReceiptVouchers_SalesInvoices1");
         });
 
-        modelBuilder.Entity<SalesInvoiceItems>(entity =>
-        {
+        modelBuilder.Entity<SalesInvoiceItem>(entity => {
             entity.HasKey(e => e.SalesInvoiceItemID);
 
             entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
@@ -258,8 +242,7 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasConstraintName("FK_SalesInvoiceItems_SalesInvoices1");
         });
 
-        modelBuilder.Entity<SalesInvoices>(entity =>
-        {
+        modelBuilder.Entity<SalesInvoice>(entity => {
             entity.HasKey(e => e.SalesInvoiceID);
 
             entity.Property(e => e.CustomerPhone).HasMaxLength(30);
@@ -268,13 +251,12 @@ public partial class PerfumeStoreDbContext : DbContext
                 .HasDefaultValueSql("(sysdatetime())", "DF_SalesInvoices_InvoiceDate");
             entity.Property(e => e.Notes).HasMaxLength(250);
 
-            entity.HasOne(d => d.CustomerPhoneNavigation).WithMany(p => p.SalesInvoices)
+            entity.HasOne(d => d.Customer).WithMany(p => p.SalesInvoices)
                 .HasForeignKey(d => d.CustomerPhone)
                 .HasConstraintName("FK_SalesInvoices_Customers1");
         });
 
-        modelBuilder.Entity<Suppliers>(entity =>
-        {
+        modelBuilder.Entity<Supplier>(entity => {
             entity.HasKey(e => e.SupplierPhone);
 
             entity.Property(e => e.SupplierPhone).HasMaxLength(30);

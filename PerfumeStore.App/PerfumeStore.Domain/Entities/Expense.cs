@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
-namespace PerfumeStore.Infrastructure.Persistence.Entities;
+namespace PerfumeStore.Domain.Entities;
 
-public partial class Expenses
-{
+public class Expense {
     public long ExpenseID { get; set; }
 
-    public DateTime ExpenseDate { get; set; }
+    public DateTime ExpenseDate { get; set; } = DateTime.Now;
 
+    [Required]
     public string ExpenseType { get; set; } = null!;
 
     public decimal ExpenseAmount { get; set; }
@@ -17,5 +18,5 @@ public partial class Expenses
 
     public int MoneyAccountID { get; set; }
 
-    public virtual MoneyAccounts MoneyAccount { get; set; } = null!;
+    public MoneyAccount MoneyAccount { get; set; } = null!;
 }

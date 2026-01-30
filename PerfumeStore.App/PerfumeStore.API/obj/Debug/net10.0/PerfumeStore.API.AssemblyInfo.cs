@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PerfumeStore.API")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+30e4c6e2f45d2ddb6be537da813f627ba388a805")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+aedbae50c4f3f9d8fd56944604a3c78a0009b500")]
 [assembly: System.Reflection.AssemblyProductAttribute("PerfumeStore.API")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PerfumeStore.API")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
