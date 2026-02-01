@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace PerfumeStore.Domain.Entities;
 
 public class PaymentVoucher {
-    public long PaymentVoucherID { get; set; }
+    public long ID { get; set; }
 
-    public DateTime PaymentVoucherDate { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.Now;
 
     public decimal Amount { get; set; }
 

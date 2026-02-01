@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace PerfumeStore.Domain.Entities;
 
 public class ReceiptVoucher {
-    public long ReceiptVoucherID { get; set; }
+    public long ID { get; set; }
 
-    public DateTime ReceiptVoucherDate { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.Now;
 
     public decimal Amount { get; set; }
 

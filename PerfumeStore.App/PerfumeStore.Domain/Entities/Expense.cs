@@ -5,14 +5,14 @@ using System.ComponentModel.DataAnnotations;
 namespace PerfumeStore.Domain.Entities;
 
 public class Expense {
-    public long ExpenseID { get; set; }
+    public long ID { get; set; }
 
-    public DateTime ExpenseDate { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.Now;
 
     [Required]
-    public string ExpenseType { get; set; } = null!;
+    public string Type { get; set; } = null!;
 
-    public decimal ExpenseAmount { get; set; }
+    public decimal Amount { get; set; }
 
     public string? Notes { get; set; }
 

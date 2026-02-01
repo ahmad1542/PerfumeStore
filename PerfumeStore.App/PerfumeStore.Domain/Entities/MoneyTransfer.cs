@@ -4,9 +4,9 @@ using System.Collections.Generic;
 namespace PerfumeStore.Domain.Entities;
 
 public class MoneyTransfer {
-    public long MoneyTransferID { get; set; }
+    public long ID { get; set; }
 
-    public DateTime TransferDate { get; set; } = DateTime.Now;
+    public DateTime Date { get; set; } = DateTime.Now;
 
     public int FromMoneyAccountID { get; set; }
 
