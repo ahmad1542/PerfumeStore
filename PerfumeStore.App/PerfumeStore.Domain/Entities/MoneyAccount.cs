@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations;
 namespace PerfumeStore.Domain.Entities;
 
 public class MoneyAccount {
-    public int MoneyAccountID { get; set; }
+    public int ID { get; set; }
 
     [Required]
     public string AccountName { get; set; } = null!;

@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations;
 namespace PerfumeStore.Domain.Entities;
 
 public class Brand {
-    public int BrandID { get; set; }
+    public int ID { get; set; }
 
     [Required]
-    public string BrandName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public string? BrandDescription { get; set; }
 

@@ -1,23 +1,23 @@
 {
   "format": 1,
   "restore": {
-    "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj": {}
+    "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj": {}
   },
   "projects": {
-    "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj": {
+    "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj",
+        "projectUniqueName": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj",
         "projectName": "PerfumeStore.Application",
-        "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj",
-        "packagesPath": "C:\\Users\\Ahmad Hussein\\.nuget\\packages\\",
-        "outputPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\obj\\",
+        "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj",
+        "packagesPath": "C:\\Users\\mhus\\.nuget\\packages\\",
+        "outputPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmad Hussein\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mhus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -26,14 +26,17 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/NugetInternal/nuget/v3/index.json": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/ViTIP.Common.Test/nuget/v3/index.json": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
-                "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj"
+              "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
+                "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj"
               }
             }
           }
@@ -69,7 +72,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -347,20 +350,20 @@
         }
       }
     },
-    "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
+    "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj",
+        "projectUniqueName": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj",
         "projectName": "PerfumeStore.Domain",
-        "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj",
-        "packagesPath": "C:\\Users\\Ahmad Hussein\\.nuget\\packages\\",
-        "outputPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\obj\\",
+        "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj",
+        "packagesPath": "C:\\Users\\mhus\\.nuget\\packages\\",
+        "outputPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmad Hussein\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mhus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -369,6 +372,9 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/NugetInternal/nuget/v3/index.json": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/ViTIP.Common.Test/nuget/v3/index.json": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -408,7 +414,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
@@ -686,20 +692,20 @@
         }
       }
     },
-    "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj": {
+    "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj",
+        "projectUniqueName": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj",
         "projectName": "PerfumeStore.Infrastructure",
-        "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj",
-        "packagesPath": "C:\\Users\\Ahmad Hussein\\.nuget\\packages\\",
-        "outputPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\obj\\",
+        "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\PerfumeStore.Infrastructure.csproj",
+        "packagesPath": "C:\\Users\\mhus\\.nuget\\packages\\",
+        "outputPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Infrastructure\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
         ],
         "configFilePaths": [
-          "C:\\Users\\Ahmad Hussein\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\mhus\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
@@ -708,17 +714,20 @@
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/NugetInternal/nuget/v3/index.json": {},
+          "https://aedevgithub.vitronic.de/SmartTrafficPlatform/_packaging/ViTIP.Common.Test/nuget/v3/index.json": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
           "net10.0": {
             "targetAlias": "net10.0",
             "projectReferences": {
-              "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj": {
-                "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj"
+              "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj": {
+                "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Application\\PerfumeStore.Application.csproj"
               },
-              "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
-                "projectPath": "D:\\Dev\\Git\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj"
+              "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj": {
+                "projectPath": "D:\\Ahmad's projects\\PerfumeStore\\PerfumeStore.App\\PerfumeStore.Domain\\PerfumeStore.Domain.csproj"
               }
             }
           }
@@ -772,7 +781,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.102/PortableRuntimeIdentifierGraph.json",
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\10.0.101/PortableRuntimeIdentifierGraph.json",
           "packagesToPrune": {
             "Microsoft.CSharp": "(,4.7.32767]",
             "Microsoft.VisualBasic": "(,10.4.32767]",
