@@ -5,10 +5,10 @@ using System.ComponentModel.DataAnnotations;
 namespace PerfumeStore.Domain.Entities;
 
 public class ProductCategory {
-    public int ProductCategoryID { get; set; }
+    public int ID { get; set; }
 
     [Required]
-    public string CategoryName { get; set; } = null!;
+    public string Name { get; set; } = null!;
 
     public string? Description { get; set; }
 

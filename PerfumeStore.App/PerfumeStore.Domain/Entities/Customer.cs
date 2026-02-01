@@ -4,14 +4,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace PerfumeStore.Domain.Entities;
 
-public class Customer {
-    [Key]
-    public string CustomerPhone { get; set; } = null!;
-
-    [Required]
-    public string CustomerName { get; set; } = null!;
-
-    public DateTime CreatedAt { get; set; } = DateTime.Now;
+public class Customer : Person {
 
     public ICollection<ReceiptVoucher> ReceiptVouchers { get; private set; } = new List<ReceiptVoucher>();
 

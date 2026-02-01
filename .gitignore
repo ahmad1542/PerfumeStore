@@ -1,0 +1,9 @@
+**/bin/
+**/obj/
+**/obj/Debug/net10.0
+
+*.csproj.user
+
+**/.vs
+
+appsettings.Development.json

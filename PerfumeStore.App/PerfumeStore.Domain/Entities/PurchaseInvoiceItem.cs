@@ -4,11 +4,9 @@ using System.Collections.Generic;
 namespace PerfumeStore.Domain.Entities;
 
 public class PurchaseInvoiceItem {
-    public long PurchaseInvoiceItemID { get; set; }
+    public long ID { get; set; }
 
     public int Quantity { get; set; }
-
-    public decimal UnitCost { get; set; }
 
     public long PurchaseInvoiceID { get; set; }
 

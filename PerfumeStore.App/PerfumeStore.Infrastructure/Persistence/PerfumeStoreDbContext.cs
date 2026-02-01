@@ -44,34 +44,34 @@ public partial class PerfumeStoreDbContext : DbContext {
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Brand>(entity => {
-            entity.HasKey(e => e.BrandID);
+            entity.HasKey(e => e.ID);
 
-            entity.HasIndex(e => e.BrandName, "IX_Brands").IsUnique();
+            entity.HasIndex(e => e.Name, "IX_Brands").IsUnique();
 
             entity.Property(e => e.BrandDescription)
                 .HasMaxLength(10)
                 .IsFixedLength();
-            entity.Property(e => e.BrandName).HasMaxLength(150);
+            entity.Property(e => e.Name).HasMaxLength(150);
         });
 
         modelBuilder.Entity<Customer>(entity => {
-            entity.HasKey(e => e.CustomerPhone);
+            entity.HasKey(e => e.Phone);
 
-            entity.Property(e => e.CustomerPhone).HasMaxLength(30);
+            entity.Property(e => e.Phone).HasMaxLength(30);
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_Customers_CreatedAt");
-            entity.Property(e => e.CustomerName).HasMaxLength(150);
+            entity.Property(e => e.Name).HasMaxLength(150);
         });
 
         modelBuilder.Entity<Expense>(entity => {
-            entity.HasKey(e => e.ExpenseID);
+            entity.HasKey(e => e.ID);
 
-            entity.Property(e => e.ExpenseAmount).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.ExpenseDate)
+            entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_Expenses_ExpenseDate");
-            entity.Property(e => e.ExpenseType).HasMaxLength(150);
+            entity.Property(e => e.Type).HasMaxLength(150);
             entity.Property(e => e.Notes).HasMaxLength(250);
 
             entity.HasOne(d => d.MoneyAccount).WithMany(p => p.Expenses)
@@ -92,7 +92,7 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<MoneyAccount>(entity => {
-            entity.HasKey(e => e.MoneyAccountID);
+            entity.HasKey(e => e.ID);
 
             entity.Property(e => e.AccountName).HasMaxLength(50);
             entity.Property(e => e.CurrentBalance).HasColumnType("decimal(18, 2)");
@@ -100,11 +100,11 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<MoneyTransfer>(entity => {
-            entity.HasKey(e => e.MoneyTransferID);
+            entity.HasKey(e => e.ID);
 
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.TransferAmount).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.TransferDate)
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_MoneyTransfers_TransferDate");
 
@@ -120,12 +120,12 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<PaymentVoucher>(entity => {
-            entity.HasKey(e => e.PaymentVoucherID);
+            entity.HasKey(e => e.ID);
 
-            entity.Property(e => e.PaymentVoucherID).ValueGeneratedNever();
+            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Notes).HasMaxLength(250);
-            entity.Property(e => e.PaymentVoucherDate)
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_PaymentVouchers_PaymentVoucherDate");
             entity.Property(e => e.SupplierPhone).HasMaxLength(30);
@@ -146,18 +146,18 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<ProductCategory>(entity => {
-            entity.HasKey(e => e.ProductCategoryID);
+            entity.HasKey(e => e.ID);
 
-            entity.Property(e => e.CategoryName).HasMaxLength(100);
+            entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(250);
         });
 
         modelBuilder.Entity<Product>(entity => {
-            entity.HasKey(e => e.ProductID);
+            entity.HasKey(e => e.ID);
 
             entity.Property(e => e.CostPrice).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CreatedAt).HasPrecision(0);
-            entity.Property(e => e.ProductName).HasMaxLength(150);
+            entity.Property(e => e.Name).HasMaxLength(150);
             entity.Property(e => e.SalePrice).HasColumnType("decimal(18, 2)");
 
             entity.HasOne(d => d.Brand).WithMany(p => p.Products)
@@ -171,9 +171,7 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<PurchaseInvoiceItem>(entity => {
-            entity.HasKey(e => e.PurchaseInvoiceItemID);
-
-            entity.Property(e => e.UnitCost).HasColumnType("decimal(18, 2)");
+            entity.HasKey(e => e.ID);
 
             entity.HasOne(d => d.Product).WithMany(p => p.PurchaseInvoiceItems)
                 .HasForeignKey(d => d.ProductID)
@@ -187,9 +185,9 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<PurchaseInvoice>(entity => {
-            entity.HasKey(e => e.PurchaseInvoiceID);
+            entity.HasKey(e => e.ID);
 
-            entity.Property(e => e.InvoiceDate)
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_PurchaseInvoices_InvoiceDate");
             entity.Property(e => e.Notes).HasMaxLength(250);
@@ -202,12 +200,12 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<ReceiptVoucher>(entity => {
-            entity.HasKey(e => e.ReceiptVoucherID);
+            entity.HasKey(e => e.ID);
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CustomerPhone).HasMaxLength(30);
             entity.Property(e => e.Notes).HasMaxLength(250);
-            entity.Property(e => e.ReceiptVoucherDate)
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_ReceiptVouchers_ReceiptVoucherDate");
 
@@ -227,9 +225,7 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<SalesInvoiceItem>(entity => {
-            entity.HasKey(e => e.SalesInvoiceItemID);
-
-            entity.Property(e => e.UnitPrice).HasColumnType("decimal(18, 2)");
+            entity.HasKey(e => e.ID);
 
             entity.HasOne(d => d.Product).WithMany(p => p.SalesInvoiceItems)
                 .HasForeignKey(d => d.ProductID)
@@ -243,10 +239,10 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<SalesInvoice>(entity => {
-            entity.HasKey(e => e.SalesInvoiceID);
+            entity.HasKey(e => e.ID);
 
             entity.Property(e => e.CustomerPhone).HasMaxLength(30);
-            entity.Property(e => e.InvoiceDate)
+            entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_SalesInvoices_InvoiceDate");
             entity.Property(e => e.Notes).HasMaxLength(250);
@@ -257,11 +253,11 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<Supplier>(entity => {
-            entity.HasKey(e => e.SupplierPhone);
+            entity.HasKey(e => e.Phone);
 
-            entity.Property(e => e.SupplierPhone).HasMaxLength(30);
+            entity.Property(e => e.Phone).HasMaxLength(30);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())", "DF_Suppliers_CreatedAt");
-            entity.Property(e => e.SupplierName).HasMaxLength(150);
+            entity.Property(e => e.Name).HasMaxLength(150);
         });
 
         OnModelCreatingPartial(modelBuilder);
