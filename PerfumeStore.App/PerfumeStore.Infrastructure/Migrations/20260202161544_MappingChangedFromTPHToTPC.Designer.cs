@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfumeStore.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Migrations
 {
     [DbContext(typeof(PerfumeStoreDbContext))]
-    partial class PerfumeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260202161544_MappingChangedFromTPHToTPC")]
+    partial class MappingChangedFromTPHToTPC
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,8 +34,8 @@ namespace PerfumeStore.Infrastructure.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
                     b.Property<string>("BrandDescription")
-                        .HasMaxLength(250)
-                        .HasColumnType("nchar(250)")
+                        .HasMaxLength(10)
+                        .HasColumnType("nchar(10)")
                         .IsFixedLength();
 
                     b.Property<string>("Name")
@@ -174,7 +177,7 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.ToTable("MoneyAccounts");
                 });
 
-            modelBuilder.Entity("PerfumeStore.Domain.Entities.MoneyTransaction", b =>
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.MoneyTransfer", b =>
                 {
                     b.Property<long>("ID")
                         .ValueGeneratedOnAdd()
@@ -186,7 +189,7 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasPrecision(0)
                         .HasColumnType("datetime2(0)")
-                        .HasDefaultValueSql("(sysdatetime())", "DF_MoneyTransactions_TransferDate");
+                        .HasDefaultValueSql("(sysdatetime())", "DF_MoneyTransfers_TransferDate");
 
                     b.Property<int>("FromMoneyAccountID")
                         .HasColumnType("int");
@@ -207,7 +210,7 @@ namespace PerfumeStore.Infrastructure.Migrations
 
                     b.HasIndex("ToMoneyAccountID");
 
-                    b.ToTable("MoneyTransactions");
+                    b.ToTable("MoneyTransfers");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.PaymentVoucher", b =>
@@ -579,19 +582,19 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("PerfumeStore.Domain.Entities.MoneyTransaction", b =>
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.MoneyTransfer", b =>
                 {
                     b.HasOne("PerfumeStore.Domain.Entities.MoneyAccount", "FromMoneyAccount")
                         .WithMany("MoneyTransfersFromMoneyAccount")
                         .HasForeignKey("FromMoneyAccountID")
                         .IsRequired()
-                        .HasConstraintName("FK_MoneyTransactions_MoneyAccounts1");
+                        .HasConstraintName("FK_MoneyTransfers_MoneyAccounts1");
 
                     b.HasOne("PerfumeStore.Domain.Entities.MoneyAccount", "ToMoneyAccount")
                         .WithMany("MoneyTransfersToMoneyAccount")
                         .HasForeignKey("ToMoneyAccountID")
                         .IsRequired()
-                        .HasConstraintName("FK_MoneyTransactions_MoneyAccounts");
+                        .HasConstraintName("FK_MoneyTransfers_MoneyAccounts");
 
                     b.Navigation("FromMoneyAccount");
 

@@ -1,8 +1,10 @@
-using Restaurants.Infrastructure.Extensions;
+using PerfumeStore.Application.Extensions;
+using PerfumeStore.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

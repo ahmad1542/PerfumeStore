@@ -17,9 +17,9 @@ public class MoneyAccount {
 
     public ICollection<Expense> Expenses { get; private set; } = new List<Expense>();
 
-    public ICollection<MoneyTransfer> MoneyTransfersFromMoneyAccount { get; private set; } = new List<MoneyTransfer>();
+    public ICollection<MoneyTransaction> MoneyTransfersFromMoneyAccount { get; private set; } = new List<MoneyTransaction>();
 
-    public ICollection<MoneyTransfer> MoneyTransfersToMoneyAccount { get; private set; } = new List<MoneyTransfer>();
+    public ICollection<MoneyTransaction> MoneyTransfersToMoneyAccount { get; private set; } = new List<MoneyTransaction>();
 
     public ICollection<PaymentVoucher> PaymentVouchers { get; private set; } = new List<PaymentVoucher>();
 

@@ -22,7 +22,7 @@ public partial class PerfumeStoreDbContext : DbContext {
 
     public virtual DbSet<MoneyAccount> MoneyAccounts { get; set; }
 
-    public virtual DbSet<MoneyTransfer> MoneyTransfers { get; set; }
+    public virtual DbSet<MoneyTransaction> MoneyTransactions { get; set; }
 
     public virtual DbSet<PaymentVoucher> PaymentVouchers { get; set; }
 
@@ -42,6 +42,10 @@ public partial class PerfumeStoreDbContext : DbContext {
 
     public virtual DbSet<Supplier> Suppliers { get; set; }
 
+    public virtual DbSet<Debt> Debts { get; set; }
+
+    public virtual DbSet<Person> Persons { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Brand>(entity => {
             entity.HasKey(e => e.ID);
@@ -49,18 +53,8 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.HasIndex(e => e.Name, "IX_Brands").IsUnique();
 
             entity.Property(e => e.BrandDescription)
-                .HasMaxLength(10)
+                .HasMaxLength(250)
                 .IsFixedLength();
-            entity.Property(e => e.Name).HasMaxLength(150);
-        });
-
-        modelBuilder.Entity<Customer>(entity => {
-            entity.HasKey(e => e.Phone);
-
-            entity.Property(e => e.Phone).HasMaxLength(30);
-            entity.Property(e => e.CreatedAt)
-                .HasPrecision(0)
-                .HasDefaultValueSql("(sysdatetime())", "DF_Customers_CreatedAt");
             entity.Property(e => e.Name).HasMaxLength(150);
         });
 
@@ -99,24 +93,24 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.Property(e => e.Notes).HasMaxLength(250);
         });
 
-        modelBuilder.Entity<MoneyTransfer>(entity => {
+        modelBuilder.Entity<MoneyTransaction>(entity => {
             entity.HasKey(e => e.ID);
 
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.TransferAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Date)
                 .HasPrecision(0)
-                .HasDefaultValueSql("(sysdatetime())", "DF_MoneyTransfers_TransferDate");
+                .HasDefaultValueSql("(sysdatetime())", "DF_MoneyTransactions_TransferDate");
 
             entity.HasOne(d => d.FromMoneyAccount).WithMany(p => p.MoneyTransfersFromMoneyAccount)
                 .HasForeignKey(d => d.FromMoneyAccountID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MoneyTransfers_MoneyAccounts1");
+                .HasConstraintName("FK_MoneyTransactions_MoneyAccounts1");
 
             entity.HasOne(d => d.ToMoneyAccount).WithMany(p => p.MoneyTransfersToMoneyAccount)
                 .HasForeignKey(d => d.ToMoneyAccountID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_MoneyTransfers_MoneyAccounts");
+                .HasConstraintName("FK_MoneyTransactions_MoneyAccounts");
         });
 
         modelBuilder.Entity<PaymentVoucher>(entity => {
@@ -141,8 +135,7 @@ public partial class PerfumeStoreDbContext : DbContext {
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.PaymentVouchers)
                 .HasForeignKey(d => d.SupplierPhone)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_PaymentVouchers_Suppliers1");
+                .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
         modelBuilder.Entity<ProductCategory>(entity => {
@@ -252,13 +245,26 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .HasConstraintName("FK_SalesInvoices_Customers1");
         });
 
-        modelBuilder.Entity<Supplier>(entity => {
+        modelBuilder.Entity<Person>(entity => {
             entity.HasKey(e => e.Phone);
 
             entity.Property(e => e.Phone).HasMaxLength(30);
-            entity.Property(e => e.CreatedAt).HasDefaultValueSql("(sysdatetime())", "DF_Suppliers_CreatedAt");
             entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.CreatedAt)
+                .HasPrecision(0)
+                .HasDefaultValueSql("sysdatetime()");
         });
+
+        modelBuilder.Entity<Person>()
+                    .HasMany(p => p.Debts)
+                    .WithOne(d => d.Person)
+                    .HasForeignKey(d => d.PersonPhone);
+
+        modelBuilder.Entity<Person>().UseTpcMappingStrategy();
+
+        modelBuilder.Entity<Customer>().ToTable("Customers");
+        modelBuilder.Entity<Supplier>().ToTable("Suppliers");
+
 
         OnModelCreatingPartial(modelBuilder);
     }

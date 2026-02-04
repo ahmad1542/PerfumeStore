@@ -6,9 +6,9 @@ namespace PerfumeStore.Domain.Entities
 {
     public class BaseEntity
     {
-        public string CreatedBy { get; set; }
-        public string UpdatedBy { get; set; }
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set; }
+        public string CreatedBy { get; set; } = "Ahmad Hussein";
+        public string UpdatedBy { get; set; } = "Ahmad Hussein";
+        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime UpdatedAt { get; set; } = DateTime.Now;
     }
 }

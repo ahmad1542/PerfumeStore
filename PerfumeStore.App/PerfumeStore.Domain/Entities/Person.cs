@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace PerfumeStore.Domain.Entities
-{
-    public class Person : BaseEntity
-    {
+namespace PerfumeStore.Domain.Entities {
+    public class Person : BaseEntity {
         [Key]
-        public string Phone{ get; set; }
+        public string Phone { get; set; } = default!;
         [Required]
-        public string Name{ get; set; }
-        public Debt? Debt { get; set; }
+        public string Name { get; set; } = default!;
+        public ICollection<Debt> Debts { get; private set; } = new List<Debt>();
+
     }
 }

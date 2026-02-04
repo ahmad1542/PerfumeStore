@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PerfumeStore.Domain.Entities;
 
-public class MoneyTransfer {
+public class MoneyTransaction {
     public long ID { get; set; }
 
     public DateTime Date { get; set; } = DateTime.Now;
