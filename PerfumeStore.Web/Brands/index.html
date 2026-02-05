@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Brands - PerfumeStore</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/theme-dark.css" />
+    <link rel="stylesheet" href="brands.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">PerfumeStore</div>
+            <nav class="navbar-links">
+                <a href="../dashboard/">Dashboard</a>
+                <a href="./" class="active">Brands</a>
+                <a href="../products/">Products</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        Brand List <span class="count-chip">3</span>
+                    </h1>
+                    <p class="page-subtitle">Manage your perfume brands here.</p>
+                </div>
+
+                <div class="list-tools">
+                    <input class="search-input" type="text" placeholder="Search brands..." />
+                    <a href="../Brands/create.html" class="btn-primary">+ New Brand</a>
+                </div>
+            </div>
+            <div class="empty-state">
+                <div class="empty-icon">🏷️</div>
+                <h2>No brands yet</h2>
+                <p>Add your first brand to start building your product catalog.</p>
+                <a href="../Brands/create.html" class="btn-primary">Create your first brand</a>
+            </div>
+
+            <div class="table-wrapper table-card">
+                <table class="brand-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Brand Name</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td><a class="brand-link" href="../Brands/view.html">Chanel</a></td>
+                            <td>Luxury French fashion house fragrance brand.</td>
+                            <td class="actions-cell">
+                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td><a class="brand-link" href="../Brands/view.html">Dior</a></td>
+                            <td>Elegant and timeless perfume line.</td>
+                            <td class="actions-cell">
+                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td><a class="brand-link" href="../Brands/view.html">Armaf</a></td>
+                            <td>Popular clone fragrance brand from UAE.</td>
+                            <td class="actions-cell">
+                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+</body>

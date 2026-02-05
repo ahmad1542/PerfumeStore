@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Edit Brand - PerfumeStore</title>
+    <link rel="stylesheet" href="../assets/theme-dark.css" />
+    <link rel="stylesheet" href="brands.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">PerfumeStore</div>
+            <nav class="navbar-links">
+                <a href="../dashboard/">Dashboard</a>
+                <a href="./" class="active">Brands</a>
+                <a href="../products/">Products</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Edit Brand</h1>
+                    <p class="page-subtitle">Update brand details and save changes.</p>
+                </div>
+
+                <a href="/brands/" class="btn-secondary">← Back</a>
+            </div>
+
+            <div class="form-card">
+                <form action="#" method="post">
+
+                    <div class="form-group">
+                        <label for="brandName">Brand Name <span class="req">*</span></label>
+                        <input id="brandName" name="brandName" type="text" value="Dior" required />
+                        <p class="hint">Use a clear name (e.g., Dior, Chanel). This will appear in Products.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="brandDesc">Description (Optional)</label>
+                        <textarea id="brandDesc" name="brandDesc" rows="5">Elegant and timeless perfume line.</textarea>
+                        <p class="hint">Optional: short note about the brand (country, style, etc.).</p>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn-primary">Save Changes</button>
+                        <a href="/brands/" class="btn-light">Cancel</a>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>
