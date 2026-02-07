@@ -11,9 +11,14 @@ namespace PerfumeStore.Infrastructure.Repositories {
             return brand.ID;
         }
 
-        public async Task<IEnumerable<Brand>> GetAllAsync() {
-            var brands = await dbContext.Brands.ToListAsync();
-            return brands;
+        public async Task<IEnumerable<Brand>> GetAllAsync(string? search = null) {
+            IQueryable<Brand> query = dbContext.Brands;
+
+            if (!string.IsNullOrWhiteSpace(search)) {
+                query = query.Where(b => b.Name.Contains(search));
+            }
+
+            return await query.ToListAsync();
         }
 
         public async Task<Brand?> GetByIdAsync(int id) {

@@ -40,24 +40,24 @@
             <div class="details-card">
                 <div class="details-row">
                     <div class="details-label">Brand Name</div>
-                    <div class="details-value">Dior</div>
+                    <div class="details-value" id="brandNameText">-</div>
                 </div>
 
                 <div class="details-row">
                     <div class="details-label">Description</div>
-                    <div class="details-value">
-                        Elegant and timeless perfume line.
-                    </div>
+                    <div class="details-value" id="brandDescText">-</div>
+
                 </div>
 
                 <div class="details-row">
                     <div class="details-label">Created</div>
-                    <div class="details-value">2026-02-05</div>
+                    <div class="details-value" id="brandCreatedText">-</div>
+
                 </div>
 
                 <div class="details-row">
                     <div class="details-label">Last Updated</div>
-                    <div class="details-value">2026-02-05</div>
+                    <div class="details-value" id="brandUpdatedText">-</div>
                 </div>
             </div>
 
@@ -70,6 +70,12 @@
 
         </div>
     </main>
+
+    <script src="brands.js"></script>
+    <script>
+        BrandsPage.initView();
+    </script>
+
 
 </body>
 

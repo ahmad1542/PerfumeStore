@@ -19,8 +19,8 @@ namespace PerfumeStore.API.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<BrandDto>>> GetAll() {
-            var brands = await mediator.Send(new GetAllBrandsQuery());
+        public async Task<ActionResult<IEnumerable<BrandDto>>> GetAll([FromQuery] string? search) {
+            var brands = await mediator.Send(new GetAllBrandsQuery(search));
             return Ok(brands);
         }
 

@@ -2,6 +2,7 @@
 using PerfumeStore.Application.Brands.Dtos;
 
 namespace PerfumeStore.Application.Brands.Queries.GetAllBrands {
-    public class GetAllBrandsQuery : IRequest<IEnumerable<BrandDto>> {
+    public class GetAllBrandsQuery(string? search) : IRequest<IEnumerable<BrandDto>> {
+        public string? Search { get; set; } = search;
     }
 }

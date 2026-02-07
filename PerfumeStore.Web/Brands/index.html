@@ -29,13 +29,13 @@
             <div class="page-header">
                 <div>
                     <h1 class="page-title">
-                        Brand List <span class="count-chip">3</span>
+                        Brand List <span class="count-chip">0</span>
                     </h1>
                     <p class="page-subtitle">Manage your perfume brands here.</p>
                 </div>
 
                 <div class="list-tools">
-                    <input class="search-input" type="text" placeholder="Search brands..." />
+                    <input id="searchInput" class="search-input" type="text" placeholder="Search brands..." />
                     <a href="../Brands/create.html" class="btn-primary">+ New Brand</a>
                 </div>
             </div>
@@ -45,6 +45,8 @@
                 <p>Add your first brand to start building your product catalog.</p>
                 <a href="../Brands/create.html" class="btn-primary">Create your first brand</a>
             </div>
+
+            <div id="pageMsg" class="hint"></div>
 
             <div class="table-wrapper table-card">
                 <table class="brand-table">
@@ -56,34 +58,15 @@
                             <th>Actions</th>
                         </tr>
                     </thead>
-                    <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td><a class="brand-link" href="../Brands/view.html">Chanel</a></td>
-                            <td>Luxury French fashion house fragrance brand.</td>
-                            <td class="actions-cell">
-                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td><a class="brand-link" href="../Brands/view.html">Dior</a></td>
-                            <td>Elegant and timeless perfume line.</td>
-                            <td class="actions-cell">
-                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td><a class="brand-link" href="../Brands/view.html">Armaf</a></td>
-                            <td>Popular clone fragrance brand from UAE.</td>
-                            <td class="actions-cell">
-                                <a href="../Brands/edit.html" class="btn-edit">Edit</a>
-                            </td>
-                        </tr>
-                    </tbody>
+                    <tbody id="brandsRows"></tbody>
                 </table>
             </div>
         </div>
     </main>
+    <script src="brands.js"></script>
+    <script>
+        loadBrands();
+    </script>
 </body>
+
+</html>

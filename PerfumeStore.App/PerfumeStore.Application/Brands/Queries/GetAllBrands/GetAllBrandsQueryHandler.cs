@@ -6,7 +6,7 @@ using PerfumeStore.Domain.Repositories;
 namespace PerfumeStore.Application.Brands.Queries.GetAllBrands {
     public class GetAllBrandsQueryHandler(IBrandsRepository brandsRepository, IMapper mapper) : IRequestHandler<GetAllBrandsQuery, IEnumerable<BrandDto>> {
         public async Task<IEnumerable<BrandDto>> Handle(GetAllBrandsQuery request, CancellationToken cancellationToken) {
-            var brands = await brandsRepository.GetAllAsync() ?? throw new Exception("There is no Brand exist!");
+            var brands = await brandsRepository.GetAllAsync(request.Search);
             var brandsDtos = mapper.Map<IEnumerable<BrandDto>>(brands);
             return brandsDtos;
         }
