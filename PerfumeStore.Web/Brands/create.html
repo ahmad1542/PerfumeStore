@@ -40,19 +40,20 @@
                     <div class="form-group">
                         <label for="brandName">Brand Name <span class="req">*</span></label>
                         <input id="brandName" name="brandName" type="text" placeholder="Example: Dior" required />
-                        <p class="hint">Use a clear name (e.g., Dior, Chanel). This will appear in Products.</p>
+                        <p class="hint">Use a clear name (e.g., Dior, Chanel). This will appear in Products.</p><br>
                     </div>
 
                     <div class="form-group">
                         <label for="brandDesc">Description (Optional)</label>
                         <textarea id="brandDesc" name="brandDesc" rows="5"
                             placeholder="Write a short description about this brand..."></textarea>
-                        <p class="hint">Optional: short note about the brand (country, style, etc.).</p>
+                        <p class="hint">Optional: short note about the brand (country, style, etc.).</p><br>
                     </div>
 
                     <div class="form-actions">
-                        <button type="submit" class="btn-primary">Save Brand</button>
-                        <a href="../brands/index.html" class="btn-light">Cancel</a>
+                        <button id="btnSave" type="button" class="btn-primary">Save Brand</button>
+                        <a href="../brands/index.html" class="btn-light">Cancel</a><br>
+                        <div id="pageMsg" class="hint"></div>
                     </div>
 
                 </form>
@@ -60,9 +61,11 @@
 
         </div>
     </main>
-    <script src="brands.js"></script>
+
+    <script src="common.js"></script>
+    <script src="create.js"></script>
     <script>
-        BrandsPage.initCreate();
+        document.getElementById("btnSave").addEventListener("click", addBrand);
     </script>
 </body>
 

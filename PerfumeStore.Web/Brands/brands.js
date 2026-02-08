@@ -1,25 +1,5 @@
 // brands/brands.js
 
-// 1) API base URL (relative)
-// Because your HTML is served from the same website as the API,
-// we can use a relative URL and avoid CORS issues.
-const API_BASE = "https://localhost:7209/api/Brands";
-
-// 2) Helper to find an element by id.
-// Why? Because we will use it a lot and it keeps code clean.
-function $(id) {
-    return document.getElementById(id);
-}
-
-// 3) Helper to show a message on the page (loading, errors, etc.)
-function setMsg(text, isError = false) {
-    const msgEl = $("pageMsg");
-    if (!msgEl) return;
-
-    msgEl.textContent = text || "";
-    msgEl.style.color = isError ? "#ff8b8b" : "rgba(232,238,252,.65)";
-}
-
 // 4) Load brands from the API and render them into the table
 async function loadBrands(searchText = "") {
     // A) Find the table body where rows should be inserted
@@ -33,8 +13,8 @@ async function loadBrands(searchText = "") {
     // If searchText is empty, call: /api/Brands
     // If not empty, call: /api/Brands?search=....
     const url = searchText && searchText.trim().length > 0
-        ? `${API_BASE}?search=${encodeURIComponent(searchText.trim())}`
-        : API_BASE;
+        ? `${BRANDS_API}?search=${encodeURIComponent(searchText.trim())}`
+        : BRANDS_API;
 
     // D) Call the API (fetch sends an HTTP request)
     const res = await fetch(url, {
