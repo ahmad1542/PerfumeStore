@@ -1,5 +1,6 @@
-let brandId
-async function loadBrandForEdit(id) {
+let brandId = null;
+
+async function loadBrandForEdit() {
     brandId = getQueryParam("id");
     if (!brandId) {
         setMsg("Missing brand id in URL.", true);
@@ -19,8 +20,8 @@ async function loadBrandForEdit(id) {
 
     const brand = await res.json();
 
-    $("brandNameText").textContent = brand.name ?? brand.Name ?? "-";
-    $("brandDescText").textContent = brand.brandDescription ?? brand.BrandDescription ?? "";
+    $("brandName").value = brand.name ?? brand.Name ?? "";
+    $("brandDesc").value = brand.brandDescription ?? brand.BrandDescription ?? "";
     setMsg("");
 }
 
@@ -38,7 +39,7 @@ async function saveBrandEdits() {
     setMsg("Saving...");
 
     const res = await fetch(`${BRANDS_API}/${encodeURIComponent(brandId)}`, {
-        method: "PUT",
+        method: "PATCH",
         headers: {
             "Content-Type": "application/json",
             Accept: "application/json"
@@ -46,11 +47,10 @@ async function saveBrandEdits() {
         body: JSON.stringify({
             id: brandId,
             name: name,
-            description: desc
+            BrandDescription: desc
         })
     });
 
-    
     if (!res.ok) {
         setMsg(`Update failed (HTTP ${res.status}).`, true);
         return;

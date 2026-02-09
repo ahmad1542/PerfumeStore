@@ -38,13 +38,13 @@
 
                     <div class="form-group">
                         <label for="brandName">Brand Name <span class="req">*</span></label>
-                        <input id="brandName" name="brandName" type="text" value="Dior" required />
+                        <input id="brandName" name="brandName" type="text" required/>
                         <p class="hint">Use a clear name (e.g., Dior, Chanel). This will appear in Products.</p><br>
                     </div>
 
                     <div class="form-group">
                         <label for="brandDesc">Description (Optional)</label>
-                        <textarea id="brandDesc" name="brandDesc" rows="5">Elegant and timeless perfume line.</textarea>
+                        <textarea id="brandDesc" name="brandDesc" rows="5"></textarea>
                         <p class="hint">Optional: short note about the brand (country, style, etc.).</p><br>
                     </div>
 
@@ -60,9 +60,11 @@
         </div>
     </main>
 
-    <script src="brands.js"></script>
+    <script src="common.js"></script>
+    <script src="edit.js"></script>
     <script>
-        BrandsPage.initEdit();
+        loadBrandForEdit();
+        document.getElementById("btnSave").addEventListener("click", saveBrandEdits);
     </script>
 
 </body>

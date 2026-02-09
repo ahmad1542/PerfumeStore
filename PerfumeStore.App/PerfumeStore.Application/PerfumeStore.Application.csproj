@@ -13,6 +13,11 @@
   <ItemGroup>
     <Folder Include="Persons\Commands\" />
     <Folder Include="Persons\Queries\" />
+    <Folder Include="Products\Commands\CreateProduct\CreateProductCommand\" />
+    <Folder Include="Products\Commands\CreateProduct\CreateProductCommandHandler\" />
+    <Folder Include="Products\Commands\CreateProduct\CreateProductCommandValidtor\" />
+    <Folder Include="Products\Commands\CreateProduct\" />
+    <Folder Include="Products\Queries\" />
   </ItemGroup>
 
   <ItemGroup>
