@@ -2,64 +2,80 @@
 
 // 4) Load brands from the API and render them into the table
 async function loadBrands(searchText = "") {
-    // A) Find the table body where rows should be inserted
-    const tbody = $("brandsRows");
-    if (!tbody) return; // safety: page might not have this table
+  const tbody = $("brandsRows");
+  const emptyState = $("emptyState");
+  const tableCard = $("tableCard");
+  const countChip = $("brandsCount");
 
-    // B) Show user feedback while loading
-    setMsg("Loading brands...");
+  if (!tbody) return;
 
-    // C) Build the URL (with optional search query)
-    // If searchText is empty, call: /api/Brands
-    // If not empty, call: /api/Brands?search=....
-    const url = searchText && searchText.trim().length > 0
-        ? `${BRANDS_API}?search=${encodeURIComponent(searchText.trim())}`
-        : BRANDS_API;
+  setMsg("Loading brands...");
 
-    // D) Call the API (fetch sends an HTTP request)
-    const res = await fetch(url, {
-        headers: { Accept: "application/json" }
-    });
+  const url =
+    searchText && searchText.trim().length > 0
+      ? `${BRANDS_API}?search=${encodeURIComponent(searchText.trim())}`
+      : BRANDS_API;
 
-    // E) If the response is not 200-299, show error and stop
-    if (!res.ok) {
-        setMsg("Failed to load brands from API.", true);
-        return;
-    }
+  const res = await fetch(url, { headers: { Accept: "application/json" } });
 
-    // F) Convert JSON response body into a JS object/array
-    const brands = await res.json(); // expected: array of BrandDto
-
-    // G) Clear old rows (important when searching / reloading)
+  if (!res.ok) {
+    setMsg("Failed to load brands from API.", true);
+    // Keep UI safe: show empty state and hide table if something goes wrong
     tbody.innerHTML = "";
+    if (countChip) countChip.textContent = "0";
+    if (emptyState) emptyState.style.display = "";
+    if (tableCard) tableCard.style.display = "none";
+    return;
+  }
 
-    // H) Handle empty list
-    if (!brands || brands.length === 0) {
-        setMsg("No brands found.");
-        return;
-    }
+  const brands = await res.json();
+  const list = Array.isArray(brands) ? brands : [];
 
-    // I) Show success message
-    setMsg(`Loaded ${brands.length} brand(s).`);
+  // Update count
+  if (countChip) countChip.textContent = String(list.length);
 
-    // J) Render each brand into a <tr>
-    brands.forEach((b, index) => {
-        const id = b.id ?? b.ID ?? ""; // supports both naming styles
-        const name = b.name ?? b.Name ?? "-";
-        const desc = b.brandDescription ?? b.BrandDescription ?? b.description ?? b.Description ?? "";
+  // Clear rows
+  tbody.innerHTML = "";
 
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
+  // Empty handling (show empty-state, hide table)
+  if (list.length === 0) {
+    setMsg(""); // cleaner look; empty-state already explains
+    if (emptyState) emptyState.style.display = "";
+    if (tableCard) tableCard.style.display = "none";
+    return;
+  }
+
+  // Has data (hide empty-state, show table)
+  if (emptyState) emptyState.style.display = "none";
+  if (tableCard) tableCard.style.display = "";
+
+  setMsg(`Loaded ${list.length} brand(s).`);
+
+  list.forEach((b, index) => {
+    const id = b.id ?? b.ID ?? "";
+    const name = b.name ?? b.Name ?? "-";
+    const desc =
+      b.brandDescription ??
+      b.BrandDescription ??
+      b.description ??
+      b.Description ??
+      "";
+
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
       <td>${index + 1}</td>
-      <td><a class="brand-link" href="view.html?id=${id}">${escapeHtml(name)}</a></td>
+      <td><a class="brand-link" href="view.html?id=${encodeURIComponent(
+        id
+      )}">${escapeHtml(name)}</a></td>
       <td>${escapeHtml(desc)}</td>
       <td class="actions-cell">
-        <a class="btn-edit" href="edit.html?id=${id}">Edit</a>
+        <a class="btn-edit" href="edit.html?id=${encodeURIComponent(
+          id
+        )}">Edit</a>
       </td>
     `;
-
-        tbody.appendChild(tr);
-    });
+    tbody.appendChild(tr);
+  });
 }
 
 // 5) Prevent HTML injection when inserting text into innerHTML

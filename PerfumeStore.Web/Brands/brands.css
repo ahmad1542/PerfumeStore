@@ -70,6 +70,10 @@
   gap: 16px;
 }
 
+#tableCard[style*="display: none"] {
+  margin-top: 0;
+}
+
 @media (max-width: 700px) {
   .details-row {
     grid-template-columns: 1fr;

@@ -29,7 +29,7 @@
             <div class="page-header">
                 <div>
                     <h1 class="page-title">
-                        Brand List <span class="count-chip">0</span>
+                        Brand List <span id="brandsCount" class="count-chip">0</span>
                     </h1>
                     <p class="page-subtitle">Manage your perfume brands here.</p>
                 </div>
@@ -39,7 +39,7 @@
                     <a href="../Brands/create.html" class="btn-primary">+ New Brand</a>
                 </div>
             </div>
-            <div class="empty-state">
+            <div id="emptyState" class="empty-state">
                 <div class="empty-icon">🏷️</div>
                 <h2>No brands yet</h2>
                 <p>Add your first brand to start building your product catalog.</p>
@@ -48,7 +48,7 @@
 
             <div id="pageMsg" class="hint"></div>
 
-            <div class="table-wrapper table-card">
+            <div id="tableCard" class="table-wrapper table-card">
                 <table class="brand-table">
                     <thead>
                         <tr>
