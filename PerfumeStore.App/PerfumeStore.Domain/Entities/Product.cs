@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace PerfumeStore.Domain.Entities;
+﻿namespace PerfumeStore.Domain.Entities;
 
 public class Product : BaseEntity {
     public int ID { get; set; }
-
     public string Name { get; set; } = null!;
-
     public int Capacity { get; set; }
-
     public decimal SalePrice { get; set; }
-
     public decimal CostPrice { get; set; }
-
     public int? MinStock { get; set; }
+
     public int? BrandID { get; set; }
     public int ProductCategoryID { get; set; }
 

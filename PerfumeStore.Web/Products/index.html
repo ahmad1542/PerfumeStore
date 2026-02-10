@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Products - Memento Perfume</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/theme-dark.css" />
+    <link rel="stylesheet" href="../Products/Products.css" />
+</head>
+
+<body>
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-product">Memento Perfume</div>
+            <nav class="navbar-links">
+                <a href="../dashboard/">Dashboard</a>
+                <a href="../Brands/">Brands</a>
+                <a href="../products/" class="active">Products</a>
+            </nav>
+        </div>
+    </header>
+    <main class="main-content">
+        <div class="container">
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">
+                        Product List <span id="productsCount" class="count-chip">0</span>
+                    </h1>
+                    <p class="page-subtitle">Manage your perfume Products here.</p>
+                </div>
+
+                <div class="list-tools">
+                    <input id="searchInput" class="search-input" type="text" placeholder="Search products..." />
+                    <a href="../Products/create.html" class="btn-primary">+ New Product</a>
+                </div>
+            </div>
+            <div id="emptyState" class="empty-state">
+                <div class="empty-icon">🏷️</div>
+                <h2>No products yet</h2>
+                <p>Add your first product to start building your product catalog.</p>
+                <a href="../Products/create.html" class="btn-primary">Create your first product</a>
+            </div>
+
+            <div id="pageMsg" class="hint"></div>
+
+            <div id="tableCard" class="table-wrapper table-card">
+                <table class="product-table">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Product Name</th>
+                            <th>Description</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="brandsRows"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+    <script src="../Brands/common.js"></script>
+    <script src="../Brands/brands.js"></script>
+    <script>
+        loadBrands();
+    </script>
+</body>
+
+</html>
