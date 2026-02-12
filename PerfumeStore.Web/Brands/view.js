@@ -1,18 +1,18 @@
 async function loadBrandDetails() {
     const id = getQueryParam("id");
     if (!id) {
-        setMsg("Missing brand id in URL.", true);
+        setMsg("pageMsg", "Missing brand id in URL.", true);
         return;
     }
 
-    setMsg("Loading brand...");
+    setMsg("pageMsg", "Loading brand...");
 
     const res = await fetch(`${BRANDS_API}/${encodeURIComponent(id)}`, {
         headers: { Accept: "application/json" }
     });
 
     if (!res.ok) {
-        setMsg(`Failed to load brand (HTTP ${res.status}).`, true);
+        setMsg("pageMsg", `Failed to load brand (HTTP ${res.status}).`, true);
         return;
     }
 

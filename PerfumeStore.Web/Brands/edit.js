@@ -3,18 +3,18 @@ let brandId = null;
 async function loadBrandForEdit() {
     brandId = getQueryParam("id");
     if (!brandId) {
-        setMsg("Missing brand id in URL.", true);
+        setMsg("pageMsg", "Missing brand id in URL.", true);
         return;
     }
 
-    setMsg("Loading brand...");
+    setMsg("pageMsg", "Loading brand...");
 
     const res = await fetch(`${BRANDS_API}/${encodeURIComponent(brandId)}`, {
         headers: { Accept: "application/json" }
     });
 
     if (!res.ok) {
-        setMsg(`Failed to load brand (HTTP ${res.status}).`, true);
+        setMsg("pageMsg", `Failed to load brand (HTTP ${res.status}).`, true);
         return;
     }
 
@@ -22,7 +22,7 @@ async function loadBrandForEdit() {
 
     $("brandName").value = brand.name ?? brand.Name ?? "";
     $("brandDesc").value = brand.brandDescription ?? brand.BrandDescription ?? "";
-    setMsg("");
+    setMsg("pageMsg", "");
 }
 
 async function saveBrandEdits() {
@@ -32,11 +32,11 @@ async function saveBrandEdits() {
     const desc = $("brandDesc").value.trim();
 
     if (!name) {
-        setMsg("Name is required", true);
+        setMsg("pageMsg", "Name is required", true);
         return;
     }
 
-    setMsg("Saving...");
+    setMsg("pageMsg", "Saving...");
 
     const res = await fetch(`${BRANDS_API}/${encodeURIComponent(brandId)}`, {
         method: "PATCH",
@@ -52,9 +52,9 @@ async function saveBrandEdits() {
     });
 
     if (!res.ok) {
-        setMsg(`Update failed (HTTP ${res.status}).`, true);
+        setMsg("pageMsg", `Update failed (HTTP ${res.status}).`, true);
         return;
     }
 
-    setMsg("Brand updated successfully.");
+    setMsg("pageMsg", "Brand updated successfully.");
 }

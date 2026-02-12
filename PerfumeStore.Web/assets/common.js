@@ -4,8 +4,8 @@ function $(id) {
 }
 
 // Show a message in #pageMsg
-function setMsg(text, isError = false) {
-    const msgEl = $("pageMsg");
+function setMsg(elementId, text, isError = false) {
+    const msgEl = $(elementId);
     if (!msgEl) return;
 
     msgEl.textContent = text || "";

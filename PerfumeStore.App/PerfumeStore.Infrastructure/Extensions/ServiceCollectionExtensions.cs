@@ -14,6 +14,7 @@ namespace PerfumeStore.Infrastructure.Extensions {
 
             services.AddScoped<IBrandsRepository, BrandsRepository>();
             services.AddScoped<IProductsRepository, ProductsRepository>();
+            services.AddScoped<IProductCategoriesRepository, ProductCategoriesRepository>();
         }
 
     }

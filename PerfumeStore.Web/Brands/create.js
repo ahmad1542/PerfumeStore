@@ -3,11 +3,11 @@ async function addBrand() {
     const desc = $("brandDesc").value.trim();
 
     if (!name) {
-        setMsg("Name is required.", true);
+        setMsg("pageMsg", "Name is required.", true);
         return;
     }
 
-    setMsg("Saving...");
+    setMsg("pageMsg", "Saving...");
 
     const res = await fetch(BRANDS_API, {
         method: "POST",
@@ -22,9 +22,9 @@ async function addBrand() {
     });
 
     if (!res.ok) {
-        setMsg(`Create failed (HTTP ${res.status}).`, true);
+        setMsg("pageMsg", `Create failed (HTTP ${res.status}).`, true);
         return;
     }
 
-    setMsg("Brand created successfully.");
+    setMsg("pageMsg", "Brand created successfully.");
 }

@@ -5,6 +5,7 @@
         public int Capacity { get; set; }
         public decimal SalePrice { get; set; }
         public decimal CostPrice { get; set; }
+        public int? MinStock { get; set; }
 
         public string CategoryName { get; set; } = null!;
 

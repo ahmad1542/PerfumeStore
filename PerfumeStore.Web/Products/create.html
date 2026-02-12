@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Product - Memento Perfume</title>
+    <link rel="stylesheet" href="../assets/theme-dark.css" />
+    <link rel="stylesheet" href="products.css" />
+</head>
+
+<body>
+
+    <header class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-product">Memento Perfume</div>
+            <nav class="navbar-links">
+                <a href="../dashboard/">Dashboard</a>
+                <a href="../Brands/">Brands</a>
+                <a href="../products/" class="active">Products</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="container">
+
+            <div class="page-header">
+                <div>
+                    <h1 class="page-title">Create Product</h1>
+                    <p class="page-subtitle">Add a new perfume product to your catalog.</p>
+                </div>
+
+                <a href="../products/index.html" class="btn-secondary">← Back</a>
+            </div>
+
+            <div class="form-card">
+                <form id="createProductForm" action="#" method="post">
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="productName">Product Name <span class="req">*</span></label>
+                            <input id="productName" name="productName" type="text" placeholder="Example: Hooked"
+                                required />
+                            <p class="hint">Use a clear name (e.g., Hooked, Noble). This will appear in Products.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="capacity">Capacity (ml) <span class="req">*</span></label>
+                            <input id="capacity" name="capacity" type="number" min="1" placeholder="100" required />
+                            <p class="hint">Example: 50, 100, 200.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="salePrice">Sale Price <span class="req">*</span></label>
+                            <input id="salePrice" name="salePrice" type="number" min="0" step="0.01"
+                                placeholder="120.00" required />
+                            <p class="hint">Price shown to customers.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="costPrice">Cost Price <span class="req">*</span></label>
+                            <input id="costPrice" name="costPrice" type="number" min="0" step="0.01" placeholder="80.00"
+                                required />
+                            <p class="hint">Your buying cost (used for profit).</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="minStock">Min Stock (Optional)</label>
+                            <input id="minStock" name="minStock" type="number" min="0" placeholder="5" />
+                            <p class="hint">If quantity goes below this, show low stock.</p>
+                        </div>
+
+                        <!-- Brand dropdown -->
+                        <div class="form-group">
+                            <label for="brandId">Brand (Optional)</label>
+                            <select id="brandId" name="brandId">
+                                <option value="">Loading brands...</option>
+                            </select>
+                            <p class="hint">Choose a brand if applicable.</p>
+                        </div>
+
+                        <!-- Category dropdown + add button -->
+                        <div class="form-group category-inline">
+                            <div class="category-label-row">
+                                <label for="categoryId">Category <span class="req">*</span></label>
+                                <button type="button" id="btnAddCategory" class="btn-mini">+ Add</button>
+                            </div>
+
+                            <select id="categoryId" name="categoryId" required>
+                                <option value="">Loading categories...</option>
+                            </select>
+                            <p class="hint">Choose an existing category, or add a new one.</p>
+                        </div>
+
+                    </div>
+
+                    <div class="form-actions">
+                        <button id="btnSave" type="button" class="btn-primary">Save Product</button>
+                        <a href="../products/index.html" class="btn-light">Cancel</a>
+                        <div id="pageMsg" class="hint"></div>
+                    </div>
+
+                </form>
+
+                <!-- Add Category Modal -->
+                <div id="categoryModal" class="modal-overlay hidden">
+                    <div class="modal-card">
+                        <div class="modal-header">
+                            <h3>Add Category</h3>
+                            <button type="button" id="btnCloseCategoryModal" class="modal-close">×</button>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label for="newCategoryName">Category Name <span class="req">*</span></label>
+                                <input id="newCategoryName" type="text" placeholder="Example: Fresh" />
+                                <p class="hint">We’ll create it and auto-select it.</p>
+                            </div>
+
+                            <div class="modal-actions">
+                                <button type="button" id="btnCreateCategory" class="btn-primary">Create</button>
+                                <button type="button" id="btnCancelCategory" class="btn-light">Cancel</button>
+                                <div id="categoryMsg" class="hint"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../assets/common.js"></script>
+    <script src="../Brands/common.js"></script>
+    <script src="common.js"></script>
+    <script src="create.js"></script>
+    <script>
+        document.getElementById("btnSave").addEventListener("click", addProduct);
+    </script>
+</body>
+
+</html>
