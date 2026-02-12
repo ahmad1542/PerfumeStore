@@ -13,6 +13,7 @@ namespace PerfumeStore.Infrastructure.Extensions {
             services.AddDbContext<PerfumeStoreDbContext>(options => options.UseSqlServer(connectionString));
 
             services.AddScoped<IBrandsRepository, BrandsRepository>();
+            services.AddScoped<IProductsRepository, ProductsRepository>();
         }
 
     }

@@ -9,7 +9,5 @@
         public string CategoryName { get; set; } = null!;
 
         public string? BrandName { get; set; }
-
-        public int? MinStock { get; set; }
     }
 }
