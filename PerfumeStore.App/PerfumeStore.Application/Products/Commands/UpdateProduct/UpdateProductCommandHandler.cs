@@ -10,6 +10,7 @@ namespace PerfumeStore.Application.Products.Commands.UpdateProduct {
             var product = productsRepository.GetByIdAsync(request.ID);
             if (product == null)
                 throw new NotFoundException(nameof(Product), request.ID.ToString());
+            
             await mapper.Map(request, product);
             await productsRepository.SaveChangesAsync();
         }

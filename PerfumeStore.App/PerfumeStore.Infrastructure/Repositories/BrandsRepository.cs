@@ -6,6 +6,8 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Repositories {
     internal class BrandsRepository(PerfumeStoreDbContext dbContext) : IBrandsRepository {
         public async Task<int> AddAsync(Brand brand) {
+            if (await dbContext.Brands.AnyAsync(e => e.Name == brand.Name) == true)
+                return 0;
             await dbContext.Brands.AddAsync(brand);
             await dbContext.SaveChangesAsync();
             return brand.ID;
@@ -27,5 +29,11 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
+
+        public async Task Update(Brand brand) {
+            if (await dbContext.Brands.AnyAsync(e => e.Name == brand.Name) == true)
+                return;
+            await SaveChangesAsync();
+        }
     }
 }

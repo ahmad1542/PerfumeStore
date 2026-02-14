@@ -1,5 +1,4 @@
-// 4) Load brands from the API and render them into the table
-async function loadBrands(searchText = "") {
+async function loadProducts(searchText = "") {
     const tbody = $("productsRows");
     const emptyState = $("emptyState");
     const tableCard = $("tableCard");
@@ -14,11 +13,12 @@ async function loadBrands(searchText = "") {
             ? `${PRODUCTS_API}?search=${encodeURIComponent(searchText.trim())}`
             : PRODUCTS_API;
 
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    let res;
 
-    if (!res.ok) {
-        setMsg("pageMsg", "Failed to load products from API.", true);
-        // Keep UI safe: show empty state and hide table if something goes wrong
+    try {
+        res = await fetch(url, { headers: { Accept: "application/json" } });
+    } catch {
+        setMsg("pageMsg", "Failed to load products.", true);
         tbody.innerHTML = "";
         if (countChip) countChip.textContent = "0";
         if (emptyState) emptyState.style.display = "";
@@ -26,52 +26,68 @@ async function loadBrands(searchText = "") {
         return;
     }
 
-    const brands = await res.json();
-    const list = Array.isArray(brands) ? brands : [];
-
-    // Update count
-    if (countChip) countChip.textContent = String(list.length);
-
-    // Clear rows
-    tbody.innerHTML = "";
-
-    // Empty handling (show empty-state, hide table)
-    if (list.length === 0) {
-        setMsg("pageMsg", ""); // cleaner look; empty-state already explains
+    if (!res.ok) {
+        setMsg("pageMsg", "Failed to load products.", true);
+        tbody.innerHTML = "";
+        if (countChip) countChip.textContent = "0";
         if (emptyState) emptyState.style.display = "";
         if (tableCard) tableCard.style.display = "none";
         return;
     }
 
-    // Has data (hide empty-state, show table)
+    const data = await res.json();
+    const list = Array.isArray(data) ? data : [];
+
+    if (countChip) countChip.textContent = String(list.length);
+    tbody.innerHTML = "";
+
+    if (list.length === 0) {
+        setMsg("pageMsg", "");
+        if (emptyState) emptyState.style.display = "";
+        if (tableCard) tableCard.style.display = "none";
+        return;
+    }
+
     if (emptyState) emptyState.style.display = "none";
     if (tableCard) tableCard.style.display = "";
 
-    setMsg("pageMsg", `Loaded ${list.length} brand(s).`);
+    setMsg("pageMsg", `Loaded ${list.length} product(s).`);
 
-    list.forEach((b, index) => {
-        const id = b.id ?? b.ID ?? "";
-        const name = b.name ?? b.Name ?? "-";
-        const desc =
-            b.brandDescription ??
-            b.BrandDescription ??
-            b.description ??
-            b.Description ??
-            "";
+    list.forEach((p, index) => {
+        const id = p.id ?? p.ID ?? "";
+        const name = p.name ?? p.Name ?? "-";
+        const capacity = p.capacity ?? p.Capacity ?? "-";
+        const salePrice = p.salePrice ?? p.SalePrice ?? "-";
+        const costPrice = p.costPrice ?? p.CostPrice ?? "-";
+
+        const category =
+            p.categoryName ??
+            p.CategoryName ??
+            p.category?.name ??
+            p.category?.Name ??
+            "-";
+
+        const brand =
+            p.brandName ??
+            p.BrandName ??
+            p.brand?.name ??
+            p.brand?.Name ??
+            "-";
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
       <td>${index + 1}</td>
-      <td><a class="brand-link" href="view.html?id=${encodeURIComponent(
-            id
-        )}">${escapeHtml(name)}</a></td>
-      <td>${escapeHtml(desc)}</td>
+      <td>${escapeHtml(name)}</td>
+      <td>${escapeHtml(String(capacity))}</td>
+      <td>${escapeHtml(category)}</td>
+      <td>${escapeHtml(brand)}</td>
+      <td>${escapeHtml(String(salePrice))}</td>
+      <td>${escapeHtml(String(costPrice))}</td>
       <td class="actions-cell">
-        <a class="btn-edit" href="edit.html?id=${encodeURIComponent(
-            id
-        )}">Edit</a>
+        <a class="btn-edit" href="edit.html?id=${encodeURIComponent(id)}">Edit</a>
       </td>
     `;
+
         tbody.appendChild(tr);
     });
 }

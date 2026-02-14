@@ -12,7 +12,7 @@ namespace PerfumeStore.Application.Brands.Commands.UpdateBrand {
                 throw new NotFoundException(nameof(Brand), request.ID.ToString());
 
             mapper.Map(request, brand);
-            await brandsRepository.SaveChangesAsync();
+            await brandsRepository.Update(brand);
         }
     }
 }

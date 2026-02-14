@@ -8,6 +8,7 @@ namespace PerfumeStore.Domain.Repositories {
         Task<Brand?> GetByIdAsync(int id);
         Task<IEnumerable<Brand>> GetAllAsync(string? search = null);
         Task<int> AddAsync(Brand brand);
+        Task Update(Brand brand);
         Task SaveChangesAsync();
     }
 }

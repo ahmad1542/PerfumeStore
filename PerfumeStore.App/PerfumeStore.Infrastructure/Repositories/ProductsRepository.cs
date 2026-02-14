@@ -12,7 +12,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<IEnumerable<Product>> GetAllAsync(string? search = null) {
-            IQueryable<Product> query = dbContext.Products;
+            IQueryable<Product> query = dbContext.Products.Include(p => p.Brand).Include(p => p.ProductCategory);
             if (!string.IsNullOrEmpty(search)) {
                 query = query.Where(p => p.Name.Contains(search));
             }
@@ -20,7 +20,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<Product?> GetByIdAsync(int id) {
-            var product = await dbContext.Products.FirstOrDefaultAsync(s => s.ID == id);
+            var product = await dbContext.Products.Include(p => p.Brand).Include(p => p.ProductCategory).FirstOrDefaultAsync(s => s.ID == id);
             return product;
         }
 
