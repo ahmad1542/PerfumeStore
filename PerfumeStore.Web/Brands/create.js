@@ -8,23 +8,29 @@ async function addBrand() {
     }
 
     setMsg("pageMsg", "Saving...");
+    try {
+        const res = await fetch(BRANDS_API, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Accept: "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                description: desc
+            })
+        });
 
-    const res = await fetch(BRANDS_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            description: desc
-        })
-    });
+        if (!res.ok) {
+            setMsg("pageMsg", `Create failed (HTTP ${res.status}).`, true);
+            return;
+        }
 
-    if (!res.ok) {
-        setMsg("pageMsg", `Create failed (HTTP ${res.status}).`, true);
-        return;
+        setMsg("pageMsg", "Brand created successfully.");
+
+    } catch (e) {
+        console.error(e);
+        setMsg("pageMsg", e.message || "Failed to create Brand.", true);
     }
 
-    setMsg("pageMsg", "Brand created successfully.");
 }

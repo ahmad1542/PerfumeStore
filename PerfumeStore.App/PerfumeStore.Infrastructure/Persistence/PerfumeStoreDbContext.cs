@@ -53,7 +53,7 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.HasIndex(e => e.Name, "IX_Brands").IsUnique();
 
             entity.Property(e => e.BrandDescription)
-                .HasMaxLength(250)
+                .HasColumnType("nvarchar(max)")
                 .IsFixedLength();
             entity.Property(e => e.Name).HasMaxLength(150);
         });
