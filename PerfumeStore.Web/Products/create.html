@@ -115,8 +115,13 @@
                         <div class="modal-body">
                             <div class="form-group">
                                 <label for="newCategoryName">Category Name <span class="req">*</span></label>
-                                <input id="newCategoryName" type="text" placeholder="Example: Fresh" />
+                                <input id="newCategoryName" type="text" placeholder="Example: Fresh" required />
                                 <p class="hint">We’ll create it and auto-select it.</p>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="newCategoryDesc">Description (Optional)</label>
+                                <textarea id="newCategoryDesc" rows="3" placeholder="Short note about this category..."></textarea>
                             </div>
 
                             <div class="modal-actions">
@@ -134,12 +139,9 @@
     </main>
 
     <script src="../assets/common.js"></script>
-    <script src="../Brands/common.js"></script>
     <script src="common.js"></script>
+    <script src="../Brands/common.js"></script>
     <script src="create.js"></script>
-    <script>
-        document.getElementById("btnSave").addEventListener("click", addProduct);
-    </script>
 </body>
 
 </html>

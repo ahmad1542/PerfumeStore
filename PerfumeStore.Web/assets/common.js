@@ -45,8 +45,21 @@ async function apiSendJson(url, method, bodyObj) {
         body: JSON.stringify(bodyObj),
     });
 
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    // Some APIs return nothing on PUT, so we try safely:
-    const text = await res.text();
-    return text ? JSON.parse(text) : null;
+    // If backend returns 400/500, read details to help debugging
+    if (!res.ok) {
+        const errText = await res.text().catch(() => "");
+        throw new Error(`HTTP ${res.status} - ${errText}`);
+    }
+
+    // 204 No Content
+    if (res.status === 204) return null;
+
+    // If content-type is JSON, parse JSON safely
+    const contentType = res.headers.get("content-type") || "";
+    if (contentType.includes("application/json")) {
+        return await res.json();
+    }
+
+    // Otherwise return text (could be empty or plain text)
+    return await res.text();
 }

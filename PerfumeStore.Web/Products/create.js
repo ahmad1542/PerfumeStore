@@ -30,72 +30,104 @@ async function loadCategories(selectId = null) {
     }
 }
 
-function setCategoryMsg(text, isError = false) {
-    const el = document.getElementById("categoryMsg");
-    if (!el) return;
-    el.textContent = text || "";
-    el.style.color = isError ? "#ff8b8b" : "rgba(232,238,252,.65)";
-}
-
 function openCategoryModal() {
-    setCategoryMsg("categoryMsg", "");
-    document.getElementById("newCategoryName").value = "";
-    document.getElementById("categoryModal").classList.remove("hidden");
-    document.getElementById("newCategoryName").focus();
+    setMsg("categoryMsg", "");
+    $("newCategoryName").value = "";
+    $("categoryModal").classList.remove("hidden");
+    $("newCategoryName").focus();
 }
 
 function closeCategoryModal() {
-    document.getElementById("categoryModal").classList.add("hidden");
+    $("categoryModal").classList.add("hidden");
+}
+
+async function createCategory() {
+  const name = $("newCategoryName").value.trim();
+  const description = $("newCategoryDesc").value.trim();
+
+  if (!name) {
+    setMsg("categoryMsg", "Category name is required.", true);
+    return;
+  }
+
+  setMsg("categoryMsg", "Creating...");
+
+  try {
+    // Use PascalCase to be safe with strict JSON settings
+    const created = await apiSendJson(CATEGORIES_API, "POST", { Name: name, Description: description });
+
+    // created might be:
+    // - JSON object { id/ID }
+    // - text
+    // - null (204)
+    const createdId = created?.id ?? created?.ID ?? null;
+
+    await loadCategories(createdId); // if null => refresh only
+    closeCategoryModal();
+    setMsg("pageMsg", "Category created and selected.");
+  } catch (e) {
+    console.error(e);
+    setMsg("categoryMsg", e.message || "Failed to create category.", true);
+  }
 }
 
 async function addProduct() {
+    setMsg("pageMsg", "");
+
     const name = $("productName").value.trim();
-    const capacity = $("capacity").value.trim();
-    const salePrice = $("salePrice").value.trim();
-    const costPrice = $("costPrice").value.trim();
-    const minStock = $("minStock").value.trim();
+    const capacity = Number($("capacity").value);
+    const salePrice = Number($("salePrice").value);
+    const costPrice = Number($("costPrice").value);
 
-    if (!name) {
-        setMsg("Name is required.", true);
+    const minStockRaw = $("minStock").value;
+    const brandRaw = $("brandId").value;
+    const categoryRaw = $("categoryId").value;
+
+    if (
+        !name ||
+        isNaN(capacity) || capacity <= 0 ||
+        isNaN(salePrice) || salePrice < 0 ||
+        isNaN(costPrice) || costPrice < 0 ||
+        !categoryRaw
+    ) {
+        setMsg("pageMsg", "Please fill all required fields correctly.", true);
         return;
     }
 
-    if (!capacity) {
-        setMsg("Capacity is required.", true);
-        return;
+    const payload = {
+        name,
+        capacity,
+        salePrice,
+        costPrice,
+        minStock: minStockRaw ? Number(minStockRaw) : null,
+        brandId: brandRaw ? Number(brandRaw) : null,
+        productCategoryId: Number(categoryRaw)
+    };
+
+    setMsg("pageMsg", "Saving...");
+
+    try {
+        await apiSendJson(PRODUCTS_API, "POST", payload);
+        setMsg("pageMsg", "Product created successfully.");
+    } catch (e) {
+        setMsg("pageMsg", "Failed to create product.", true);
     }
+}
 
-    if (!salePrice) {
-        setMsg("Sale Price is required.", true);
-        return;
-    }
+// ---------- wire up ----------
+document.addEventListener("DOMContentLoaded", async () => {
+    await Promise.all([loadBrands(), loadCategories()]);
 
-    if (!costPrice) {
-        setMsg("Cost Price is required.", true);
-        return;
-    }
+    document.getElementById("btnAddCategory").addEventListener("click", openCategoryModal);
+    document.getElementById("btnCloseCategoryModal").addEventListener("click", closeCategoryModal);
+    document.getElementById("btnCancelCategory").addEventListener("click", closeCategoryModal);
+    document.getElementById("btnCreateCategory").addEventListener("click", createCategory);
 
-    setMsg("Saving...");
-
-    const res = await fetch(PRODUCTS_API, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            Accept: "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            capacity: capacity,
-            salePrice: salePrice,
-            costPrice: costPrice,
-            minStock: minStock
-        })
+    // Close when clicking the overlay background
+    document.getElementById("categoryModal").addEventListener("click", (e) => {
+        if (e.target.id === "categoryModal") closeCategoryModal();
     });
 
-    if (!res.ok) {
-        setMsg(`Create failed (HTTP ${res.status}).`, true);
-        return;
-    }
-
-    setMsg("Product created successfully.");
-}
+    // Save
+    document.getElementById("btnSave").addEventListener("click", addProduct);
+});

@@ -141,6 +141,7 @@ public partial class PerfumeStoreDbContext : DbContext {
         modelBuilder.Entity<ProductCategory>(entity => {
             entity.HasKey(e => e.ID);
 
+            entity.HasIndex(e => e.Name).IsUnique();
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(250);
         });

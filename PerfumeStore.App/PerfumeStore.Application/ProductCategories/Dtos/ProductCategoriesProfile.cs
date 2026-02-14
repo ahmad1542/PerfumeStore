@@ -6,7 +6,7 @@ using PerfumeStore.Domain.Entities;
 namespace PerfumeStore.Application.ProductCategories.Dtos {
     public class ProductCategoriesProfile : Profile {
         public ProductCategoriesProfile() {
-            CreateMap<ProductCategoryDto, ProductCategory>();
+            CreateMap<ProductCategory, ProductCategoryDto>();
             CreateMap<CreateProductCategoryCommand, ProductCategory>();
             CreateMap<UpdateProductCategoryCommand, ProductCategory>();
 
