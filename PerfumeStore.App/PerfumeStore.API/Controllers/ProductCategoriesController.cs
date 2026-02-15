@@ -25,13 +25,13 @@ namespace PerfumeStore.API.Controllers {
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateBrand([FromBody] CreateProductCategoryCommand command) {
+        public async Task<IActionResult> CreateProductCategory([FromBody] CreateProductCategoryCommand command) {
             int id = await mediator.Send(command);
             return CreatedAtAction(nameof(GetById), new { id }, null);
         }
 
         [HttpPatch("{id}")]
-        public async Task<IActionResult> UpdateBrand([FromRoute] int id, [FromBody] UpdateProductCategoryCommand command) {
+        public async Task<IActionResult> UpdateProductCategory([FromRoute] int id, [FromBody] UpdateProductCategoryCommand command) {
             command.ID = id;
             await mediator.Send(command);
             return NoContent();
