@@ -122,7 +122,6 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_PaymentVouchers_PaymentVoucherDate");
-            entity.Property(e => e.SupplierPhone).HasMaxLength(30);
 
             entity.HasOne(d => d.MoneyAccount).WithMany(p => p.PaymentVouchers)
                 .HasForeignKey(d => d.MoneyAccountID)
@@ -134,7 +133,7 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .HasConstraintName("FK_PaymentVouchers_PurchaseInvoices1");
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.PaymentVouchers)
-                .HasForeignKey(d => d.SupplierPhone)
+                .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull);
         });
 
@@ -185,10 +184,9 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_PurchaseInvoices_InvoiceDate");
             entity.Property(e => e.Notes).HasMaxLength(250);
-            entity.Property(e => e.SupplierPhone).HasMaxLength(30);
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.PurchaseInvoices)
-                .HasForeignKey(d => d.SupplierPhone)
+                .HasForeignKey(d => d.SupplierId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PurchaseInvoices_Suppliers1");
         });
@@ -197,14 +195,13 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.HasKey(e => e.ID);
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
-            entity.Property(e => e.CustomerPhone).HasMaxLength(30);
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_ReceiptVouchers_ReceiptVoucherDate");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.ReceiptVouchers)
-                .HasForeignKey(d => d.CustomerPhone)
+                .HasForeignKey(d => d.CustomerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReceiptVouchers_Customers1");
 
@@ -235,22 +232,25 @@ public partial class PerfumeStoreDbContext : DbContext {
         modelBuilder.Entity<SalesInvoice>(entity => {
             entity.HasKey(e => e.ID);
 
-            entity.Property(e => e.CustomerPhone).HasMaxLength(30);
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_SalesInvoices_InvoiceDate");
             entity.Property(e => e.Notes).HasMaxLength(250);
 
             entity.HasOne(d => d.Customer).WithMany(p => p.SalesInvoices)
-                .HasForeignKey(d => d.CustomerPhone)
+                .HasForeignKey(d => d.CustomerId)
                 .HasConstraintName("FK_SalesInvoices_Customers1");
         });
 
         modelBuilder.Entity<Person>(entity => {
-            entity.HasKey(e => e.Phone);
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Id).ValueGeneratedNever();
 
-            entity.Property(e => e.Phone).HasMaxLength(30);
-            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.Property(e => e.Phone).HasMaxLength(30).IsRequired();
+            entity.HasIndex(e => e.Phone).IsUnique();
+
+            entity.Property(e => e.Name).HasMaxLength(150).IsRequired();
+
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasDefaultValueSql("sysdatetime()");
@@ -259,7 +259,7 @@ public partial class PerfumeStoreDbContext : DbContext {
         modelBuilder.Entity<Person>()
                     .HasMany(p => p.Debts)
                     .WithOne(d => d.Person)
-                    .HasForeignKey(d => d.PersonPhone);
+                    .HasForeignKey(d => d.PersonId);
 
         modelBuilder.Entity<Person>().UseTpcMappingStrategy();
 

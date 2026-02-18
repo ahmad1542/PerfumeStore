@@ -12,7 +12,7 @@ async function createItem() {
   try {
     const body = buildBodyFromForm();
     await apiSendJson(API, 'POST', body);
-    window.location.href = 'index.html';
+    setMsg('pageMsg', 'Saved successfully.', false);
   } catch (e) {
     setMsg('pageMsg', 'Save failed. Check API and payload.', true);
     console.error(e);

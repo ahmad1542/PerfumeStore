@@ -10,10 +10,10 @@ public class PurchaseInvoice {
 
     public string? Notes { get; set; }
 
-    public string SupplierPhone { get; set; } = null!;
+    public Guid SupplierId { get; set; }
 
     public Supplier Supplier { get; set; } = null!;
-    public int AmountPaid { get; set; }
+    public decimal AmountPaid { get; set; }
     public Debt? Debt { get; set; }
     public ICollection<PaymentVoucher> PaymentVouchers { get; private set; } = new List<PaymentVoucher>();
 

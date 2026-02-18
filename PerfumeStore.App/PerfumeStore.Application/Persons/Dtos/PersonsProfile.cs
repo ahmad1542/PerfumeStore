@@ -8,8 +8,12 @@ namespace PerfumeStore.Application.Persons.Dtos {
         public PersonsProfile() {
             CreateMap<Person, PersonDto>()
                 .ForMember(d => d.TotalDebt, opt => opt.MapFrom(s => s.Debts.Sum(x => x.Amount)));
-            CreateMap<Person, CreatePersonCommand>();
-            CreateMap<Person, UpdatePersonCommand>();
+            CreateMap<CreatePersonCommand, Person>()
+                .ForMember(dest => dest.Debts, opt => opt.Ignore())
+                .ForAllMembers(opt => opt.Condition((src, dest, val) => val != null));
+            CreateMap<UpdatePersonCommand, Person>()
+                .ForMember(d => d.Debts, opt => opt.Ignore())
+                .ForAllMembers(opt => opt.Condition((src, dest, val) => val != null));
         }
     }
 }

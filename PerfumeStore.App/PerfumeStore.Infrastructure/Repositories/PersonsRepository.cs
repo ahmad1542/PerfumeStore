@@ -7,6 +7,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
     public class PersonsRepository(PerfumeStoreDbContext dbContext) : IPersonsRepository {
         public async Task<string> AddAsync(Person person) {
             await dbContext.Persons.AddAsync(person);
+            await dbContext.SaveChangesAsync();
             return person.Phone;
         }
 

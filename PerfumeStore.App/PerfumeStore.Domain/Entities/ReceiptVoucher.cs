@@ -12,7 +12,7 @@ public class ReceiptVoucher {
 
     public string? Notes { get; set; }
 
-    public string CustomerPhone { get; set; } = null!;
+    public Guid CustomerId { get; set; }
 
     public long? SalesInvoiceID { get; set; }
 

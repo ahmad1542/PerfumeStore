@@ -13,7 +13,7 @@ public class PaymentVoucher {
 
     public string? Notes { get; set; }
 
-    public string SupplierPhone { get; set; } = null!;
+    public Guid SupplierId { get; set; }
     public long? PurchaseInvoiceID { get; set; }
     public int MoneyAccountID { get; set; }
 
