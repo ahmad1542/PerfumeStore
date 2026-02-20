@@ -7,6 +7,7 @@ namespace PerfumeStore.Application.Persons.Dtos {
     public class PersonsProfile : Profile {
         public PersonsProfile() {
             CreateMap<Person, PersonDto>()
+                .ForMember(d => d.Id, opt => opt.MapFrom(s => s.Id))
                 .ForMember(d => d.TotalDebt, opt => opt.MapFrom(s => s.Debts.Sum(x => x.Amount)));
             CreateMap<CreatePersonCommand, Person>()
                 .ForMember(dest => dest.Debts, opt => opt.Ignore())

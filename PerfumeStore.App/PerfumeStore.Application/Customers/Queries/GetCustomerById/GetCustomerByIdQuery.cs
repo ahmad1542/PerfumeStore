@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
+using PerfumeStore.Application.Customers.Dtos;
 
 namespace PerfumeStore.Application.Customers.Queries.GetCustomerById {
-    internal class GetCustomerByIdQuery {
+    public class GetCustomerByIdQuery(Guid id) : IRequest<CustomerDto> {
+        public Guid Id { get; set; } = id;
     }
 }

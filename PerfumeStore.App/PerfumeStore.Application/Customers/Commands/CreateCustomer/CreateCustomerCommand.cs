@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using MediatR;
 
 namespace PerfumeStore.Application.Customers.Commands.CreateCustomer {
-    internal class CreateCustomerCommand {
+    public class CreateCustomerCommand : IRequest<Guid> {
+        public string Phone { get; set; } = default!;
+        public string Name { get; set; } = default!;
     }
 }

@@ -11,9 +11,9 @@ namespace PerfumeStore.API.Controllers {
     [ApiController]
     public class PersonsController(IMediator mediator) : ControllerBase {
 
-        [HttpGet("{phoneNo}")]
-        public async Task<ActionResult<PersonDto?>> GetByPhoneNo([FromRoute] string phoneNo) {
-            var person = await mediator.Send(new GetPersonByPhoneNoQuery(phoneNo));
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PersonDto?>> GetById([FromRoute] Guid id) {
+            var person = await mediator.Send(new GetPersonByIdQuery(id));
 
             return Ok(person);
         }
@@ -26,13 +26,13 @@ namespace PerfumeStore.API.Controllers {
 
         [HttpPost]
         public async Task<IActionResult> CreatePerson([FromBody] CreatePersonCommand command) {
-            string phoneNo = await mediator.Send(command);
-            return CreatedAtAction(nameof(GetByPhoneNo), new { phoneNo }, null);
+            Guid id = await mediator.Send(command);
+            return CreatedAtAction(nameof(GetById), new { id }, null);
         }
 
-        [HttpPatch("{phoneNo}")]
-        public async Task<IActionResult> UpdatePerson([FromRoute] string phoneNo, [FromBody] UpdatePersonCommand command) {
-            command.Phone = phoneNo;
+        [HttpPatch("{id}")]
+        public async Task<IActionResult> UpdatePerson([FromRoute] Guid id, [FromBody] UpdatePersonCommand command) {
+            command.Id = id;
             await mediator.Send(command);
             return NoContent();
         }

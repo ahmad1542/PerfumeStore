@@ -2,9 +2,9 @@
 
 namespace PerfumeStore.Domain.Repositories {
     public interface ICustomersRepository {
-        Task<Customer?> GetByPhoneNoAsync(string phone);
+        Task<Customer?> GetByIdAsync(Guid id);
         Task<IEnumerable<Customer>> GetAllAsync(string? search = null);
-        Task<string> AddAsync(Customer customer);
+        Task<Guid> AddAsync(Customer customer);
         Task SaveChangesAsync();
     }
 }

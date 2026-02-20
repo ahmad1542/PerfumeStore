@@ -11,8 +11,8 @@ namespace PerfumeStore.Application.Customers.Dtos {
                 .IncludeBase<Person, PersonDto>()
                 .ForMember(d => d.TotalSalesInvoices, opt => opt.MapFrom(s => s.SalesInvoices.Count))
                 .ForMember(d => d.TotalDebt, opt => opt.MapFrom(s => s.Debts.Sum(x => x.Amount)));
-            CreateMap<Customer, CreateCustomerCommand>();
-            CreateMap<Customer, UpdateCustomerCommand>();
+            CreateMap<CreateCustomerCommand, Customer>();
+            CreateMap<UpdateCustomerCommand, Customer>();
         }
     }
 }

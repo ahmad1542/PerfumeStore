@@ -52,7 +52,7 @@ async function loadList(searchText = "") {
   setMsg("pageMsg", `Loaded ${list.length} record(s).`);
 
   list.forEach((x, index) => {
-    const id = x.phone ?? x.Phone ?? '';
+    const id = x.id ?? x.Id ?? '';
     const cells = [];
     cells.push(escapeHtml(x.phone ?? x.Phone ?? '-'));
     cells.push(escapeHtml(x.name ?? x.Name ?? '-'));

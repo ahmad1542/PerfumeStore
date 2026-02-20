@@ -1,5 +1,3 @@
-// create.js
-
 function buildBodyFromForm() {
   const body = {};
   body['Phone'] = $('Phone').value || null;
@@ -18,7 +16,3 @@ async function createItem() {
     console.error(e);
   }
 }
-
-
-
-

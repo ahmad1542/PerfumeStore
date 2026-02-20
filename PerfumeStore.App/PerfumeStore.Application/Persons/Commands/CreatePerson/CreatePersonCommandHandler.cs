@@ -4,11 +4,11 @@ using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Repositories;
 
 namespace PerfumeStore.Application.Persons.Commands.CreatePerson {
-    public class CreatePersonCommandHandler(IPersonsRepository personsRepository, IMapper mapper) : IRequestHandler<CreatePersonCommand, string> {
-        public async Task<string> Handle(CreatePersonCommand request, CancellationToken cancellationToken) {
+    public class CreatePersonCommandHandler(IPersonsRepository personsRepository, IMapper mapper) : IRequestHandler<CreatePersonCommand, Guid> {
+        public async Task<Guid> Handle(CreatePersonCommand request, CancellationToken cancellationToken) {
             var person = mapper.Map<Person>(request);
-            string phoneNo = await personsRepository.AddAsync(person);
-            return phoneNo;
+            Guid id = await personsRepository.AddAsync(person);
+            return id;
         }
     }
 }

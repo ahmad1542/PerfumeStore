@@ -5,9 +5,10 @@ using PerfumeStore.Infrastructure.Persistence;
 
 namespace PerfumeStore.Infrastructure.Repositories {
     public class CustomersRepository(PerfumeStoreDbContext dbContext) : ICustomersRepository {
-        public async Task<string> AddAsync(Customer customer) {
+        public async Task<Guid> AddAsync(Customer customer) {
             await dbContext.Customers.AddAsync(customer);
-            return customer.Phone;
+            await dbContext.SaveChangesAsync();
+            return customer.Id;
         }
 
         public async Task<IEnumerable<Customer>> GetAllAsync(string? search = null) {
@@ -18,11 +19,12 @@ namespace PerfumeStore.Infrastructure.Repositories {
             return await query.ToListAsync();
         }
 
-        public async Task<Customer?> GetByPhoneNoAsync(string phone) {
-            return await dbContext.Customers.Include(c => c.ReceiptVouchers)
+        public async Task<Customer?> GetByIdAsync(Guid id) {
+            return await dbContext.Customers
+                                .Include(c => c.ReceiptVouchers)
                                 .Include(c => c.SalesInvoices)
                                 .Include(c => c.Debts)
-                                .FirstOrDefaultAsync(c => c.Phone == phone);
+                                .FirstOrDefaultAsync(c => c.Id == id);
         }
 
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();

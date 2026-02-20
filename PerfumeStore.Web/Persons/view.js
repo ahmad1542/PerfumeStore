@@ -1,4 +1,3 @@
-// view.js
 async function loadView() {
   const id = getQueryParam('id');
   if (!id) {
