@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Product Name</th><th>Quantity</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>AccountName</th><th>CurrentBalance</th><th>Notes</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -52,14 +52,15 @@ async function loadList(searchText = "") {
   setMsg("pageMsg", `Loaded ${list.length} record(s).`);
 
   list.forEach((x, index) => {
-    const id = x.productId ?? x.productID ?? '';
+    const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
-    cells.push(escapeHtml((x.product?.name ?? x.Product?.Name ?? x.productName ?? x.ProductName ?? "").toString()));
-    cells.push(escapeHtml(x.quantity ?? x.Quantity ?? 0));
+    cells.push(escapeHtml(x.accountName ?? x.AccountName ?? '-'));
+    cells.push(escapeHtml(x.currentBalance ?? x.CurrentBalance ?? 0));
+    cells.push(escapeHtml(x.notes ?? x.Notes ?? ''));
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${id}</td>
+      <td>${index + 1}</td>
       ${cells.map(c => `<td>${c}</td>`).join("")}
       <td class="actions-cell">
         <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>

@@ -12,7 +12,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<IEnumerable<Inventory>> GetAllAsync(string? search = null) {
-            IQueryable<Inventory> query = dbContext.Inventory;
+            IQueryable<Inventory> query = dbContext.Inventory.Include(c => c.Product);
             if (!string.IsNullOrWhiteSpace(search)) {
                 query = query.Where(c => c.Product.Name.Contains(search));
             }
