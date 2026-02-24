@@ -4,7 +4,6 @@ using PerfumeStore.Application.Inventory.Commands.CreateInventory;
 using PerfumeStore.Application.Inventory.Commands.UpdateInventory;
 using PerfumeStore.Application.Inventory.Queries.GetAllInventory;
 using PerfumeStore.Application.Inventory.Queries.GetInventoryById;
-using PerfumeStore.Application.Persons.Commands.UpdatePerson;
 
 namespace PerfumeStore.API.Controllers {
     [Route("api/[controller]")]
