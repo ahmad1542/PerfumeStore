@@ -1,0 +1,28 @@
+﻿using Microsoft.EntityFrameworkCore;
+using PerfumeStore.Domain.Entities;
+using PerfumeStore.Domain.Repositories;
+using PerfumeStore.Infrastructure.Persistence;
+
+namespace PerfumeStore.Infrastructure.Repositories {
+    public class MoneyTransactionsRepository(PerfumeStoreDbContext dbContext) : IMoneyTransactionsRepository {
+        public async Task<long> AddAsync(MoneyTransaction moneyTransaction) {
+            await dbContext.MoneyTransactions.AddAsync(moneyTransaction);
+            await dbContext.SaveChangesAsync();
+            return moneyTransaction.ID;
+        }
+
+        public async Task<IEnumerable<MoneyTransaction>> GetAllAsync(string? search = null) {
+            IQueryable<MoneyTransaction> query = dbContext.MoneyTransactions;
+            if (!string.IsNullOrWhiteSpace(search)) {
+                query = query.Where(c => c.FromMoneyAccount.AccountName.Contains(search));
+            }
+            return await query.ToListAsync();
+        }
+
+        public async Task<MoneyTransaction?> GetByIdAsync(long id) {
+            return await dbContext.MoneyTransactions.FirstOrDefaultAsync(c => c.ID == id);
+        }
+
+        public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
+    }
+}

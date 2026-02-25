@@ -111,3 +111,23 @@
 .moneytransactions-link:hover {
   text-decoration: underline;
 }
+
+.money-select,
+select {
+  background: linear-gradient(180deg, #141c2f, #0f1626);
+  color: #e8eefc;
+  border: 1px solid rgba(255, 255, 255, .12);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-weight: 800;
+  outline: none;
+}
+
+select:hover {
+  background: linear-gradient(180deg, #18223a, #121b30);
+}
+
+select:focus {
+  border-color: rgba(97, 218, 251, .6);
+  box-shadow: 0 0 0 2px rgba(97, 218, 251, .15);
+}

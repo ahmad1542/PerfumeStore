@@ -63,3 +63,52 @@ async function apiSendJson(url, method, bodyObj) {
     // Otherwise return text (could be empty or plain text)
     return await res.text();
 }
+
+function getValidationMessageFromHttpError(err) {
+    const msg = err?.message || '';
+
+    // Expecting: "HTTP 400 - <json>"
+    const dashIndex = msg.indexOf(' - ');
+    if (dashIndex === -1) return null;
+
+    const maybeJson = msg.slice(dashIndex + 3).trim();
+    if (!maybeJson.startsWith('{')) return null;
+
+    try {
+        const problem = JSON.parse(maybeJson);
+
+        // ASP.NET Core validation: problem.errors = { field: [messages...] }
+        const errors = problem?.errors;
+        if (errors && typeof errors === 'object') {
+            for (const key of Object.keys(errors)) {
+                const arr = errors[key];
+                if (Array.isArray(arr) && arr.length > 0) {
+                    return arr[0]; // first message, e.g. "ID must be greater than 0."
+                }
+            }
+        }
+
+        // fallback
+        if (problem?.title) return problem.title;
+        if (problem?.detail) return problem.detail;
+
+        return null;
+    } catch {
+        return null;
+    }
+}
+
+function getFriendlyMessage(err) {
+    const validationMsg = getValidationMessageFromHttpError(err);
+    if (validationMsg) return validationMsg;
+
+    if (err?.message?.includes('HTTP 401')) return 'You are not authorized.';
+    if (err?.message?.includes('HTTP 403')) return 'You do not have permission.';
+    if (err?.message?.includes('HTTP 404')) return 'Requested resource was not found.';
+    if (err?.message?.includes('HTTP 500')) return 'Server error. Please try again later.';
+
+    if (err?.message?.includes('Failed to fetch'))
+        return 'Network error. Please check your connection.';
+
+    return 'Something went wrong. Please try again.';
+}
