@@ -12,7 +12,13 @@ async function createItem() {
     await apiSendJson(API, 'POST', body);
     window.location.href = 'index.html';
   } catch (e) {
-    setMsg('pageMsg', 'Save failed. Check API and payload.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ??  'Save failed. Check API and payload.',
+      true
+    );
     console.error(e);
   }
 }

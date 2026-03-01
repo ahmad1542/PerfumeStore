@@ -29,8 +29,14 @@ async function addBrand() {
         setMsg("pageMsg", "Brand created successfully.");
 
     } catch (e) {
+        const validationMsg = getFriendlyMessage(e);
+
+        setMsg(
+            'pageMsg',
+            validationMsg ?? 'Failed to create brand. Please try again later.',
+            true
+        );
         console.error(e);
-        setMsg("pageMsg", e.message || "Failed to create Brand.", true);
     }
 
 }

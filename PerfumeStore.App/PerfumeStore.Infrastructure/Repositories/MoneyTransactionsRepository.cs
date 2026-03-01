@@ -12,7 +12,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<IEnumerable<MoneyTransaction>> GetAllAsync(string? search = null) {
-            IQueryable<MoneyTransaction> query = dbContext.MoneyTransactions;
+            IQueryable<MoneyTransaction> query = dbContext.MoneyTransactions.Include(e => e.FromMoneyAccount).Include(e => e.ToMoneyAccount);
             if (!string.IsNullOrWhiteSpace(search)) {
                 query = query.Where(c => c.FromMoneyAccount.AccountName.Contains(search));
             }
@@ -20,7 +20,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<MoneyTransaction?> GetByIdAsync(long id) {
-            return await dbContext.MoneyTransactions.FirstOrDefaultAsync(c => c.ID == id);
+            return await dbContext.MoneyTransactions.Include(e => e.FromMoneyAccount).Include(e => e.ToMoneyAccount).FirstOrDefaultAsync(c => c.ID == id);
         }
 
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();

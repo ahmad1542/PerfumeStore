@@ -1,21 +1,50 @@
 function buildBodyFromForm() {
-  const body = {};
-  body['Date'] = $('Date').value || null;
-  body['FromMoneyAccountID'] = $('FromMoneyAccountID').value || null;
-  body['ToMoneyAccountID'] = $('ToMoneyAccountID').value || null;
-  body['TransferAmount'] = Number($('TransferAmount').value || 0);
-  body['Notes'] = $('Notes').value || null;
-  return body;
+  const fromId = $('FromMoneyAccountID').value;
+  const toId = $('ToMoneyAccountID').value;
+
+  return {
+    Date: $('Date').value || null, // yyyy-MM-dd
+    FromMoneyAccountID: fromId ? Number(fromId) : null,
+    ToMoneyAccountID: toId ? Number(toId) : null,
+    TransferAmount: Number($('TransferAmount').value || 0),
+    Notes: $('Notes').value || null
+  };
 }
 
 async function createItem() {
   setMsg('pageMsg', 'Saving...', false);
+
   try {
     const body = buildBodyFromForm();
+
+    if (!body.FromMoneyAccountID || !body.ToMoneyAccountID) {
+      setMsg('pageMsg', 'Please select From and To accounts.', true);
+      return;
+    }
+    if (body.FromMoneyAccountID === body.ToMoneyAccountID) {
+      setMsg('pageMsg', 'From and To accounts cannot be the same.', true);
+      return;
+    }
+    if (body.TransferAmount <= 0) {
+      setMsg('pageMsg', 'Transfer amount must be greater than 0.', true);
+      return;
+    }
+    const fromBal = getSelectedBalance('FromMoneyAccountID');
+    if (fromBal != null && body.TransferAmount > fromBal) {
+      setMsg('pageMsg', `Insufficient balance. Available: ${fromBal}`, true);
+      return;
+    }
+
     await apiSendJson(API, 'POST', body);
     window.location.href = 'index.html';
   } catch (e) {
-    setMsg('pageMsg', 'Save failed. Check API and payload.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Save failed. Check API and payload.',
+      true
+    );
     console.error(e);
   }
 }
@@ -27,24 +56,6 @@ async function initPage() {
   } catch (e) { console.error(e); }
 }
 
-
-async function fillPeopleSelect(selectId, apiUrl) {
-  const el = $(selectId);
-  if (!el) return;
-  el.innerHTML = `<option value="">-- Select --</option>`;
-  let list = [];
-  try { list = await apiGetJson(apiUrl); } catch { list = []; }
-  (Array.isArray(list) ? list : []).forEach(p => {
-    const phone = p.phone ?? p.Phone ?? "";
-    const name = p.name ?? p.Name ?? "";
-    if (!phone) return;
-    const opt = document.createElement("option");
-    opt.value = phone;
-    opt.textContent = name ? `${name} (${phone})` : phone;
-    el.appendChild(opt);
-  });
-}
-
 async function fillMoneyAccounts(selectId) {
   const el = $(selectId);
   if (!el) return;
@@ -54,90 +65,17 @@ async function fillMoneyAccounts(selectId) {
   (Array.isArray(list) ? list : []).forEach(a => {
     const id = a.id ?? a.ID ?? a.Id ?? "";
     const name = a.accountName ?? a.AccountName ?? ("Account #" + id);
+    const bal = a.currentBalance ?? a.CurrentBalance ?? null;
     if (id === "") return;
+
     const opt = document.createElement("option");
     opt.value = id;
-    opt.textContent = name;
+
+    opt.dataset.balance = String(bal);
+
+    opt.textContent = bal != null
+      ? `${name} (Balance: ${bal})`
+      : name;
     el.appendChild(opt);
   });
 }
-
-async function fillProductsToElement(selectEl) {
-  if (!selectEl) return;
-  selectEl.innerHTML = `<option value="">-- Select product --</option>`;
-  let list = [];
-  try { list = await apiGetJson("https://localhost:7209/api/Products"); } catch { list = []; }
-  (Array.isArray(list) ? list : []).forEach(p => {
-    const id = p.id ?? p.ID ?? "";
-    const name = p.name ?? p.Name ?? ("Product #" + id);
-    if (id === "") return;
-    const opt = document.createElement("option");
-    opt.value = id;
-    opt.textContent = name;
-    selectEl.appendChild(opt);
-  });
-}
-
-function wireDebtToggle() {
-  const cb = $("HasDebt");
-  const amount = $("DebtAmount");
-  const notes = $("DebtNotes");
-  function apply() {
-    const on = !!cb?.checked;
-    if (amount) amount.disabled = !on;
-    if (notes) notes.disabled = !on;
-  }
-  if (cb) cb.addEventListener("change", apply);
-  apply();
-}
-
-function setupInvoiceItems() {
-  window._items = [];
-  const btn = $("btnAddItem");
-  if (btn) btn.addEventListener("click", () => addItemRow());
-  addItemRow();
-}
-
-function addItemRow() {
-  const rows = $("itemsRows");
-  if (!rows) return;
-  const idx = rows.querySelectorAll('tr').length + 1;
-  const tr = document.createElement('tr');
-  tr.innerHTML = `
-    <td>${idx}</td>
-    <td><select class="search-input" data-role="product"></select></td>
-    <td><input class="search-input" type="number" min="1" value="1" data-role="qty" /></td>
-    <td style="text-align:right;">
-      <button type="button" class="btn-light" data-role="remove">Remove</button>
-    </td>
-  `;
-  rows.appendChild(tr);
-
-  const productSel = tr.querySelector('select[data-role="product"]');
-  fillProductsToElement(productSel);
-
-  tr.querySelector('[data-role="remove"]').addEventListener('click', () => {
-    tr.remove();
-    rebuildItemsFromUI();
-  });
-
-  tr.querySelector('[data-role="qty"]').addEventListener('input', rebuildItemsFromUI);
-  productSel.addEventListener('change', rebuildItemsFromUI);
-
-  rebuildItemsFromUI();
-}
-
-function rebuildItemsFromUI() {
-  const rows = $("itemsRows");
-  if (!rows) return;
-  const items = [];
-  rows.querySelectorAll('tr').forEach(tr => {
-    const pid = tr.querySelector('select[data-role="product"]')?.value || "";
-    const qty = Number(tr.querySelector('input[data-role="qty"]')?.value || 0);
-    if (pid && qty > 0) items.push({ productId: Number(pid), qty });
-  });
-  window._items = items;
-  const msg = $("itemsMsg");
-  if (msg) msg.textContent = items.length ? `${items.length} item(s) ready.` : "No items selected yet.";
-}
-

@@ -66,8 +66,14 @@ async function createCategory() {
     closeCategoryModal();
     setMsg("pageMsg", "Category created and selected.");
   } catch (e) {
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Failed to create category.',
+      true
+    );
     console.error(e);
-    setMsg("categoryMsg", e.message || "Failed to create category.", true);
   }
 }
 
@@ -110,7 +116,14 @@ async function addProduct() {
         await apiSendJson(PRODUCTS_API, "POST", payload);
         setMsg("pageMsg", "Product created successfully.");
     } catch (e) {
-        setMsg("pageMsg", "Failed to create product.", true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Failed to create product.',
+      true
+    );
+    console.error(e);
     }
 }
 

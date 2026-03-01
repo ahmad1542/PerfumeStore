@@ -55,8 +55,8 @@ async function loadList(searchText = "") {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
     cells.push(escapeHtml(x.date ?? x.Date ?? ''));
-    cells.push(escapeHtml((x.fromMoneyAccount?.accountName ?? x.FromMoneyAccount?.AccountName ?? x.fromMoneyAccountID ?? x.FromMoneyAccountID ?? '-')));
-    cells.push(escapeHtml((x.toMoneyAccount?.accountName ?? x.ToMoneyAccount?.AccountName ?? x.toMoneyAccountID ?? x.ToMoneyAccountID ?? '-')));
+    cells.push(escapeHtml((x.fromMoneyAccountName ?? x.fromMoneyAccountID ?? x.FromMoneyAccountID ?? '-')));
+    cells.push(escapeHtml((x.toMoneyAccountName ?? x.toMoneyAccountID ?? x.ToMoneyAccountID ?? '-')));
     cells.push(escapeHtml(x.transferAmount ?? x.TransferAmount ?? 0));
 
     const tr = document.createElement("tr");

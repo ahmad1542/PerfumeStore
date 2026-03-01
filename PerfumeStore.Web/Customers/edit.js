@@ -16,7 +16,13 @@ async function initEdit() {
 
     setMsg('pageMsg', '');
   } catch (e) {
-    setMsg('pageMsg', 'Failed to load record from API.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Failed to load record from API.',
+      true
+    );
     console.error(e);
     return;
   }
@@ -39,7 +45,13 @@ async function updateItem(id) {
     await apiSendJson(`${API}/${encodeURIComponent(id)}`, 'PATCH', body);
     window.location.href = 'index.html';
   } catch (e) {
-    setMsg('pageMsg', 'Update failed. Check API and payload.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Update failed. Please check your input and try again.',
+      true
+    );
     console.error(e);
   }
 }

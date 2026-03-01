@@ -17,7 +17,13 @@ async function loadView() {
     $('details').innerHTML = lines.join('');
     setMsg('pageMsg', '');
   } catch (e) {
-    setMsg('pageMsg', 'Failed to load record from API.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Failed to load record from API.',
+      true
+    );
     console.error(e);
   }
 }

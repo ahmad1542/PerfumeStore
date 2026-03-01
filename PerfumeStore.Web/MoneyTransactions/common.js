@@ -12,3 +12,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 350);
   });
 });
+
+function getSelectedBalance(selectId) {
+  const el = $(selectId);
+  if (!el) return null;
+
+  const opt = el.options[el.selectedIndex];
+  if (!opt) return null;
+
+  const balStr = opt.dataset.balance;
+  if (balStr == null || balStr === "") return null;
+
+  const bal = Number(balStr);
+  return Number.isFinite(bal) ? bal : null;
+}

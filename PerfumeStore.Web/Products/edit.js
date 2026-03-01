@@ -116,7 +116,14 @@ async function updateProduct() {
         await apiSendJson(`${PRODUCTS_API}/${productId}`, "PATCH", payload);
         setMsg("pageMsg", "Product updated successfully.");
     } catch (e) {
-        setMsg("pageMsg", "Failed to update product.", true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Update failed. Please check your input and try again.',
+      true
+    );
+    console.error(e);
     }
 }
 
