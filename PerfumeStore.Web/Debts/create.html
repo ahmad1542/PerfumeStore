@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Debt - Memento Perfume</title>
+  <link rel="stylesheet" href="../assets/theme-dark.css" />
+  <link rel="stylesheet" href="debts.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+        <a href="../dashboard/">Dashboard</a>
+        <a href="../Debts/" class="active">Debts</a>
+        <a href="../SalesInvoices/">Sales Invoices</a>
+        <a href="../PurchaseInvoices/">Purchase Invoices</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Create Debt</h1>
+          <p class="page-subtitle">Fill the information below.</p>
+        </div>
+        <a href="index.html" class="btn-secondary">← Back</a>
+      </div>
+
+      <div class="form-card">
+        <form id="form" action="#" method="post">
+          <div class="form-group">
+            <label for="Amount">Amount <span class="req">*</span></label>
+            <input id="Amount" type="number" placeholder="Amount" required />
+          </div>
+          <div class="form-group">
+            <label for="SalesInvoiceId">Sales Invoice ID</label>
+            <input id="SalesInvoiceId" type="text" placeholder="Sales Invoice ID" />
+          </div>
+          <div class="form-group">
+            <label for="PurchaseInvoiceId">Purchase Invoice ID</label>
+            <input id="PurchaseInvoiceId" type="text" placeholder="Purchase Invoice ID" />
+          </div>
+          <div class="form-group">
+            <label for="PersonId">Persons</label>
+            <select id="PersonId" class="search-input"></select>
+          </div>
+          <div class="form-group">
+            <label for="Notes">Notes</label>
+            <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>
+          </div>
+
+          <div class="form-actions"
+            style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button id="btnSave" type="button" class="btn-primary">Save</button>
+            <a href="index.html" class="btn-light">Cancel</a>
+            <div id="pageMsg" class="hint"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="common.js"></script>
+  <script src="create.js"></script>
+  <script>document.getElementById('btnSave').addEventListener('click', createItem); if (typeof initPage === 'function') initPage();</script>
+</body>
+
+</html>

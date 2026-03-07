@@ -71,44 +71,44 @@
 }
 
 
-.moneytransactions-table {
+.debts-table {
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
 
-.moneytransactions-table th {
+.debts-table th {
   background: rgba(255, 255, 255, .06);
   color: var(--text);
   font-weight: 900;
   border-bottom: 1px solid var(--border);
 }
 
-.moneytransactions-table td {
+.debts-table td {
   color: rgba(232, 238, 252, .9);
 }
 
-.moneytransactions-table th,
-.moneytransactions-table td {
+.debts-table th,
+.debts-table td {
   padding: 14px 16px;
   border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
 
-.moneytransactions-table tbody tr:nth-child(even) {
+.debts-table tbody tr:nth-child(even) {
   background: rgba(255, 255, 255, .02);
 }
 
-.moneytransactions-table tbody tr:hover {
+.debts-table tbody tr:hover {
   background: rgba(97, 218, 251, .08);
 }
 
-.moneytransactions-link {
+.debts-link {
   color: rgba(232, 238, 252, .92);
   font-weight: 900;
   text-decoration: none;
 }
 
-.moneytransactions-link:hover {
+.debts-link:hover {
   text-decoration: underline;
 }
 

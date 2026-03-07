@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Sales Invoice - Memento Perfume</title>
+  <link rel="stylesheet" href="../assets/theme-dark.css" />
+  <link rel="stylesheet" href="salesinvoices.css" />
+</head>
+
+<body>
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+        <a href="../dashboard/">Dashboard</a>
+        <a href="../Debts/">Debts</a>
+        <a href="../SalesInvoices/" class="active">Sales Invoices</a>
+        <a href="../PurchaseInvoices/">Purchase Invoices</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Create Sales Invoice</h1>
+          <p class="page-subtitle">Fill the information below.</p>
+        </div>
+        <a href="index.html" class="btn-secondary">← Back</a>
+      </div>
+
+      <div class="form-card">
+        <form id="form" action="#" method="post">
+          <div class="form-group">
+            <label for="Date">Date <span class="req">*</span></label>
+            <input id="Date" type="date" placeholder="Date" required />
+          </div>
+          <hr style="border-color: transparent;">
+          <div class="form-group">
+            <label for="CustomerId">Customers</label>
+            <select id="CustomerId" class="search-input"></select>
+          </div>
+          <hr style="border-color: transparent;">
+          <div class="form-group">
+            <label for="AmountPaid">Amount Paid <span class="req">*</span></label>
+            <input id="AmountPaid" type="number" placeholder="Amount Paid" required />
+          </div>
+          <hr style="border-color: transparent;">
+          <div class="form-group">
+            <label for="Notes">Notes</label>
+            <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>
+          </div>
+          <div class="form-group">
+            <hr style="border-color: transparent;">
+            <label class="chk">
+              <input type="checkbox" id="HasDebt" />
+              <span class="chk-box" aria-hidden="true"></span>
+              <span class="chk-text">Has Debt</span>
+            </label>
+          </div>
+          <div id="debt-group">
+            <hr style="border-color: transparent;">
+            <div class="form-group">
+              <label for="DebtAmount">Debt Amount <span class="req">*</span></label>
+              <input id="DebtAmount" type="number" placeholder="Debt Amount"/>
+            </div>
+            <hr style="border-color: transparent;">
+            <div class="form-group">
+              <label for="DebtNotes">Debt Notes</label>
+              <textarea id="DebtNotes" rows="4" placeholder="Debt Notes..."></textarea>
+            </div>
+          </div>
+
+          <hr style="border-color: rgba(255,255,255,.08); margin: 18px 0;">
+          <h3 style="margin:0 0 10px;font-weight:900;">Items</h3>
+          <p class="hint">Add products and quantities (frontend only for now; backend wiring later).</p>
+          <div class="table-wrapper table-card" style="margin-top:10px;">
+            <table class="salesinvoices-table">
+              <thead>
+                <tr>
+                  <th style="width:60px;">#</th>
+                  <th>Product</th>
+                  <th style="width:140px;">Qty</th>
+                  <th style="width:120px;text-align:right;">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="itemsRows"></tbody>
+            </table>
+          </div>
+          <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+            <button type="button" class="btn-secondary" id="btnAddItem">+ Add Item</button>
+            <div class="hint" id="itemsMsg"></div>
+          </div>
+
+          <div class="form-actions"
+            style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+            <button id="btnSave" type="button" class="btn-primary">Save</button>
+            <a href="index.html" class="btn-light">Cancel</a>
+            <div id="pageMsg" class="hint"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="common.js"></script>
+  <script src="create.js"></script>
+  <script>document.getElementById('btnSave').addEventListener('click', createItem); if (typeof initPage === 'function') initPage();</script>
+</body>
+
+</html>

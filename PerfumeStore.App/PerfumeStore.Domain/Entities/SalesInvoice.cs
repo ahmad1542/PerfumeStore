@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace PerfumeStore.Domain.Entities;
+﻿namespace PerfumeStore.Domain.Entities;
 
 public class SalesInvoice {
     public long ID { get; set; }

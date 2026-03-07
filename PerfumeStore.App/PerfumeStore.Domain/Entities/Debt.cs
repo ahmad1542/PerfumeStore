@@ -1,7 +1,5 @@
-﻿namespace PerfumeStore.Domain.Entities
-{
-    public class Debt : BaseEntity
-    {
+﻿namespace PerfumeStore.Domain.Entities {
+    public class Debt : BaseEntity {
         public int Id { get; set; }
 
         public decimal Amount { get; set; }
