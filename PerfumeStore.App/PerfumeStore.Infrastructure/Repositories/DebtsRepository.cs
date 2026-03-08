@@ -1,11 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using PerfumeStore.Domain.Entities;
+using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
 using PerfumeStore.Infrastructure.Persistence;
 
 namespace PerfumeStore.Infrastructure.Repositories {
     public class DebtsRepository(PerfumeStoreDbContext dbContext) : IDebtsRepository {
         public async Task<int> AddAsync(Debt debt) {
+            if (debt == null)
+                throw new NotFoundException(nameof(Debt), debt.Id.ToString());
             await dbContext.Debts.AddAsync(debt);
             await dbContext.SaveChangesAsync();
             return debt.Id;
