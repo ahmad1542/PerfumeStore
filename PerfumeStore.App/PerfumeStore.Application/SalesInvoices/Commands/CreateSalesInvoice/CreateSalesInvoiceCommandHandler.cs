@@ -8,7 +8,7 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice {
         public async Task<long> Handle(CreateSalesInvoiceCommand request, CancellationToken cancellationToken) {
             var salesInvoice = mapper.Map<SalesInvoice>(request);
             await salesInvoicesRepository.AddAsync(salesInvoice, request.Products);
-            await debtsRepository.AddAsync(salesInvoice.Debt!);
+            // await debtsRepository.AddAsync(salesInvoice.Debt!);
             return salesInvoice.ID;
         }
     }

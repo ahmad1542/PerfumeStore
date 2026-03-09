@@ -1,7 +1,7 @@
 function buildBodyFromForm() {
   const body = {};
   body['Date'] = $('Date').value || null;
-  body['CustomerPhone'] = $('CustomerPhone').value || null;
+  body['CustomerName'] = $('CustomerName').value || null;
   body['AmountPaid'] = Number($('AmountPaid').value || 0);
   body['HasDebt'] = !!$('HasDebt').checked;
   body['DebtAmount'] = Number($('DebtAmount').value || 0);

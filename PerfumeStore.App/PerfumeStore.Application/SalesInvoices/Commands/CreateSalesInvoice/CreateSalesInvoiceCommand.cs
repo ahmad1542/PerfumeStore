@@ -1,6 +1,4 @@
 ﻿using MediatR;
-using PerfumeStore.Application.Products.Dtos;
-using PerfumeStore.Domain.Entities;
 
 namespace PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice {
     public class CreateSalesInvoiceCommand : IRequest<long> {
@@ -16,6 +14,6 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice {
         public decimal? DebtAmount { get; set; }
         public string? DebtNotes { get; set; }
         public bool HasDebt { get; set; } = false;
-        public Dictionary<int, int> Products{ get; set; } = [];
+        public Dictionary<int, int> Products { get; set; } = [];
     }
 }

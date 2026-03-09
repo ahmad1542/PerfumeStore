@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer</th><th>AmountPaid</th><th>Debt Amount</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer Name</th><th>AmountPaid</th><th>Debt Amount</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -11,15 +11,30 @@ async function loadList(searchText = "") {
   const emptyState = $("emptyState");
   const tableCard = $("tableCard");
   const countChip = $("countChip");
+  const fromDate = $("fromDateInput")?.value?.trim() || "";
+  const toDate = $("toDateInput")?.value?.trim() || "";
 
   if (!tbody) return;
 
   setMsg("pageMsg", "Loading...", false);
 
-  const url =
-    searchText && searchText.trim().length > 0
-      ? `${API}?search=${encodeURIComponent(searchText.trim())}`
-      : API;
+  const params = new URLSearchParams();
+
+  if (searchText && searchText.trim().length > 0) {
+    params.append("search", searchText.trim());
+  }
+
+  if (fromDate) {
+    params.append("fromDate", fromDate);
+  }
+
+  if (toDate) {
+    params.append("toDate", toDate);
+  }
+
+  const url = params.toString()
+    ? `${API}?${params.toString()}`
+    : API;
 
   let list = [];
   try {
@@ -55,9 +70,9 @@ async function loadList(searchText = "") {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
     cells.push(escapeHtml(x.date ?? x.Date ?? ''));
-    cells.push(escapeHtml((x.customer?.name ?? x.Customer?.Name ?? x.customerName ?? x.CustomerName ?? x.customerId ?? x.CustomerID ?? '-')));
+    cells.push(escapeHtml((x.customerName ?? x.CustomerName ?? x.customer?.name ?? x.Customer?.Name ?? '-')));
     cells.push(escapeHtml(x.amountPaid ?? x.AmountPaid ?? 0));
-    cells.push(escapeHtml((x.debt?.amount ?? x.Debt?.Amount ?? 0)));
+    cells.push(escapeHtml((x.debtAmount ?? x.DebtAmount ?? x.debt?.amount ?? x.Debt?.Amount ?? 0)));
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
