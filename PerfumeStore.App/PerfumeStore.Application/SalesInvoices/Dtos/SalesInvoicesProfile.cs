@@ -17,7 +17,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                 .ForMember(d => d.ReceiptVouchers, opt => opt.Ignore())
                 .ForMember(d => d.SalesInvoiceItems, opt => opt.Ignore())
                 .ForMember(d => d.Debt, opt => opt.MapFrom((src, dest) =>
-                    (src.DebtAmount.HasValue && src.DebtAmount.Value > 0)
+                    (src.HasDebt && src.DebtAmount.HasValue && src.DebtAmount.Value > 0)
                         ? new Debt {
                             Amount = src.DebtAmount.Value,
                             Notes = src.DebtNotes,

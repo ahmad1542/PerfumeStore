@@ -21,6 +21,8 @@ namespace PerfumeStore.Infrastructure.Extensions {
             services.AddScoped<IInventoryRepository, InventoryRepository>();
             services.AddScoped<IMoneyAccountsRepository, MoneyAccountsRepository>();
             services.AddScoped<IMoneyTransactionsRepository, MoneyTransactionsRepository>();
+            services.AddScoped<ISalesInvoicesRepository, SalesInvoicesRepository>();
+            services.AddScoped<IDebtsRepository, DebtsRepository>();
         }
 
     }
