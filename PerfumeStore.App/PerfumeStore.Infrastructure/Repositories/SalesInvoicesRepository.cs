@@ -60,7 +60,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
                 .Include(p => p.Customer)
                 .Include(p => p.Debt)
                 .Include(p => p.ReceiptVouchers)
-                .Include(p => p.SalesInvoiceItems).FirstOrDefaultAsync(s => s.ID == id);
+                .Include(p => p.SalesInvoiceItems).ThenInclude(i => i.Product).FirstOrDefaultAsync(s => s.ID == id);
 
             return salesInvoice;
         }

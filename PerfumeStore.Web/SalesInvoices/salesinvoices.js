@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer Name</th><th>AmountPaid</th><th>Debt Amount</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer Name</th><th>AmountPaid</th><th>Debt Amount</th><th>Products Count</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -69,10 +69,12 @@ async function loadList(searchText = "") {
   list.forEach((x, index) => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
-    cells.push(escapeHtml(x.date ?? x.Date ?? ''));
+    const rawDate = x.date ?? x.Date ?? '';
+    cells.push(escapeHtml(formatDateOnly(rawDate)));
     cells.push(escapeHtml((x.customerName ?? x.CustomerName ?? x.customer?.name ?? x.Customer?.Name ?? '-')));
     cells.push(escapeHtml(x.amountPaid ?? x.AmountPaid ?? 0));
     cells.push(escapeHtml((x.debtAmount ?? x.DebtAmount ?? x.debt?.amount ?? x.Debt?.Amount ?? 0)));
+    cells.push(escapeHtml((x.productsCount ?? x.ProductsCount ?? 0)));
 
     const tr = document.createElement("tr");
     tr.innerHTML = `

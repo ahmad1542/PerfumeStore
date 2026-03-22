@@ -112,3 +112,8 @@ function getFriendlyMessage(err) {
 
     return 'Something went wrong. Please try again.';
 }
+
+function formatDateOnly(dateStr) {
+  if (!dateStr) return "";
+  return dateStr.split('T')[0];
+}

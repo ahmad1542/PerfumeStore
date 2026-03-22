@@ -1,8 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PerfumeStore.Application.Brands.Commands.CreateBrand;
-using PerfumeStore.Application.Brands.Commands.UpdateBrand;
-using PerfumeStore.Application.Brands.Queries.GetAllBrands;
 using PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice;
 using PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice;
 using PerfumeStore.Application.SalesInvoices.Dtos;
@@ -15,7 +12,7 @@ namespace PerfumeStore.API.Controllers {
     public class SalesInvoicesController(IMediator mediator) : ControllerBase {
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<SalesInvoiceDto?>> GetById([FromRoute] long id) {
+        public async Task<ActionResult<SalesInvoiceDetailsDto?>> GetById([FromRoute] long id) {
             var salesInvoice = await mediator.Send(new GetSalesInvoiceByIdQuery(id));
 
             return Ok(salesInvoice);

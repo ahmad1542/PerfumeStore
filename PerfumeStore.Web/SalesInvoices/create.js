@@ -1,13 +1,15 @@
 function buildBodyFromForm() {
   const body = {};
   body['Date'] = $('Date').value || null;
-  body['CustomerName'] = $('CustomerName').value || null;
+  body['CustomerId'] = $('CustomerId').value || null;
   body['AmountPaid'] = Number($('AmountPaid').value || 0);
   body['HasDebt'] = !!$('HasDebt').checked;
   body['DebtAmount'] = Number($('DebtAmount').value || 0);
   body['DebtNotes'] = $('DebtNotes').value || null;
   body['Notes'] = $('Notes').value || null;
-  body['Items'] = (window._items || []).map(x => ({ ProductID: x.productId, Quantity: x.qty }));
+  body['Products'] = Object.fromEntries(
+    (window._items || []).map(x => [x.productId, x.qty])
+  );
   return body;
 }
 
@@ -59,16 +61,29 @@ async function initPage() {
 async function fillPeopleSelect(selectId, apiUrl) {
   const el = $(selectId);
   if (!el) return;
+
   el.innerHTML = `<option value="">-- Select --</option>`;
+
   let list = [];
-  try { list = await apiGetJson(apiUrl); } catch { list = []; }
+  try {
+    list = await apiGetJson(apiUrl);
+  } catch {
+    list = [];
+  }
+
   (Array.isArray(list) ? list : []).forEach(p => {
+    const id = p.id ?? p.ID ?? p.customerId ?? p.CustomerId ?? "";
     const phone = p.phone ?? p.Phone ?? "";
     const name = p.name ?? p.Name ?? "";
-    if (!phone) return;
+
+    if (!id) return;
+
     const opt = document.createElement("option");
-    opt.value = phone;
-    opt.textContent = name ? `${name} (${phone})` : phone;
+    opt.value = id;
+    opt.textContent = name
+      ? phone ? `${name} (${phone})` : name
+      : id;
+
     el.appendChild(opt);
   });
 }
