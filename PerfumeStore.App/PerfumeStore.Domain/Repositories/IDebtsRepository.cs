@@ -5,6 +5,7 @@ namespace PerfumeStore.Domain.Repositories {
         Task<Debt?> GetByIdAsync(int id);
         Task<IEnumerable<Debt>> GetAllAsync(string? search = null);
         Task<int> AddAsync(Debt debt);
+        Task SoftDeleteAsync(Debt debt);
         Task SaveChangesAsync();
     }
 }

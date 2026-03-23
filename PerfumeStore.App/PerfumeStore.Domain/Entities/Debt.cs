@@ -13,6 +13,8 @@
 
         public Guid? PersonId { get; set; }
         public Person? Person { get; set; }
+
+        public bool IsDeleted { get; set; } = false;
     }
 
 }

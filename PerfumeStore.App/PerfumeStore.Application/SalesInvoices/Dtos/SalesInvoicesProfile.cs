@@ -9,7 +9,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
         public SalesInvoicesProfile() {
             CreateMap<SalesInvoice, SalesInvoiceDto>()
                 .ForMember(d => d.CustomerName, opt => opt.MapFrom(s => s.Customer != null ? s.Customer.Name : null))
-                .ForMember(d => d.DebtAmount, opt => opt.MapFrom(s => s.Debt != null ? s.Debt.Amount : 0))
+                .ForMember(d => d.DebtAmount, opt => opt.MapFrom(s => s.Debt != null && !s.Debt.IsDeleted ? s.Debt.Amount : 0))
                 .ForMember(d => d.ProductsCount, opt => opt.MapFrom(s => s.SalesInvoiceItems != null ? s.SalesInvoiceItems.Count : 0));
 
 
@@ -20,7 +20,8 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                 .ForMember(d => d.CustomerName, opt => opt.MapFrom(s => s.Customer != null ? s.Customer.Name : null))
                 .ForMember(d => d.DebtAmount, opt => opt.MapFrom(s => s.Debt != null ? s.Debt.Amount : 0))
                 .ForMember(d => d.ProductsCount, opt => opt.MapFrom(s => s.SalesInvoiceItems.Count))
-                .ForMember(d => d.Products, opt => opt.MapFrom(s => s.SalesInvoiceItems));
+                .ForMember(d => d.Products, opt => opt.MapFrom(s => s.SalesInvoiceItems))
+                .ForMember(d => d.DebtAmount, opt => opt.MapFrom(s => s.Debt != null && !s.Debt.IsDeleted ? s.Debt.Amount : 0));
 
             CreateMap<CreateSalesInvoiceCommand, SalesInvoice>()
                 .ForMember(d => d.ID, opt => opt.Ignore())

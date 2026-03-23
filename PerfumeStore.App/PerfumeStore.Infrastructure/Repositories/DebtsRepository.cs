@@ -7,8 +7,6 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Repositories {
     public class DebtsRepository(PerfumeStoreDbContext dbContext) : IDebtsRepository {
         public async Task<int> AddAsync(Debt debt) {
-            if (debt == null)
-                throw new NotFoundException(nameof(Debt), debt.Id.ToString());
             await dbContext.Debts.AddAsync(debt);
             await dbContext.SaveChangesAsync();
             return debt.Id;
@@ -21,6 +19,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
                 search = search.Trim();
 
                 query = query.Where(d =>
+                    !d.IsDeleted ||
                     d.Id.ToString().Contains(search) ||
                     d.Amount.ToString().Contains(search) ||
                     (d.Notes != null && d.Notes.Contains(search)) ||
@@ -35,8 +34,13 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<Debt?> GetByIdAsync(int id) {
-            var debt = await dbContext.Debts.FirstOrDefaultAsync(s => s.Id == id);
+            var debt = await dbContext.Debts.FirstOrDefaultAsync(s => s.Id == id && !s.IsDeleted);
             return debt;
+        }
+
+        public async Task SoftDeleteAsync(Debt debt) {
+            debt.IsDeleted = true;
+            await dbContext.SaveChangesAsync();
         }
 
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();

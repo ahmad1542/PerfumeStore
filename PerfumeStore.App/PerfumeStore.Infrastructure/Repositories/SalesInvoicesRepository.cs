@@ -65,6 +65,25 @@ namespace PerfumeStore.Infrastructure.Repositories {
             return salesInvoice;
         }
 
+        public async Task UpdateProductsAsync(long salesInvoiceId, Dictionary<int, int> products) {
+            var oldItems = dbContext.SalesInvoiceItems.Where(x => x.SalesInvoiceID == salesInvoiceId);
+            dbContext.SalesInvoiceItems.RemoveRange(oldItems);
+
+            foreach (var product in products) {
+                if (!await CheckIfProductExist(product.Key)) {
+                    throw new NotFoundException(nameof(Product), product.Key.ToString());
+                }
+
+                await dbContext.SalesInvoiceItems.AddAsync(new SalesInvoiceItem {
+                    SalesInvoiceID = salesInvoiceId,
+                    ProductID = product.Key,
+                    Quantity = product.Value
+                });
+            }
+
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
 
         private async Task<bool> CheckIfProductExist(int id) {
