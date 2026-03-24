@@ -1,24 +1,40 @@
 async function initPage() {
   try {
-    await fillPeopleSelect('CustomerPhone', 'https://localhost:7209/api/Customers');
+    await fillPeopleSelect("CustomerId", "https://localhost:7209/api/Customers");
+    await fillMoneyAccounts("MoneyAccountId");
     setupInvoiceItems();
-    wireDebtToggle();
-  } catch (e) { console.error(e); }
+    wireDebtAndPaymentRules();
+  } catch (e) {
+    console.error(e);
+  }
 }
 
 async function fillPeopleSelect(selectId, apiUrl) {
   const el = $(selectId);
   if (!el) return;
+
   el.innerHTML = `<option value="">-- Select --</option>`;
+
   let list = [];
-  try { list = await apiGetJson(apiUrl); } catch { list = []; }
-  (Array.isArray(list) ? list : []).forEach(p => {
+  try {
+    list = await apiGetJson(apiUrl);
+  } catch {
+    list = [];
+  }
+
+  (Array.isArray(list) ? list : []).forEach((p) => {
+    const id = p.id ?? p.ID ?? p.Id ?? "";
     const phone = p.phone ?? p.Phone ?? "";
     const name = p.name ?? p.Name ?? "";
-    if (!phone) return;
+
+    if (!id) return;
+
     const opt = document.createElement("option");
-    opt.value = phone;
-    opt.textContent = name ? `${name} (${phone})` : phone;
+    opt.value = id;
+    opt.textContent = name
+      ? `${name}${phone ? ` (${phone})` : ""}`
+      : `Customer #${id}`;
+
     el.appendChild(opt);
   });
 }
@@ -26,13 +42,22 @@ async function fillPeopleSelect(selectId, apiUrl) {
 async function fillMoneyAccounts(selectId) {
   const el = $(selectId);
   if (!el) return;
+
   el.innerHTML = `<option value="">-- Select --</option>`;
+
   let list = [];
-  try { list = await apiGetJson("https://localhost:7209/api/MoneyAccounts"); } catch { list = []; }
-  (Array.isArray(list) ? list : []).forEach(a => {
+  try {
+    list = await apiGetJson("https://localhost:7209/api/MoneyAccounts");
+  } catch {
+    list = [];
+  }
+
+  (Array.isArray(list) ? list : []).forEach((a) => {
     const id = a.id ?? a.ID ?? a.Id ?? "";
-    const name = a.accountName ?? a.AccountName ?? ("Account #" + id);
+    const name = a.accountName ?? a.AccountName ?? a.name ?? a.Name ?? ("Account #" + id);
+
     if (id === "") return;
+
     const opt = document.createElement("option");
     opt.value = id;
     opt.textContent = name;
@@ -42,13 +67,22 @@ async function fillMoneyAccounts(selectId) {
 
 async function fillProductsToElement(selectEl) {
   if (!selectEl) return;
+
   selectEl.innerHTML = `<option value="">-- Select product --</option>`;
+
   let list = [];
-  try { list = await apiGetJson("https://localhost:7209/api/Products"); } catch { list = []; }
-  (Array.isArray(list) ? list : []).forEach(p => {
-    const id = p.id ?? p.ID ?? "";
+  try {
+    list = await apiGetJson("https://localhost:7209/api/Products");
+  } catch {
+    list = [];
+  }
+
+  (Array.isArray(list) ? list : []).forEach((p) => {
+    const id = p.id ?? p.ID ?? p.Id ?? "";
     const name = p.name ?? p.Name ?? ("Product #" + id);
+
     if (id === "") return;
+
     const opt = document.createElement("option");
     opt.value = id;
     opt.textContent = name;
@@ -56,133 +90,349 @@ async function fillProductsToElement(selectEl) {
   });
 }
 
-function wireDebtToggle() {
-  const cb = $("HasDebt");
-  const amount = $("DebtAmount");
-  const notes = $("DebtNotes");
-  function apply() {
-    const on = !!cb?.checked;
-    if (amount) amount.disabled = !on;
-    if (notes) notes.disabled = !on;
+function wireDebtAndPaymentRules() {
+  const amountPaidInput = $("AmountPaid");
+  const moneyAccountSelect = $("MoneyAccountId");
+  const hasDebtCheckbox = $("HasDebt");
+  const debtGroup = $("debt-group");
+  const debtAmountInput = $("DebtAmount");
+  const debtNotesInput = $("DebtNotes");
+
+  function applyRules() {
+    const amountPaid = Number(amountPaidInput?.value || 0);
+    const hasDebt = !!hasDebtCheckbox?.checked;
+
+    if (moneyAccountSelect) {
+      if (amountPaid > 0) {
+        moneyAccountSelect.disabled = false;
+        moneyAccountSelect.required = true;
+      } else {
+        moneyAccountSelect.disabled = true;
+        moneyAccountSelect.required = false;
+        moneyAccountSelect.value = "";
+      }
+    }
+
+    if (amountPaid <= 0) {
+      if (hasDebtCheckbox) {
+        hasDebtCheckbox.checked = true;
+        hasDebtCheckbox.disabled = true;
+      }
+
+      if (debtGroup) debtGroup.style.display = "block";
+      if (debtAmountInput) {
+        debtAmountInput.disabled = false;
+        debtAmountInput.required = true;
+      }
+      if (debtNotesInput) {
+        debtNotesInput.disabled = false;
+      }
+
+      return;
+    }
+
+    if (hasDebtCheckbox) {
+      hasDebtCheckbox.disabled = false;
+    }
+
+    if (hasDebt) {
+      if (debtGroup) debtGroup.style.display = "block";
+      if (debtAmountInput) {
+        debtAmountInput.disabled = false;
+        debtAmountInput.required = true;
+      }
+      if (debtNotesInput) {
+        debtNotesInput.disabled = false;
+      }
+    } else {
+      if (debtGroup) debtGroup.style.display = "none";
+      if (debtAmountInput) {
+        debtAmountInput.disabled = true;
+        debtAmountInput.required = false;
+        debtAmountInput.value = "";
+      }
+      if (debtNotesInput) {
+        debtNotesInput.disabled = true;
+        debtNotesInput.value = "";
+      }
+    }
   }
-  if (cb) cb.addEventListener("change", apply);
-  apply();
+
+  if (amountPaidInput) {
+    amountPaidInput.addEventListener("input", applyRules);
+  }
+
+  if (hasDebtCheckbox) {
+    hasDebtCheckbox.addEventListener("change", applyRules);
+  }
+
+  applyRules();
 }
 
 function setupInvoiceItems() {
   window._items = [];
+
   const btn = $("btnAddItem");
-  if (btn) btn.addEventListener("click", () => addItemRow());
-  addItemRow();
+  if (btn) {
+    btn.addEventListener("click", () => addItemRow());
+  }
 }
 
-function addItemRow() {
+async function loadExistingItems(items) {
   const rows = $("itemsRows");
   if (!rows) return;
-  const idx = rows.querySelectorAll('tr').length + 1;
-  const tr = document.createElement('tr');
+
+  rows.innerHTML = "";
+
+  const list = Array.isArray(items) ? items : [];
+
+  if (!list.length) {
+    addItemRow();
+    rebuildItemsFromUI();
+    return;
+  }
+
+  for (const item of list) {
+    await addItemRow({
+      productId:
+        item.productId ??
+        item.ProductId ??
+        item.ProductID ??
+        item.productID ??
+        "",
+      qty:
+        item.quantity ??
+        item.Quantity ??
+        item.qty ??
+        1
+    });
+  }
+
+  rebuildItemsFromUI();
+}
+
+async function addItemRow(initialData = null) {
+  const rows = $("itemsRows");
+  if (!rows) return;
+
+  const tr = document.createElement("tr");
   tr.innerHTML = `
-    <td>${idx}</td>
+    <td></td>
     <td><select class="search-input" data-role="product"></select></td>
     <td><input class="search-input" type="number" min="1" value="1" data-role="qty" /></td>
     <td style="text-align:right;">
       <button type="button" class="btn-light" data-role="remove">Remove</button>
     </td>
   `;
+
   rows.appendChild(tr);
 
   const productSel = tr.querySelector('select[data-role="product"]');
-  fillProductsToElement(productSel);
+  const qtyInput = tr.querySelector('input[data-role="qty"]');
 
-  tr.querySelector('[data-role="remove"]').addEventListener('click', () => {
+  await fillProductsToElement(productSel);
+
+  if (initialData) {
+    if (productSel && initialData.productId) {
+      productSel.value = String(initialData.productId);
+    }
+
+    if (qtyInput) {
+      qtyInput.value = String(Number(initialData.qty || 1));
+    }
+  }
+
+  tr.querySelector('[data-role="remove"]').addEventListener("click", () => {
     tr.remove();
+    rebuildRowNumbers();
     rebuildItemsFromUI();
+
+    const rowsCount = $("itemsRows")?.querySelectorAll("tr").length || 0;
+    if (rowsCount === 0) {
+      addItemRow();
+    }
   });
 
-  tr.querySelector('[data-role="qty"]').addEventListener('input', rebuildItemsFromUI);
-  productSel.addEventListener('change', rebuildItemsFromUI);
+  qtyInput.addEventListener("input", rebuildItemsFromUI);
+  productSel.addEventListener("change", rebuildItemsFromUI);
 
+  rebuildRowNumbers();
   rebuildItemsFromUI();
+}
+
+function rebuildRowNumbers() {
+  const rows = $("itemsRows");
+  if (!rows) return;
+
+  rows.querySelectorAll("tr").forEach((tr, index) => {
+    const firstCell = tr.querySelector("td");
+    if (firstCell) firstCell.textContent = String(index + 1);
+  });
 }
 
 function rebuildItemsFromUI() {
   const rows = $("itemsRows");
   if (!rows) return;
+
   const items = [];
-  rows.querySelectorAll('tr').forEach(tr => {
+
+  rows.querySelectorAll("tr").forEach((tr) => {
     const pid = tr.querySelector('select[data-role="product"]')?.value || "";
     const qty = Number(tr.querySelector('input[data-role="qty"]')?.value || 0);
-    if (pid && qty > 0) items.push({ productId: Number(pid), qty });
+
+    if (pid && qty > 0) {
+      items.push({
+        productId: Number(pid),
+        qty: qty
+      });
+    }
   });
+
   window._items = items;
+
   const msg = $("itemsMsg");
-  if (msg) msg.textContent = items.length ? `${items.length} item(s) ready.` : "No items selected yet.";
+  if (msg) {
+    msg.textContent = items.length
+      ? `${items.length} item(s) ready.`
+      : "No items selected yet.";
+  }
 }
 
-
 async function initEdit() {
-  const id = getQueryParam('id');
+  const id = getQueryParam("id");
   if (!id) {
-    setMsg('pageMsg', 'Missing id in URL.', true);
+    setMsg("pageMsg", "Missing id in URL.", true);
     return;
   }
 
-  if (typeof initPage === 'function') await initPage();
+  if (typeof initPage === "function") {
+    await initPage();
+  }
 
-  setMsg('pageMsg', 'Loading...', false);
+  setMsg("pageMsg", "Loading...", false);
 
   try {
     const item = await apiGetJson(`${API}/${encodeURIComponent(id)}`);
-    if ($('Date')) $('Date').value = item.Date ?? item.date ?? item.Date ?? '';
-    if ($('CustomerPhone')) $('CustomerPhone').value = item.CustomerPhone ?? item.customerphone ?? item.Customerphone ?? '';
-    if ($('AmountPaid')) $('AmountPaid').value = item.AmountPaid ?? item.amountpaid ?? item.Amountpaid ?? '';
-    if ($('HasDebt')) $('HasDebt').checked = !!(item.HasDebt ?? item.hasdebt ?? false);
-    if ($('DebtAmount')) $('DebtAmount').value = item.DebtAmount ?? item.debtamount ?? item.Debtamount ?? '';
-    if ($('DebtNotes')) $('DebtNotes').value = item.DebtNotes ?? item.debtnotes ?? item.Debtnotes ?? '';
-    if ($('Notes')) $('Notes').value = item.Notes ?? item.notes ?? item.Notes ?? '';
 
-    setMsg('pageMsg', '');
+    if ($("Date")) {
+      const rawDate = item.Date ?? item.date ?? "";
+      $("Date").value = rawDate ? String(rawDate).split("T")[0] : "";
+    }
+
+    if ($("CustomerId")) {
+      $("CustomerId").value = String(
+        item.CustomerId ??
+        item.customerId ??
+        item.CustomerID ??
+        ""
+      );
+    }
+
+    if ($("AmountPaid")) {
+      $("AmountPaid").value = item.AmountPaid ?? item.amountPaid ?? 0;
+    }
+
+    if ($("MoneyAccountId")) {
+      $("MoneyAccountId").value = String(
+        item.MoneyAccountId ??
+        item.moneyAccountId ??
+        item.MoneyAccountID ??
+        ""
+      );
+    }
+
+    const debtAmountValue = item.DebtAmount ?? item.debtAmount ?? "";
+    const hasDebtValue =
+      item.HasDebt ??
+      item.hasDebt ??
+      (debtAmountValue !== null && debtAmountValue !== undefined && Number(debtAmountValue) > 0);
+
+    if ($("HasDebt")) {
+      $("HasDebt").checked = !!hasDebtValue;
+    }
+
+    if ($("DebtAmount")) {
+      $("DebtAmount").value = debtAmountValue;
+    }
+
+    if ($("DebtNotes")) {
+      $("DebtNotes").value = item.DebtNotes ?? item.debtNotes ?? "";
+    }
+
+    if ($("Notes")) {
+      $("Notes").value = item.Notes ?? item.notes ?? "";
+    }
+
+    if (typeof wireDebtAndPaymentRules === "function") {
+      wireDebtAndPaymentRules();
+    }
+
+    await loadExistingItems(
+      item.Products ??
+      item.products ??
+      item.Items ??
+      item.items ??
+      []
+    );
+
+    setMsg("pageMsg", "");
   } catch (e) {
     const validationMsg = getFriendlyMessage(e);
 
     setMsg(
-      'pageMsg',
-      validationMsg ?? 'Failed to load record from API. Check console for details.',
+      "pageMsg",
+      validationMsg ?? "Failed to load record from API. Check console for details.",
       true
     );
     console.error(e);
     return;
   }
 
-  const btn = $('btnSave');
-  if (btn) btn.addEventListener('click', () => updateItem(id));
+  const btn = $("btnSave");
+  if (btn) {
+    btn.addEventListener("click", () => updateItem(id));
+  }
 }
 
 function buildBodyFromForm() {
+  const amountPaid = Number($("AmountPaid")?.value || 0);
+  const hasDebt = !!$("HasDebt")?.checked;
+
   const body = {};
-  body['Date'] = $('Date').value || null;
-  body['CustomerPhone'] = $('CustomerPhone').value || null;
-  body['AmountPaid'] = Number($('AmountPaid').value || 0);
-  body['HasDebt'] = !!$('HasDebt').checked;
-  body['DebtAmount'] = Number($('DebtAmount').value || 0);
-  body['DebtNotes'] = $('DebtNotes').value || null;
-  body['Notes'] = $('Notes').value || null;
-  body['Items'] = (window._items || []).map(x => ({ ProductID: x.productId, Quantity: x.qty }));
+  body["Date"] = $("Date")?.value || null;
+  body["CustomerId"] = $("CustomerId")?.value || null;
+  body["AmountPaid"] = amountPaid;
+  body["MoneyAccountId"] = amountPaid > 0
+    ? (Number($("MoneyAccountId")?.value || 0) || null)
+    : null;
+  body["HasDebt"] = hasDebt || amountPaid <= 0;
+  body["DebtAmount"] = (hasDebt || amountPaid <= 0)
+    ? (Number($("DebtAmount")?.value || 0) || 0)
+    : 0;
+  body["DebtNotes"] = (hasDebt || amountPaid <= 0)
+    ? ($("DebtNotes")?.value || null)
+    : null;
+  body["Notes"] = $("Notes")?.value || null;
+  body['Products'] = Object.fromEntries(
+    (window._items || []).map(x => [x.productId, x.qty])
+  );
+
   return body;
 }
 
 async function updateItem(id) {
-  setMsg('pageMsg', 'Saving...', false);
+  setMsg("pageMsg", "Saving...", false);
+
   try {
     const body = buildBodyFromForm();
-    await apiSendJson(`${API}/${encodeURIComponent(id)}`, 'PATCH', body);
-    window.location.href = 'index.html';
+    await apiSendJson(`${API}/${encodeURIComponent(id)}`, "PATCH", body);
+    window.location.href = "index.html";
   } catch (e) {
     const validationMsg = getFriendlyMessage(e);
 
     setMsg(
-      'pageMsg',
-      validationMsg ?? 'Update failed. Please check your input and try again.',
+      "pageMsg",
+      validationMsg ?? "Update failed. Please check your input and try again.",
       true
     );
     console.error(e);

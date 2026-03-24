@@ -38,31 +38,46 @@
             <label for="Date">Date <span class="req">*</span></label>
             <input id="Date" type="date" placeholder="Date" required />
           </div>
+          <hr style="border-color: transparent;">
           <div class="form-group">
-            <label for="CustomerPhone">Customer Phone</label>
-            <select id="CustomerPhone" class="search-input"></select>
+            <label for="CustomerId">Customer</label>
+            <select id="CustomerId" class="search-input"></select>
           </div>
+          <hr style="border-color: transparent;">
           <div class="form-group">
             <label for="AmountPaid">Amount Paid <span class="req">*</span></label>
             <input id="AmountPaid" type="number" placeholder="Amount Paid" required />
           </div>
+          <hr style="border-color: transparent;">
           <div class="form-group">
-            <label style="display:flex;align-items:center;gap:10px;">
-              <input id="HasDebt" type="checkbox" />
-              <span>Has Debt</span>
-            </label>
+            <label for="MoneyAccountId">Money Account <span class="req">*</span></label><br>
+            <select id="MoneyAccountId" class="search-input">
+            </select>
           </div>
-          <div class="form-group">
-            <label for="DebtAmount">Debt Amount</label>
-            <input id="DebtAmount" type="number" placeholder="Debt Amount" />
-          </div>
-          <div class="form-group">
-            <label for="DebtNotes">Deb\1 \2otes</label>
-            <textarea id="DebtNotes" rows="4" placeholder="Deb\1 \2otes..."></textarea>
-          </div>
+          <hr style="border-color: transparent;">
           <div class="form-group">
             <label for="Notes">Notes</label>
             <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>
+          </div>
+          <div class="form-group">
+            <hr style="border-color: transparent;">
+            <label class="chk">
+              <input type="checkbox" id="HasDebt" />
+              <span class="chk-box" aria-hidden="true"></span>
+              <span class="chk-text">Has Debt</span>
+            </label>
+          </div>
+          <div id="debt-group">
+            <hr style="border-color: transparent;">
+            <div class="form-group">
+              <label for="DebtAmount">Debt Amount <span class="req">*</span></label>
+              <input id="DebtAmount" type="number" placeholder="Debt Amount"/>
+            </div>
+            <hr style="border-color: transparent;">
+            <div class="form-group">
+              <label for="DebtNotes">Debt Notes</label>
+              <textarea id="DebtNotes" rows="4" placeholder="Debt Notes..."></textarea>
+            </div>
           </div>
 
           <hr style="border-color: rgba(255,255,255,.08); margin: 18px 0;">

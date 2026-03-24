@@ -232,6 +232,11 @@ public partial class PerfumeStoreDbContext : DbContext {
         modelBuilder.Entity<SalesInvoice>(entity => {
             entity.HasKey(e => e.ID);
 
+            entity.HasOne(x => x.MoneyAccount)
+                .WithMany()
+                .HasForeignKey(x => x.MoneyAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_SalesInvoices_InvoiceDate");

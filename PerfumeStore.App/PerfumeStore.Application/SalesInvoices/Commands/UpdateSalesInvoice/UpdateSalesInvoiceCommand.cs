@@ -10,6 +10,7 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
         public Guid? CustomerId { get; set; }
 
         public decimal AmountPaid { get; set; }
+        public int? MoneyAccountId { get; set; }
 
         public decimal? DebtAmount { get; set; }
         public string? DebtNotes { get; set; }

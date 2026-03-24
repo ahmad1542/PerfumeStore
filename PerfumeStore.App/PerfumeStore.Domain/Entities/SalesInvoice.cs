@@ -13,6 +13,10 @@ public class SalesInvoice {
     public decimal AmountPaid {  get; set; }
 
     public Debt? Debt { get; set; }
+    
+    public int? MoneyAccountId { get; set; }
+    public MoneyAccount? MoneyAccount { get; set; }
+
     public ICollection<ReceiptVoucher> ReceiptVouchers { get; private set; } = new List<ReceiptVoucher>();
 
     public ICollection<SalesInvoiceItem> SalesInvoiceItems { get; private set; } = new List<SalesInvoiceItem>();
