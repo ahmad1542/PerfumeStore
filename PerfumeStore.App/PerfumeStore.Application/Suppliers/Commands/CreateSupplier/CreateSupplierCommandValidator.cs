@@ -1,5 +1,4 @@
 ﻿using FluentValidation;
-using PerfumeStore.Application.Customers.Commands.CreateCustomer;
 
 namespace PerfumeStore.Application.Suppliers.Commands.CreateSupplier {
     public class CreateSupplierCommandValidator : AbstractValidator<CreateSupplierCommand> {

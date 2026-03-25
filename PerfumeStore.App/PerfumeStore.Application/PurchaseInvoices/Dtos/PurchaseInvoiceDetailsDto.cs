@@ -1,5 +1,7 @@
-﻿namespace PerfumeStore.Application.PurchaseInvoices.Dtos {
-    public class PurchaseInvoiceDto {
+﻿using PerfumeStore.Application.PurchaseInvoiceItems.Dtos;
+
+namespace PerfumeStore.Application.PurchaseInvoices.Dtos {
+    public class PurchaseInvoiceDetailsDto {
         public long ID { get; set; }
 
         public DateTime Date { get; set; } = DateTime.Now;
@@ -13,5 +15,7 @@
         public decimal? DebtAmount { get; set; }
 
         public int ProductsCount { get; set; }
+
+        public List<PurchaseInvoiceItemDetailsDto> Products { get; set; } = [];
     }
 }

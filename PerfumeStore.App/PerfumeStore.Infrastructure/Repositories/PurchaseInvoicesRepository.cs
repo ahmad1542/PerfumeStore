@@ -7,21 +7,34 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Repositories {
     public class PurchaseInvoicesRepository(PerfumeStoreDbContext dbContext) : IPurchaseInvoicesRepository {
         public async Task<long> AddAsync(PurchaseInvoice purchaseInvoice, Dictionary<int, int> products) {
-            await dbContext.PurchaseInvoices.AddAsync(purchaseInvoice);
-            await dbContext.SaveChangesAsync();
-            foreach (var product in products) {
-                if (!await CheckIfProductExist(product.Key)) {
-                    throw new NotFoundException(nameof(Product), product.Key.ToString());
-                }
-                await dbContext.PurchaseInvoiceItems.AddAsync(new PurchaseInvoiceItem {
-                    PurchaseInvoiceID = purchaseInvoice.ID,
-                    ProductID = product.Key,
-                    Quantity = product.Value
-                });
-            }
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
-            await dbContext.SaveChangesAsync();
-            return purchaseInvoice.ID;
+            try {
+                await dbContext.PurchaseInvoices.AddAsync(purchaseInvoice);
+                await dbContext.SaveChangesAsync();
+
+                foreach (var product in products) {
+                    if (!await CheckIfProductExist(product.Key)) {
+                        throw new NotFoundException(nameof(Product), product.Key.ToString());
+                    }
+
+                    await dbContext.PurchaseInvoiceItems.AddAsync(new PurchaseInvoiceItem {
+                        PurchaseInvoiceID = purchaseInvoice.ID,
+                        ProductID = product.Key,
+                        Quantity = product.Value
+                    });
+
+                    await IncreaseInventoryAsync(product.Key, product.Value);
+                }
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return purchaseInvoice.ID;
+            } catch {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task<IEnumerable<PurchaseInvoice>> GetAllAsync(string? search = null, DateTime? fromDate = null, DateTime? toDate = null) {
@@ -65,10 +78,42 @@ namespace PerfumeStore.Infrastructure.Repositories {
             return purchaseInvoice;
         }
 
+        public async Task UpdateProductsAsync(long purchaseInvoiceId, Dictionary<int, int> products) {
+            var oldItems = dbContext.PurchaseInvoiceItems.Where(x => x.PurchaseInvoiceID == purchaseInvoiceId);
+            dbContext.PurchaseInvoiceItems.RemoveRange(oldItems);
+
+            foreach (var product in products) {
+                if (!await CheckIfProductExist(product.Key)) {
+                    throw new NotFoundException(nameof(Product), product.Key.ToString());
+                }
+
+                await dbContext.PurchaseInvoiceItems.AddAsync(new PurchaseInvoiceItem {
+                    PurchaseInvoiceID = purchaseInvoiceId,
+                    ProductID = product.Key,
+                    Quantity = product.Value
+                });
+            }
+
+            await dbContext.SaveChangesAsync();
+        }
+
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
 
         private async Task<bool> CheckIfProductExist(int id) {
             return await dbContext.Products.AnyAsync(p => p.ID == id);
+        }
+
+        private async Task IncreaseInventoryAsync(int productId, int quantity) {
+            var inventory = await dbContext.Inventory.FirstOrDefaultAsync(i => i.ProductID == productId);
+
+            if (inventory == null) {
+                await dbContext.Inventory.AddAsync(new Inventory {
+                    ProductID = productId,
+                    Quantity = quantity
+                });
+            } else {
+                inventory.Quantity += quantity;
+            }
         }
     }
 }

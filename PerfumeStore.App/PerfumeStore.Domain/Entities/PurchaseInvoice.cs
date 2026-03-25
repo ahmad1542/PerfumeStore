@@ -11,10 +11,14 @@ public class PurchaseInvoice {
     public string? Notes { get; set; }
 
     public Guid SupplierId { get; set; }
-
     public Supplier Supplier { get; set; } = null!;
+
     public decimal AmountPaid { get; set; }
+
     public Debt? Debt { get; set; }
+
+    public int? MoneyAccountId { get; set; }
+    public MoneyAccount? MoneyAccount { get; set; }
     public ICollection<PaymentVoucher> PaymentVouchers { get; private set; } = new List<PaymentVoucher>();
 
     public ICollection<PurchaseInvoiceItem> PurchaseInvoiceItems { get; private set; } = new List<PurchaseInvoiceItem>();

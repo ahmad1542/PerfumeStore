@@ -1,0 +1,34 @@
+﻿using AutoMapper;
+using MediatR;
+using PerfumeStore.Domain.Entities;
+using PerfumeStore.Domain.Repositories;
+
+namespace PerfumeStore.Application.PurchaseInvoices.Commands.CreateSalesInvoice {
+    public class CreatePurchaseInvoiceCommandHandler(IPurchaseInvoicesRepository purchaseInvoicesRepository, IMoneyAccountsRepository moneyAccountsRepository, IMapper mapper) : IRequestHandler<CreatePurchaseInvoiceCommand, long> {
+        public async Task<long> Handle(CreatePurchaseInvoiceCommand request, CancellationToken cancellationToken) {
+            var purchaseInvoice = mapper.Map<PurchaseInvoice>(request);
+
+            MoneyAccount? account = null;
+
+            if (request.AmountPaid > 0) {
+                if (!request.MoneyAccountId.HasValue)
+                    throw new Exception("Money account is required when amount is paid.");
+
+                account = await moneyAccountsRepository.GetByIdAsync(request.MoneyAccountId.Value);
+
+                if (account == null)
+                    throw new Exception("Invalid money account.");
+            }
+
+            await purchaseInvoicesRepository.AddAsync(purchaseInvoice, request.Products);
+
+            if (request.AmountPaid > 0) {
+                account!.CurrentBalance += request.AmountPaid;
+                await moneyAccountsRepository.SaveChangesAsync();
+            }
+
+            // await debtsRepository.AddAsync(purchaseInvoice.Debt!);
+            return purchaseInvoice.ID;
+        }
+    }
+}
