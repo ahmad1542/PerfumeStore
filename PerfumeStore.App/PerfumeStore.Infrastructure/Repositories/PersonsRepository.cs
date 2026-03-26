@@ -12,7 +12,9 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task<IEnumerable<Person>> GetAllAsync(string? search = null) {
-            IQueryable<Person> query = dbContext.Persons;
+            IQueryable<Person> query = dbContext.Persons
+                .Where(p => p.GetType() == typeof(Person));
+
             if (!string.IsNullOrWhiteSpace(search)) {
                 query = query.Where(p => p.Name.Contains(search) || p.Phone.Contains(search));
             }
