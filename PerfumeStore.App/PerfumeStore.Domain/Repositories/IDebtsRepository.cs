@@ -7,5 +7,9 @@ namespace PerfumeStore.Domain.Repositories {
         Task<int> AddAsync(Debt debt);
         Task SoftDeleteAsync(Debt debt);
         Task SaveChangesAsync();
+
+        Task<bool> CheckIfSalesInvoiceExist(long id);
+        Task<bool> CheckIfPurchaseInvoiceExist(long id);
+        Task<bool> CheckIfPersonExist(Guid id);
     }
 }

@@ -57,11 +57,17 @@ namespace PerfumeStore.Infrastructure.Repositories {
             if (!string.IsNullOrWhiteSpace(search)) {
                 search = search.Trim();
 
+                bool isLong = long.TryParse(search, out var searchId);
+                bool isDecimal = decimal.TryParse(search, out var searchAmount);
+
                 query = query.Where(x =>
-                    x.ID.ToString().Contains(search) ||
-                    x.AmountPaid.ToString().Contains(search) ||
+                    (isLong && x.ID == searchId) ||
+                    (isDecimal && x.AmountPaid == searchAmount) ||
                     (x.Supplier != null && x.Supplier.Name.Contains(search)) ||
-                    (x.Debt != null && x.Debt.Amount.ToString().Contains(search))
+                    (isDecimal && (
+                        (x.Debt != null && x.Debt.Amount == searchAmount) ||
+                        (searchAmount == 0 && x.Debt == null)
+                    ))
                 );
             }
 
@@ -79,22 +85,41 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         public async Task UpdateProductsAsync(long purchaseInvoiceId, Dictionary<int, int> products) {
-            var oldItems = dbContext.PurchaseInvoiceItems.Where(x => x.PurchaseInvoiceID == purchaseInvoiceId);
-            dbContext.PurchaseInvoiceItems.RemoveRange(oldItems);
+            await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
-            foreach (var product in products) {
-                if (!await CheckIfProductExist(product.Key)) {
-                    throw new NotFoundException(nameof(Product), product.Key.ToString());
+            try {
+                var oldItems = await dbContext.PurchaseInvoiceItems
+                    .Where(x => x.PurchaseInvoiceID == purchaseInvoiceId)
+                    .ToListAsync();
+
+                // Remove old purchased quantities from inventory first
+                foreach (var oldItem in oldItems) {
+                    await DecreaseInventoryForPurchaseUpdateAsync(oldItem.ProductID, oldItem.Quantity);
                 }
 
-                await dbContext.PurchaseInvoiceItems.AddAsync(new PurchaseInvoiceItem {
-                    PurchaseInvoiceID = purchaseInvoiceId,
-                    ProductID = product.Key,
-                    Quantity = product.Value
-                });
-            }
+                dbContext.PurchaseInvoiceItems.RemoveRange(oldItems);
 
-            await dbContext.SaveChangesAsync();
+                foreach (var product in products) {
+                    if (!await CheckIfProductExist(product.Key)) {
+                        throw new NotFoundException(nameof(Product), product.Key.ToString());
+                    }
+
+                    await dbContext.PurchaseInvoiceItems.AddAsync(new PurchaseInvoiceItem {
+                        PurchaseInvoiceID = purchaseInvoiceId,
+                        ProductID = product.Key,
+                        Quantity = product.Value
+                    });
+
+                    // Apply the new purchase
+                    await IncreaseInventoryAsync(product.Key, product.Value);
+                }
+
+                await dbContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            } catch {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
 
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
@@ -104,7 +129,8 @@ namespace PerfumeStore.Infrastructure.Repositories {
         }
 
         private async Task IncreaseInventoryAsync(int productId, int quantity) {
-            var inventory = await dbContext.Inventory.FirstOrDefaultAsync(i => i.ProductID == productId);
+            var inventory = await dbContext.Inventory
+                .FirstOrDefaultAsync(x => x.ProductID == productId);
 
             if (inventory == null) {
                 await dbContext.Inventory.AddAsync(new Inventory {
@@ -114,6 +140,21 @@ namespace PerfumeStore.Infrastructure.Repositories {
             } else {
                 inventory.Quantity += quantity;
             }
+        }
+
+        private async Task DecreaseInventoryForPurchaseUpdateAsync(int productId, int quantity) {
+            var inventory = await dbContext.Inventory
+                .FirstOrDefaultAsync(x => x.ProductID == productId);
+
+            if (inventory == null) {
+                throw new Exception($"Inventory record not found for product id {productId}.");
+            }
+
+            if (inventory.Quantity < quantity) {
+                throw new Exception($"Cannot reverse old purchase invoice for product id {productId}. Available: {inventory.Quantity}, required: {quantity}");
+            }
+
+            inventory.Quantity -= quantity;
         }
     }
 }

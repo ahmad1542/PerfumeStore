@@ -73,8 +73,6 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
                 }
             }
 
-            await salesInvoicesRepository.SaveChangesAsync();
-
             await salesInvoicesRepository.UpdateProductsAsync(salesInvoice.ID, request.Products);
         }
     }

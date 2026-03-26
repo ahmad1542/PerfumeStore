@@ -3,7 +3,7 @@ using MediatR;
 using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Repositories;
 
-namespace PerfumeStore.Application.PurchaseInvoices.Commands.CreateSalesInvoice {
+namespace PerfumeStore.Application.PurchaseInvoices.Commands.CreatePurchaseInvoice {
     public class CreatePurchaseInvoiceCommandHandler(IPurchaseInvoicesRepository purchaseInvoicesRepository, IMoneyAccountsRepository moneyAccountsRepository, IMapper mapper) : IRequestHandler<CreatePurchaseInvoiceCommand, long> {
         public async Task<long> Handle(CreatePurchaseInvoiceCommand request, CancellationToken cancellationToken) {
             var purchaseInvoice = mapper.Map<PurchaseInvoice>(request);
@@ -23,7 +23,7 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.CreateSalesInvoice 
             await purchaseInvoicesRepository.AddAsync(purchaseInvoice, request.Products);
 
             if (request.AmountPaid > 0) {
-                account!.CurrentBalance += request.AmountPaid;
+                account!.CurrentBalance -= request.AmountPaid;
                 await moneyAccountsRepository.SaveChangesAsync();
             }
 

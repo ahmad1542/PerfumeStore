@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using PerfumeStore.Application.PurchaseInvoiceItems.Dtos;
-using PerfumeStore.Application.PurchaseInvoices.Commands.CreateSalesInvoice;
-using PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice;
+using PerfumeStore.Application.PurchaseInvoices.Commands.CreatePurchaseInvoice;
+using PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice;
 using PerfumeStore.Application.SalesInvoiceItems.Dtos;
 using PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice;
 using PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice;

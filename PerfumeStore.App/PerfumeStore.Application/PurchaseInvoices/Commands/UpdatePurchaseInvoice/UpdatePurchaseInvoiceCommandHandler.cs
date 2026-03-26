@@ -3,14 +3,14 @@ using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
 
-namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice {
+namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice {
     public class UpdatePurchaseInvoiceCommandHandler(IPurchaseInvoicesRepository purchaseInvoicesRepository, IDebtsRepository debtsRepository, IMoneyAccountsRepository moneyAccountsRepository) : IRequestHandler<UpdatePurchaseInvoiceCommand> {
         public async Task Handle(UpdatePurchaseInvoiceCommand request, CancellationToken cancellationToken) {
 
             var purchaseInvoice = await purchaseInvoicesRepository.GetByIdAsync(request.ID);
 
             if (purchaseInvoice == null)
-                throw new NotFoundException(nameof(SalesInvoice), request.ID.ToString());
+                throw new NotFoundException(nameof(PurchaseInvoice), request.ID.ToString());
 
             var oldAmountPaid = purchaseInvoice.AmountPaid;
             var oldMoneyAccountId = purchaseInvoice.MoneyAccountId;
@@ -38,7 +38,7 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice 
             }
 
             if (oldAccount != null) {
-                oldAccount.CurrentBalance -= oldAmountPaid;
+                oldAccount.CurrentBalance += oldAmountPaid;
             }
 
             purchaseInvoice.Date = request.Date;
@@ -48,7 +48,7 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice 
             purchaseInvoice.MoneyAccountId = request.AmountPaid > 0 ? request.MoneyAccountId : null;
 
             if (newAccount != null) {
-                newAccount.CurrentBalance += request.AmountPaid;
+                newAccount.CurrentBalance -= request.AmountPaid;
             }
 
             if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0) {
@@ -56,13 +56,13 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice 
                     purchaseInvoice.Debt.Amount = request.DebtAmount.Value;
                     purchaseInvoice.Debt.Notes = request.DebtNotes;
                     purchaseInvoice.Debt.PersonId = request.SupplierId;
-                    purchaseInvoice.Debt.SalesInvoiceId = purchaseInvoice.ID;
+                    purchaseInvoice.Debt.PurchaseInvoiceId = purchaseInvoice.ID;
                 } else {
                     purchaseInvoice.Debt = new Debt {
                         Amount = request.DebtAmount.Value,
                         Notes = request.DebtNotes,
                         PersonId = request.SupplierId,
-                        SalesInvoiceId = purchaseInvoice.ID
+                        PurchaseInvoiceId = purchaseInvoice.ID
                     };
                 }
             } else {
@@ -71,8 +71,6 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice 
                     purchaseInvoice.Debt = null;
                 }
             }
-
-            await purchaseInvoicesRepository.SaveChangesAsync();
 
             await purchaseInvoicesRepository.UpdateProductsAsync(purchaseInvoice.ID, request.Products);
         }

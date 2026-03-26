@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 
-namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice {
+namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice {
     public class UpdatePurchaseInvoiceCommandValidator : AbstractValidator<UpdatePurchaseInvoiceCommand> {
         public UpdatePurchaseInvoiceCommandValidator() {
             RuleFor(x => x.Notes)

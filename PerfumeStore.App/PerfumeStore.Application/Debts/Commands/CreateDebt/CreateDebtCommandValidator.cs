@@ -6,28 +6,29 @@ namespace PerfumeStore.Application.Debts.Commands.CreateDebt {
             RuleFor(x => x.Amount)
                 .GreaterThan(0)
                 .WithMessage("Amount is required and must be greater than 0.");
+
             RuleFor(x => x.Notes)
-                .MinimumLength(250)
-                .WithMessage("Notes must be at least 250 characters long.");
+                .MaximumLength(250)
+                .WithMessage("Notes must not exceed 250 characters.");
+
             RuleFor(x => x)
                 .Must(HasExactlyOneLink)
                 .WithMessage("Debt must be linked to exactly one of: Sales Invoice, Purchase Invoice, or Person.");
 
-            When(x => x.SalesInvoiceId.HasValue, () =>
-            {
-                RuleFor(x => x.SalesInvoiceId!.Value).GreaterThan(0);
+            When(x => x.SalesInvoiceId.HasValue, () => {
+                RuleFor(x => x.SalesInvoiceId!.Value)
+                    .GreaterThan(0);
             });
 
-            When(x => x.PurchaseInvoiceId.HasValue, () =>
-            {
-                RuleFor(x => x.PurchaseInvoiceId!.Value).GreaterThan(0);
+            When(x => x.PurchaseInvoiceId.HasValue, () => {
+                RuleFor(x => x.PurchaseInvoiceId!.Value)
+                    .GreaterThan(0);
             });
 
-            // Notes required only when linking to person
             When(x => x.PersonId.HasValue, () => {
                 RuleFor(x => x.Notes)
-                .NotEmpty()
-                .WithMessage("Notes are required when debt is linked to a person.");
+                    .NotEmpty()
+                    .WithMessage("Notes are required when debt is linked to a person.");
             });
         }
 

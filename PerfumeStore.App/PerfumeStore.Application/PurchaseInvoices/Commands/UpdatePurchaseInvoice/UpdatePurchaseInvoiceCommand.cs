@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice {
+namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice {
     public class UpdatePurchaseInvoiceCommand : IRequest {
         public long ID { get; set; }
         public DateTime Date { get; set; } = DateTime.Now;

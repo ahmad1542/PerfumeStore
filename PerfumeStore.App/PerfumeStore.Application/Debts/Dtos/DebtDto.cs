@@ -1,6 +1,4 @@
-﻿using PerfumeStore.Domain.Entities;
-
-namespace PerfumeStore.Application.Debts.Dtos {
+﻿namespace PerfumeStore.Application.Debts.Dtos {
     public class DebtDto {
         public int Id { get; set; }
 
@@ -8,9 +6,10 @@ namespace PerfumeStore.Application.Debts.Dtos {
         public string? Notes { get; set; }
 
         public long? SalesInvoiceId { get; set; }
-
         public long? PurchaseInvoiceId { get; set; }
 
+        public Guid? PersonId { get; set; }
         public string? PersonPhone { get; set; }
+        public string? PersonName { get; set; }
     }
 }

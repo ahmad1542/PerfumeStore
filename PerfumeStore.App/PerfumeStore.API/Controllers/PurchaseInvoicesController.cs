@@ -1,10 +1,10 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using PerfumeStore.Application.PurchaseInvoices.Commands.CreateSalesInvoice;
-using PerfumeStore.Application.PurchaseInvoices.Commands.UpdateSalesInvoice;
+using PerfumeStore.Application.PurchaseInvoices.Commands.CreatePurchaseInvoice;
+using PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice;
 using PerfumeStore.Application.PurchaseInvoices.Dtos;
-using PerfumeStore.Application.PurchaseInvoices.Queries.GetAllSalesinvoices;
-using PerfumeStore.Application.PurchaseInvoices.Queries.GetSalesInvoiceById;
+using PerfumeStore.Application.PurchaseInvoices.Queries.GetAllPurchaseinvoices;
+using PerfumeStore.Application.PurchaseInvoices.Queries.GetPurchaseInvoiceById;
 
 namespace PerfumeStore.API.Controllers {
     [Route("api/[controller]")]
