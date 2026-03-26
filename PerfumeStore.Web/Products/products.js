@@ -76,7 +76,7 @@ async function loadProducts(searchText = "") {
 
         const tr = document.createElement("tr");
         tr.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${escapeHtml(id)}</td>
       <td>${escapeHtml(name)}</td>
       <td>${escapeHtml(String(capacity))}</td>
       <td>${escapeHtml(category)}</td>

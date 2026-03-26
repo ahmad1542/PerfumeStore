@@ -63,7 +63,7 @@ async function loadBrands(searchText = "") {
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${escapeHtml(id)}</td>
       <td><a class="brand-link" href="view.html?id=${encodeURIComponent(
         id
       )}">${escapeHtml(name)}</a></td>

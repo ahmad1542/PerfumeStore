@@ -61,7 +61,7 @@ async function loadList(searchText = "") {
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${index + 1}</td>
+      <td>${escapeHtml(id)}</td>
       ${cells.map(c => `<td>${c}</td>`).join("")}
       <td class="actions-cell">
         <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>
