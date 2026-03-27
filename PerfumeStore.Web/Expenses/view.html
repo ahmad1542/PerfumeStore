@@ -1,33 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>View Debt - Memento Perfume</title>
+  <title>View Expense - Memento Perfume</title>
   <link rel="stylesheet" href="../assets/theme-dark.css" />
-  <link rel="stylesheet" href="debts.css" />
+  <link rel="stylesheet" href="expenses.css" />
 </head>
-
 <body>
   <header class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-brand">Memento Perfume</div>
-      <nav class="navbar-links">
+  <div class="navbar-container">
+    <div class="navbar-brand">Memento Perfume</div>
+    <nav class="navbar-links">
         <a href="../dashboard/">Dashboard</a>
-        <a href="../Debts/" class="active">Debts</a>
+        <a href="../Debts/">Debts</a>
         <a href="../SalesInvoices/">Sales Invoices</a>
         <a href="../PurchaseInvoices/">Purchase Invoices</a>
-        <a href="../Expenses/">Expenses</a>
-      </nav>
-    </div>
-  </header>
+        <a href="../Expenses/" class="active">Expenses</a>
+    </nav>
+  </div>
+</header>
 
   <main class="main-content">
     <div class="container">
       <div class="page-header">
         <div>
-          <h1 class="page-title">View Debt</h1>
+          <h1 class="page-title">View Expense</h1>
           <p class="page-subtitle">Fill the information below.</p>
         </div>
         <a href="index.html" class="btn-secondary">← Back</a>
@@ -35,11 +33,11 @@
 
       <div class="form-card">
         <div class="details-row cardx" style="padding:16px;">
-          <div style="font-weight:900;color:rgba(232,238,252,.75);">Field</div>
-          <div style="font-weight:900;color:rgba(232,238,252,.75);">Value</div>
-          <div id="details"></div>
-        </div>
-        <div id="pageMsg" class="hint"></div>
+  <div style="font-weight:900;color:rgba(232,238,252,.75);">Field</div>
+  <div style="font-weight:900;color:rgba(232,238,252,.75);">Value</div>
+  <div id="details"></div>
+</div>
+<div id="pageMsg" class="hint"></div>
       </div>
     </div>
   </main>
@@ -49,5 +47,4 @@
   <script src="view.js"></script>
   <script>loadView();</script>
 </body>
-
 </html>
