@@ -18,6 +18,8 @@ public partial class PerfumeStoreDbContext : DbContext {
 
     public virtual DbSet<Expense> Expenses { get; set; }
 
+    public virtual DbSet<ExpenseType> ExpenseTypes { get; set; }
+
     public virtual DbSet<Inventory> Inventory { get; set; }
 
     public virtual DbSet<MoneyAccount> MoneyAccounts { get; set; }
@@ -58,20 +60,29 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.Property(e => e.Name).HasMaxLength(150);
         });
 
-        modelBuilder.Entity<Expense>(entity => {
+        modelBuilder.Entity<Expense>(entity =>
+        {
             entity.HasKey(e => e.ID);
 
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
+
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_Expenses_ExpenseDate");
-            entity.Property(e => e.Type).HasMaxLength(150);
+
             entity.Property(e => e.Notes).HasMaxLength(250);
 
-            entity.HasOne(d => d.MoneyAccount).WithMany(p => p.Expenses)
+            entity.HasOne(d => d.MoneyAccount)
+                .WithMany(p => p.Expenses)
                 .HasForeignKey(d => d.MoneyAccountID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Expenses_MoneyAccounts1");
+
+            entity.HasOne(d => d.ExpenseType)
+                .WithMany(p => p.Expenses)
+                .HasForeignKey(d => d.ExpenseTypeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Expenses_ExpenseTypes");
         });
 
         modelBuilder.Entity<Inventory>(entity => {
@@ -264,6 +275,13 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasDefaultValueSql("sysdatetime()");
+        });
+
+        modelBuilder.Entity<ExpenseType>(entity => {
+            entity.ToTable("ExpenseType");
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Name).HasMaxLength(150);
+            entity.HasIndex(e => e.Name).IsUnique();
         });
 
         modelBuilder.Entity<Person>()

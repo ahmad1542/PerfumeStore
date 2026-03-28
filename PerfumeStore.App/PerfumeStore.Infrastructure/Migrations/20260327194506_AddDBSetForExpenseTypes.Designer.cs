@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfumeStore.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Migrations
 {
     [DbContext(typeof(PerfumeStoreDbContext))]
-    partial class PerfumeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260327194506_AddDBSetForExpenseTypes")]
+    partial class AddDBSetForExpenseTypes
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -148,14 +151,15 @@ namespace PerfumeStore.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ExpenseType");
+                    b.ToTable("ExpenseType", (string)null);
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Inventory", b =>

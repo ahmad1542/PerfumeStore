@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfumeStore.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Migrations
 {
     [DbContext(typeof(PerfumeStoreDbContext))]
-    partial class PerfumeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260327171140_AddExpenseTypeTable")]
+    partial class AddExpenseTypeTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -119,9 +122,6 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .HasColumnType("datetime2(0)")
                         .HasDefaultValueSql("(sysdatetime())", "DF_Expenses_ExpenseDate");
 
-                    b.Property<int>("ExpenseTypeId")
-                        .HasColumnType("int");
-
                     b.Property<int>("MoneyAccountID")
                         .HasColumnType("int");
 
@@ -129,9 +129,12 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.HasKey("ID");
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.HasIndex("ExpenseTypeId");
+                    b.HasKey("ID");
 
                     b.HasIndex("MoneyAccountID");
 
@@ -594,19 +597,11 @@ namespace PerfumeStore.Infrastructure.Migrations
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Expense", b =>
                 {
-                    b.HasOne("PerfumeStore.Domain.Entities.ExpenseType", "ExpenseType")
-                        .WithMany("Expenses")
-                        .HasForeignKey("ExpenseTypeId")
-                        .IsRequired()
-                        .HasConstraintName("FK_Expenses_ExpenseTypes");
-
                     b.HasOne("PerfumeStore.Domain.Entities.MoneyAccount", "MoneyAccount")
                         .WithMany("Expenses")
                         .HasForeignKey("MoneyAccountID")
                         .IsRequired()
                         .HasConstraintName("FK_Expenses_MoneyAccounts1");
-
-                    b.Navigation("ExpenseType");
 
                     b.Navigation("MoneyAccount");
                 });
@@ -786,11 +781,6 @@ namespace PerfumeStore.Infrastructure.Migrations
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Brand", b =>
                 {
                     b.Navigation("Products");
-                });
-
-            modelBuilder.Entity("PerfumeStore.Domain.Entities.ExpenseType", b =>
-                {
-                    b.Navigation("Expenses");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.MoneyAccount", b =>

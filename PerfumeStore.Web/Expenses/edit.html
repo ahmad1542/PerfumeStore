@@ -9,57 +9,71 @@
 </head>
 <body>
   <header class="navbar">
-  <div class="navbar-container">
-    <div class="navbar-brand">Memento Perfume</div>
-    <nav class="navbar-links">
-        <a href="../dashboard/">Dashboard</a>
-        <a href="../Debts/">Debts</a>
-        <a href="../SalesInvoices/">Sales Invoices</a>
-        <a href="../PurchaseInvoices/">Purchase Invoices</a>
-        <a href="../Expenses/" class="active">Expenses</a>
-    </nav>
-  </div>
-</header>
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+          <a href="../dashboard/">Dashboard</a>
+          <a href="../Debts/">Debts</a>
+          <a href="../SalesInvoices/">Sales Invoices</a>
+          <a href="../PurchaseInvoices/">Purchase Invoices</a>
+          <a href="../Expenses/" class="active">Expenses</a>
+      </nav>
+    </div>
+  </header>
 
   <main class="main-content">
     <div class="container">
       <div class="page-header">
         <div>
           <h1 class="page-title">Edit Expense</h1>
-          <p class="page-subtitle">Fill the information below.</p>
+          <p class="page-subtitle">Update the expense details.</p>
         </div>
         <a href="index.html" class="btn-secondary">← Back</a>
       </div>
 
       <div class="form-card">
         <form id="form" action="#" method="post">
-<div class="form-group">
-  <label for="Date">Date <span class="req">*</span></label>
-  <input id="Date" type="date" placeholder="Date" required />
-</div>
-<div class="form-group">
-  <label for="Type">Type <span class="req">*</span></label>
-  <input id="Type" type="text" placeholder="Type" required />
-</div>
-<div class="form-group">
-  <label for="Amount">Amount <span class="req">*</span></label>
-  <input id="Amount" type="number" placeholder="Amount" required />
-</div>
-<div class="form-group">
-  <label for="MoneyAccountID">Mone\1 \2ccoun\1 \2D <span class="req">*</span></label>
-  <select id="MoneyAccountID" class="search-input"></select>
-</div>
-<div class="form-group">
-  <label for="Notes">Notes</label>
-  <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>
-</div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="Date">Date <span class="req">*</span></label>
+              <input id="Date" type="date" required />
+            </div>
 
-<div class="form-actions" style="margin-top:14px; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
-  <button id="btnSave" type="button" class="btn-primary">Save</button>
-  <a href="index.html" class="btn-light">Cancel</a>
-  <div id="pageMsg" class="hint"></div>
-</div>
-</form>
+            <div class="form-group">
+              <label for="Amount">Amount <span class="req">*</span></label>
+              <input id="Amount" type="number" step="0.01" min="0.01" placeholder="Amount" required />
+            </div>
+
+            <div class="form-group form-group-full">
+              <div class="field-header">
+                <label for="ExpenseTypeID">Expense Type <span class="req">*</span></label>
+                <button id="toggleNewExpenseTypeBtn" type="button" class="btn-linkish">+ New expense type</button>
+              </div>
+              <select id="ExpenseTypeID" required></select>
+              <div id="newExpenseTypePanel" class="inline-create-panel" style="display:none;">
+                <input id="NewExpenseTypeName" type="text" maxlength="150" placeholder="New expense type name" />
+                <button id="btnCreateExpenseType" type="button" class="btn-secondary">Create type</button>
+              </div>
+              <div id="expenseTypeMsg" class="hint"></div>
+            </div>
+
+            <div class="form-group">
+              <label for="MoneyAccountID">Money Account <span class="req">*</span></label>
+              <select id="MoneyAccountID" class="search-input" required></select>
+            </div>
+
+            <div class="form-group form-group-full">
+              <label for="Notes">Notes</label>
+              <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button id="btnSave" type="button" class="btn-primary">Save</button>
+            <a href="index.html" class="btn-light">Cancel</a>
+            <div id="pageMsg" class="hint"></div>
+          </div>
+        </form>
       </div>
     </div>
   </main>

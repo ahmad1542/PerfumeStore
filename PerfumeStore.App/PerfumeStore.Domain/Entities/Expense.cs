@@ -9,12 +9,12 @@ public class Expense {
 
     public DateTime Date { get; set; } = DateTime.Now;
 
-    [Required]
-    public string Type { get; set; } = null!;
-
     public decimal Amount { get; set; }
 
     public string? Notes { get; set; }
+
+    public int ExpenseTypeId { get; set; }
+    public ExpenseType ExpenseType { get; set; } = null!;
 
     public int MoneyAccountID { get; set; }
 

@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en" dir="ltr">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -11,19 +12,20 @@
   <link rel="stylesheet" href="../assets/theme-dark.css" />
   <link rel="stylesheet" href="expenses.css" />
 </head>
+
 <body>
   <header class="navbar">
-  <div class="navbar-container">
-    <div class="navbar-brand">Memento Perfume</div>
-    <nav class="navbar-links">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
         <a href="../dashboard/">Dashboard</a>
         <a href="../Debts/">Debts</a>
         <a href="../SalesInvoices/">Sales Invoices</a>
         <a href="../PurchaseInvoices/">Purchase Invoices</a>
         <a href="../Expenses/" class="active">Expenses</a>
-    </nav>
-  </div>
-</header>
+      </nav>
+    </div>
+  </header>
 
   <main class="main-content">
     <div class="container">
@@ -36,8 +38,29 @@
         </div>
 
         <div class="list-tools">
+          
+          <div class="expense-type-dropdown-wrap">
+            <button type="button" id="expenseTypeDropdownBtn" class="expense-type-dropdown-btn">
+              <span id="expenseTypeDropdownText">All expense types</span>
+              <i class="bi bi-chevron-down"></i>
+            </button>
+            
+            <div id="expenseTypeDropdownMenu" class="expense-type-dropdown-menu hidden">
+              <div class="expense-type-dropdown-header">
+                <label class="checkbox-filter-item expense-type-all-option">
+                  <input type="checkbox" id="expenseTypeAllCheckbox" checked />
+                  <span>All expense types</span>
+                </label>
+              </div>
+              
+              <div id="expenseTypeFilters" class="expense-type-dropdown-list"></div>
+            </div>
+          </div>
+          
           <input id="searchInput" class="search-input" type="text" placeholder="Search..." />
-          <a href="create.html" class="btn-primary">+ New</a>
+          <input id="fromDateInput" class="search-input date-filter-input" type="date" />
+          <input id="toDateInput" class="search-input date-filter-input" type="date" />
+          <a href="create.html" class="btn-primary">+ New Expense</a>
         </div>
       </div>
 
@@ -62,6 +85,6 @@
   <script src="../assets/common.js"></script>
   <script src="common.js"></script>
   <script src="expenses.js"></script>
-  <script>loadList();</script>
 </body>
+
 </html>

@@ -1,9 +1,7 @@
-// Expenses/expenses.js
-
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Type</th><th>Amount</th><th>MoneyAccount</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Type</th><th>Amount</th><th>Money Account</th>  <th>Notes</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -13,22 +11,37 @@ async function loadList(searchText = "") {
   const emptyState = $("emptyState");
   const tableCard = $("tableCard");
   const countChip = $("countChip");
+  const fromDate = $("fromDateInput")?.value?.trim() || "";
+  const toDate = $("toDateInput")?.value?.trim() || "";
+  const selectedExpenseTypeIds = typeof getSelectedExpenseTypeIds === "function" ? getSelectedExpenseTypeIds() : [];
+  const totalExpenseTypeCheckboxes = document.querySelectorAll('.expense-type-filter-checkbox').length;
 
   if (!tbody) return;
 
   setMsg("pageMsg", "Loading...", false);
 
-  const url =
-    searchText && searchText.trim().length > 0
-      ? `${API}?search=${encodeURIComponent(searchText.trim())}`
-      : API;
+  const params = new URLSearchParams();
+  if (searchText && searchText.trim()) params.append('search', searchText.trim());
+  if (fromDate) params.append('fromDate', fromDate);
+  if (toDate) params.append('toDate', toDate);
+
+  if (totalExpenseTypeCheckboxes > 0 && selectedExpenseTypeIds.length === 0) {
+    setMsg("pageMsg", "No expense types are selected.", false);
+    tbody.innerHTML = "";
+    if (countChip) countChip.textContent = "0";
+    if (emptyState) emptyState.style.display = "";
+    if (tableCard) tableCard.style.display = "none";
+    return;
+  }
+
+  selectedExpenseTypeIds.forEach(id => params.append('expenseTypeIds', id));
+
+  const url = params.toString() ? `${API}?${params.toString()}` : API;
 
   let list = [];
   try {
-    const res = await fetch(url, { headers: { Accept: "application/json" } });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    list = Array.isArray(data) ? data : [];
+    list = await apiGetJson(url);
+    list = Array.isArray(list) ? list : [];
   } catch (e) {
     setMsg("pageMsg", "Failed to load data from API.", true);
     tbody.innerHTML = "";
@@ -55,16 +68,20 @@ async function loadList(searchText = "") {
 
   list.forEach((x, index) => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
-    const cells = [];
-    cells.push(escapeHtml(x.date ?? x.Date ?? ''));
-    cells.push(escapeHtml(x.type ?? x.Type ?? '-'));
-    cells.push(escapeHtml(x.amount ?? x.Amount ?? 0));
-    cells.push(escapeHtml((x.moneyAccount?.accountName ?? x.MoneyAccount?.AccountName ?? x.moneyAccountID ?? x.MoneyAccountID ?? '-')));
+    const date = formatDateOnly(x.date ?? x.Date ?? '');
+    const type = x.expenseTypeName ?? x.ExpenseTypeName ?? '-';
+    const amount = x.amount ?? x.Amount ?? 0;
+    const moneyAccount = x.moneyAccountName ?? x.MoneyAccountName ?? '-';
+    const notes = x.notes ?? x.Notes ?? '';
 
     const tr = document.createElement("tr");
     tr.innerHTML = `
-      <td>${index + 1}</td>
-      ${cells.map(c => `<td>${c}</td>`).join("")}
+      <td>${escapeHtml(index + 1)}</td>
+      <td>${escapeHtml(date)}</td>
+      <td>${escapeHtml(type)}</td>
+      <td>${escapeHtml(amount)}</td>
+      <td>${escapeHtml(moneyAccount)}</td>
+      <td class="notes-cell">${escapeHtml(notes)}</td>
       <td class="actions-cell">
         <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>
         <a class="btn-edit" href="edit.html?id=${encodeURIComponent(id)}">Edit</a>
