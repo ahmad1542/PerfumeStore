@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Payment Vouchers - Memento Perfume</title>
+  <link rel="stylesheet" href="../assets/theme-dark.css" />
+  <link rel="stylesheet" href="paymentvouchers.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+        <a href="../Dashboard/">Dashboard</a>
+        <a href="../Debts/">Debts</a>
+        <a href="../SalesInvoices/">Sales Invoices</a>
+        <a href="../PurchaseInvoices/">Purchase Invoices</a>
+        <a href="../Expenses/">Expenses</a>
+        <a href="../PaymentVouchers/" class="active">Payment Vouchers</a>
+        <a href="../ReceiptVouchers/">Receipt Vouchers</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Payment Vouchers <span id="countChip" class="count-chip">0</span></h1>
+          <p class="page-subtitle">Track supplier payments and how each payment was allocated to purchase invoices.</p>
+        </div>
+        <div class="list-tools">
+          <input id="searchInput" class="search-input" type="text" placeholder="Search by supplier, amount, notes, invoice id..." />
+          <a href="create.html" class="btn-primary">+ New Payment Voucher</a>
+        </div>
+      </div>
+
+      <div id="emptyState" class="empty-state">
+        <div class="empty-icon">💸</div>
+        <h2>No payment vouchers yet</h2>
+        <p>Create your first supplier payment voucher.</p>
+        <a href="create.html" class="btn-primary">Create</a>
+      </div>
+
+      <div id="pageMsg" class="hint"></div>
+
+      <div id="tableCard" class="table-wrapper table-card">
+        <table class="paymentvouchers-table">
+          <thead id="tableHead"></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="common.js"></script>
+  <script src="paymentvouchers.js"></script>
+  <script>loadList();</script>
+</body>
+</html>

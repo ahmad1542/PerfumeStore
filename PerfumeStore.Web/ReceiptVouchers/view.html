@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>View Receipt Voucher - Memento Perfume</title>
+  <link rel="stylesheet" href="../assets/theme-dark.css" />
+  <link rel="stylesheet" href="receiptvouchers.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+        <a href="../Dashboard/">Dashboard</a>
+        <a href="../Debts/">Debts</a>
+        <a href="../SalesInvoices/">Sales Invoices</a>
+        <a href="../PurchaseInvoices/">Purchase Invoices</a>
+        <a href="../Expenses/">Expenses</a>
+        <a href="../PaymentVouchers/">Payment Vouchers</a>
+        <a href="../ReceiptVouchers/" class="active">Receipt Vouchers</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Receipt Voucher Details</h1>
+          <p class="page-subtitle">Header information and applied allocations.</p>
+        </div>
+        <a href="index.html" class="btn-secondary">← Back</a>
+      </div>
+
+      <div class="form-card">
+        <div class="detail-grid" id="detailGrid"></div>
+
+        <h3 class="detail-section-title">Applied Items</h3>
+        <div id="applicationsEmpty" class="empty-inline">No applied items found.</div>
+        <div id="applicationsCard" class="table-wrapper table-card" style="display:none;">
+          <table class="receiptvouchers-table">
+            <thead>
+              <tr>
+                <th>Item</th>
+                <th>Type</th>
+                <th>Date</th>
+                <th>Notes</th>
+                <th>Applied Amount</th>
+              </tr>
+            </thead>
+            <tbody id="applicationRows"></tbody>
+          </table>
+        </div>
+
+        <div id="pageMsg" class="hint"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="common.js"></script>
+  <script src="view.js"></script>
+  <script>loadView();</script>
+</body>
+</html>

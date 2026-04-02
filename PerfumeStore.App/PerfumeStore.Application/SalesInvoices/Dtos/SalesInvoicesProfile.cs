@@ -26,7 +26,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
             CreateMap<CreateSalesInvoiceCommand, SalesInvoice>()
                 .ForMember(d => d.ID, opt => opt.Ignore())
                 .ForMember(d => d.Customer, opt => opt.Ignore())
-                .ForMember(d => d.ReceiptVouchers, opt => opt.Ignore())
+                .ForMember(d => d.ReceiptVoucherSalesInvoices, opt => opt.Ignore())
                 .ForMember(d => d.SalesInvoiceItems, opt => opt.Ignore())
                 .ForMember(d => d.Debt, opt => opt.MapFrom((src, dest) =>
                     (src.HasDebt && src.DebtAmount.HasValue && src.DebtAmount.Value > 0)
@@ -41,7 +41,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
             CreateMap<UpdateSalesInvoiceCommand, SalesInvoice>()
                 .ForMember(d => d.ID, opt => opt.Ignore())
                 .ForMember(d => d.Customer, opt => opt.Ignore())
-                .ForMember(d => d.ReceiptVouchers, opt => opt.Ignore())
+                .ForMember(d => d.ReceiptVoucherSalesInvoices, opt => opt.Ignore())
                 .ForMember(d => d.SalesInvoiceItems, opt => opt.Ignore());
         }
     }

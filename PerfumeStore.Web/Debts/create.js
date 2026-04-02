@@ -26,12 +26,11 @@ function validateBody(body) {
     (body.PersonId ? 1 : 0);
 
   if (linksCount === 0)
-    return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person.";
+    return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person / Supplier.";
 
   if (linksCount > 1)
     return "Only one link is allowed. Clear the other fields and try again.";
 
-  // if user typed something non-numeric
   if ($("SalesInvoiceId").value.trim() && !body.SalesInvoiceId)
     return "Sales Invoice ID must be a valid number.";
 
@@ -68,7 +67,7 @@ async function createItem() {
 
 async function initPage() {
   try {
-    await fillPeopleSelect("PersonId", "https://localhost:7209/api/Persons");
+    await fillDebtPartiesSelect("PersonId");
   } catch (e) {
     console.error(e);
   }
@@ -76,13 +75,6 @@ async function initPage() {
   wireExclusiveLinkInputs();
 }
 
-/**
- * Enforce EXACTLY ONE link:
- * - If SalesInvoiceId has value => disable PurchaseInvoiceId + PersonId and clear them
- * - If PurchaseInvoiceId has value => disable SalesInvoiceId + PersonId and clear them
- * - If PersonId selected => disable both invoice id inputs and clear them
- * - If cleared => enable all again
- */
 function wireExclusiveLinkInputs() {
   const sales = $("SalesInvoiceId");
   const purchase = $("PurchaseInvoiceId");
@@ -93,7 +85,6 @@ function wireExclusiveLinkInputs() {
     const purchaseVal = purchase.value.trim();
     const personVal = person.value.trim();
 
-    // Determine active link
     let active = "";
     if (salesVal) active = "sales";
     else if (purchaseVal) active = "purchase";
@@ -134,28 +125,36 @@ function wireExclusiveLinkInputs() {
   apply();
 }
 
-async function fillPeopleSelect(selectId, apiUrl) {
+async function fillDebtPartiesSelect(selectId) {
   const el = $(selectId);
   if (!el) return;
 
-  el.innerHTML = `<option value="">-- Select --</option>`;
-  let list = [];
-  try {
-    list = await apiGetJson(apiUrl);
-  } catch {
-    list = [];
-  }
+  el.innerHTML = `<option value="">-- Select Person / Supplier --</option>`;
 
-  (Array.isArray(list) ? list : []).forEach((p) => {
+  let persons = [];
+  let suppliers = [];
+
+  try { persons = await apiGetJson("https://localhost:7209/api/Persons"); } catch { persons = []; }
+  try { suppliers = await apiGetJson("https://localhost:7209/api/Suppliers"); } catch { suppliers = []; }
+
+  const seen = new Set();
+  const items = [];
+
+  (Array.isArray(persons) ? persons : []).forEach((p) => items.push({ ...p, _partyType: "Person" }));
+  (Array.isArray(suppliers) ? suppliers : []).forEach((s) => items.push({ ...s, _partyType: "Supplier" }));
+
+  items.forEach((p) => {
     const id = p.id ?? p.ID ?? p.Id ?? "";
-    if (!id) return;
+    if (!id || seen.has(id)) return;
+    seen.add(id);
 
     const name = p.name ?? p.Name ?? "";
     const phone = p.phone ?? p.Phone ?? "";
+    const type = p._partyType || "Person";
 
     const opt = document.createElement("option");
     opt.value = id;
-    opt.textContent = name ? `${name}${phone ? ` (${phone})` : ""}` : (phone || id);
+    opt.textContent = `${type} - ${name ? `${name}${phone ? ` (${phone})` : ""}` : (phone || id)}`;
     el.appendChild(opt);
   });
 }

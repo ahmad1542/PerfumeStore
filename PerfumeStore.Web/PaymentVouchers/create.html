@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Create Payment Voucher - Memento Perfume</title>
+  <link rel="stylesheet" href="../assets/theme-dark.css" />
+  <link rel="stylesheet" href="paymentvouchers.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
+        <a href="../Dashboard/">Dashboard</a>
+        <a href="../Debts/">Debts</a>
+        <a href="../SalesInvoices/">Sales Invoices</a>
+        <a href="../PurchaseInvoices/">Purchase Invoices</a>
+        <a href="../Expenses/">Expenses</a>
+        <a href="../PaymentVouchers/" class="active">Payment Vouchers</a>
+        <a href="../ReceiptVouchers/">Receipt Vouchers</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">
+    <div class="container">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">Create Payment Voucher</h1>
+          <p class="page-subtitle">Pay one supplier and distribute the amount across multiple purchase invoices.</p>
+        </div>
+        <a href="index.html" class="btn-secondary">← Back</a>
+      </div>
+
+      <div class="form-card">
+        <form id="form" action="#" method="post">
+          <div class="voucher-grid">
+            <div class="form-group">
+              <label for="Date">Date <span class="req">*</span></label>
+              <input id="Date" type="date" required />
+            </div>
+
+            <div class="form-group">
+              <label for="SupplierId">Supplier <span class="req">*</span></label>
+              <select id="SupplierId" class="search-input" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="MoneyAccountID">Money Account <span class="req">*</span></label>
+              <select id="MoneyAccountID" class="search-input" required></select>
+            </div>
+
+            <div class="form-group">
+              <label for="Amount">Paid Amount <span class="req">*</span></label>
+              <input id="Amount" type="number" min="0.01" step="0.01" placeholder="Amount paid to supplier" required />
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="Notes">Notes</label>
+            <textarea id="Notes" rows="4" placeholder="Optional notes..."></textarea>
+          </div>
+
+          <div class="allocator-header">
+            <div>
+              <h3>Apply Payment to Invoices</h3>
+              <p class="hint">Only unpaid purchase invoices for the selected supplier are shown.</p>
+            </div>
+            <button type="button" class="btn-light" id="btnAutoAllocate">Auto Allocate Oldest First</button>
+          </div>
+
+          <div id="invoiceEmpty" class="empty-inline">Choose a supplier to load open purchase invoices.</div>
+
+          <div id="invoiceTableCard" class="table-wrapper table-card" style="display:none;">
+            <table class="paymentvouchers-table">
+              <thead>
+                <tr>
+                  <th style="width:80px;">Invoice</th>
+                  <th style="width:150px;">Date</th>
+                  <th>Notes</th>
+                  <th style="width:170px;">Remaining</th>
+                  <th style="width:190px;">Applied Amount</th>
+                </tr>
+              </thead>
+              <tbody id="invoiceRows"></tbody>
+            </table>
+          </div>
+
+          <div class="summary-bar">
+            <div class="summary-chip">Voucher Amount: <strong id="summaryVoucherAmount">0.00</strong></div>
+            <div class="summary-chip">Applied Total: <strong id="summaryAppliedAmount">0.00</strong></div>
+            <div class="summary-chip">Difference: <strong id="summaryDifference">0.00</strong></div>
+          </div>
+
+          <div class="form-actions voucher-actions">
+            <button id="btnSave" type="button" class="btn-primary">Save Payment Voucher</button>
+            <a href="index.html" class="btn-light">Cancel</a>
+            <div id="pageMsg" class="hint"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <script src="../assets/common.js"></script>
+  <script src="common.js"></script>
+  <script src="create.js"></script>
+  <script>
+    document.getElementById('btnSave').addEventListener('click', createItem);
+    if (typeof initPage === 'function') initPage();
+  </script>
+</body>
+</html>

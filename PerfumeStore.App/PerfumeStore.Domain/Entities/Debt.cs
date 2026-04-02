@@ -15,6 +15,8 @@
         public Person? Person { get; set; }
 
         public bool IsDeleted { get; set; } = false;
+
+        public ICollection<ReceiptVoucherDebt> ReceiptVoucherDebts { get; set; } = new List<ReceiptVoucherDebt>();
     }
 
 }

@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Amount</th><th>PersonPhone</th><th>PersonName</th><th>SalesInvoiceId</th><th>PurchaseInvoiceId</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Amount</th><th>Type</th><th>PersonPhone</th><th>PersonName</th><th>SalesInvoiceId</th><th>PurchaseInvoiceId</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -51,10 +51,11 @@ async function loadList(searchText = "") {
 
   setMsg("pageMsg", `Loaded ${list.length} record(s).`);
 
-  list.forEach((x, index) => {
+  list.forEach((x) => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
     cells.push(escapeHtml(x.amount ?? x.Amount ?? 0));
+    cells.push(escapeHtml(x.partyType ?? x.PartyType ?? '-'));
     cells.push(escapeHtml(x.personPhone ?? x.PersonPhone ?? '-'));
     cells.push(escapeHtml(x.personName ?? x.PersonName ?? '-'));
     cells.push(escapeHtml(x.salesInvoiceId ?? x.SalesInvoiceId ?? '-'));

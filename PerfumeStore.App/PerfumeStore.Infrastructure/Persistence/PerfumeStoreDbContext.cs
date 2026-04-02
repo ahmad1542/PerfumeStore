@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PerfumeStore.Domain.Entities;
 
 namespace PerfumeStore.Infrastructure.Persistence;
@@ -13,63 +11,43 @@ public partial class PerfumeStoreDbContext : DbContext {
     }
 
     public virtual DbSet<Brand> Brands { get; set; }
-
     public virtual DbSet<Customer> Customers { get; set; }
-
     public virtual DbSet<Expense> Expenses { get; set; }
-
     public virtual DbSet<ExpenseType> ExpenseTypes { get; set; }
-
     public virtual DbSet<Inventory> Inventory { get; set; }
-
     public virtual DbSet<MoneyAccount> MoneyAccounts { get; set; }
-
     public virtual DbSet<MoneyTransaction> MoneyTransactions { get; set; }
-
     public virtual DbSet<PaymentVoucher> PaymentVouchers { get; set; }
-
+    public virtual DbSet<PaymentVoucherPurchaseInvoice> PaymentVoucherPurchaseInvoices { get; set; }
     public virtual DbSet<ProductCategory> ProductCategories { get; set; }
-
     public virtual DbSet<Product> Products { get; set; }
-
     public virtual DbSet<PurchaseInvoiceItem> PurchaseInvoiceItems { get; set; }
-
     public virtual DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
-
     public virtual DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
-
+    public virtual DbSet<ReceiptVoucherSalesInvoice> ReceiptVoucherSalesInvoices { get; set; }
+    public virtual DbSet<ReceiptVoucherDebt> ReceiptVoucherDebts { get; set; }
     public virtual DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
-
     public virtual DbSet<SalesInvoice> SalesInvoices { get; set; }
-
     public virtual DbSet<Supplier> Suppliers { get; set; }
-
     public virtual DbSet<Debt> Debts { get; set; }
-
     public virtual DbSet<Person> Persons { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder) {
         modelBuilder.Entity<Brand>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.HasIndex(e => e.Name, "IX_Brands").IsUnique();
-
             entity.Property(e => e.BrandDescription)
                 .HasColumnType("nvarchar(max)")
                 .IsFixedLength();
             entity.Property(e => e.Name).HasMaxLength(150);
         });
 
-        modelBuilder.Entity<Expense>(entity =>
-        {
+        modelBuilder.Entity<Expense>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
-
             entity.Property(e => e.Date)
                 .HasPrecision(0)
                 .HasDefaultValueSql("(sysdatetime())", "DF_Expenses_ExpenseDate");
-
             entity.Property(e => e.Notes).HasMaxLength(250);
 
             entity.HasOne(d => d.MoneyAccount)
@@ -87,9 +65,7 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<Inventory>(entity => {
             entity.HasKey(e => e.ProductID);
-
             entity.Property(e => e.ProductID).ValueGeneratedNever();
-
             entity.HasOne(d => d.Product).WithOne(p => p.Inventory)
                 .HasForeignKey<Inventory>(d => d.ProductID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -98,7 +74,6 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<MoneyAccount>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.Property(e => e.AccountName).HasMaxLength(50);
             entity.Property(e => e.CurrentBalance).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Notes).HasMaxLength(250);
@@ -106,7 +81,6 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<MoneyTransaction>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.TransferAmount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Date)
@@ -126,8 +100,6 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<PaymentVoucher>(entity => {
             entity.HasKey(e => e.ID);
-
-            entity.Property(e => e.ID).ValueGeneratedNever();
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.Date)
@@ -139,18 +111,31 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PaymentVouchers_MoneyAccounts1");
 
-            entity.HasOne(d => d.PurchaseInvoice).WithMany(p => p.PaymentVouchers)
-                .HasForeignKey(d => d.PurchaseInvoiceID)
-                .HasConstraintName("FK_PaymentVouchers_PurchaseInvoices1");
-
             entity.HasOne(d => d.Supplier).WithMany(p => p.PaymentVouchers)
                 .HasForeignKey(d => d.SupplierId)
-                .OnDelete(DeleteBehavior.ClientSetNull);
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_PaymentVouchers_Suppliers1");
+        });
+
+        modelBuilder.Entity<PaymentVoucherPurchaseInvoice>(entity => {
+            entity.HasKey(e => e.ID);
+            entity.Property(e => e.AppliedAmount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.PaymentVoucher).WithMany(p => p.AppliedPurchaseInvoices)
+                .HasForeignKey(d => d.PaymentVoucherId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_PaymentVoucherPurchaseInvoices_PaymentVouchers");
+
+            entity.HasOne(d => d.PurchaseInvoice).WithMany(p => p.PaymentVoucherPurchaseInvoices)
+                .HasForeignKey(d => d.PurchaseInvoiceId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_PaymentVoucherPurchaseInvoices_PurchaseInvoices");
+
+            entity.HasIndex(e => new { e.PaymentVoucherId, e.PurchaseInvoiceId }).IsUnique();
         });
 
         modelBuilder.Entity<ProductCategory>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.HasIndex(e => e.Name).IsUnique();
             entity.Property(e => e.Name).HasMaxLength(100);
             entity.Property(e => e.Description).HasMaxLength(250);
@@ -158,7 +143,6 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<Product>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.Property(e => e.CostPrice).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.CreatedAt).HasPrecision(0);
             entity.Property(e => e.Name).HasMaxLength(150);
@@ -209,7 +193,6 @@ public partial class PerfumeStoreDbContext : DbContext {
 
         modelBuilder.Entity<ReceiptVoucher>(entity => {
             entity.HasKey(e => e.ID);
-
             entity.Property(e => e.Amount).HasColumnType("decimal(18, 2)");
             entity.Property(e => e.Notes).HasMaxLength(250);
             entity.Property(e => e.Date)
@@ -221,14 +204,49 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReceiptVouchers_Customers1");
 
+            entity.HasOne(d => d.Person).WithMany()
+                .HasForeignKey(d => d.PersonId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_ReceiptVouchers_Persons1");
+
             entity.HasOne(d => d.MoneyAccount).WithMany(p => p.ReceiptVouchers)
                 .HasForeignKey(d => d.MoneyAccountID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_ReceiptVouchers_MoneyAccounts1");
+        });
 
-            entity.HasOne(d => d.SalesInvoice).WithMany(p => p.ReceiptVouchers)
-                .HasForeignKey(d => d.SalesInvoiceID)
-                .HasConstraintName("FK_ReceiptVouchers_SalesInvoices1");
+        modelBuilder.Entity<ReceiptVoucherSalesInvoice>(entity => {
+            entity.HasKey(e => e.ID);
+            entity.Property(e => e.AppliedAmount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.ReceiptVoucher).WithMany(p => p.AppliedSalesInvoices)
+                .HasForeignKey(d => d.ReceiptVoucherId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_ReceiptVoucherSalesInvoices_ReceiptVouchers");
+
+            entity.HasOne(d => d.SalesInvoice).WithMany(p => p.ReceiptVoucherSalesInvoices)
+                .HasForeignKey(d => d.SalesInvoiceId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_ReceiptVoucherSalesInvoices_SalesInvoices");
+
+            entity.HasIndex(e => new { e.ReceiptVoucherId, e.SalesInvoiceId }).IsUnique();
+        });
+
+        modelBuilder.Entity<ReceiptVoucherDebt>(entity => {
+            entity.HasKey(e => e.ID);
+            entity.Property(e => e.AppliedAmount).HasColumnType("decimal(18, 2)");
+
+            entity.HasOne(d => d.ReceiptVoucher).WithMany(p => p.AppliedPersonDebts)
+                .HasForeignKey(d => d.ReceiptVoucherId)
+                .OnDelete(DeleteBehavior.Cascade)
+                .HasConstraintName("FK_ReceiptVoucherDebts_ReceiptVouchers");
+
+            entity.HasOne(d => d.Debt).WithMany(p => p.ReceiptVoucherDebts)
+                .HasForeignKey(d => d.DebtId)
+                .OnDelete(DeleteBehavior.Restrict)
+                .HasConstraintName("FK_ReceiptVoucherDebts_Debts");
+
+            entity.HasIndex(e => new { e.ReceiptVoucherId, e.DebtId }).IsUnique();
         });
 
         modelBuilder.Entity<SalesInvoiceItem>(entity => {
@@ -266,12 +284,9 @@ public partial class PerfumeStoreDbContext : DbContext {
         modelBuilder.Entity<Person>(entity => {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Id).ValueGeneratedNever();
-
             entity.Property(e => e.Phone).HasMaxLength(30).IsRequired();
             entity.HasIndex(e => e.Phone).IsUnique();
-
             entity.Property(e => e.Name).HasMaxLength(150).IsRequired();
-
             entity.Property(e => e.CreatedAt)
                 .HasPrecision(0)
                 .HasDefaultValueSql("sysdatetime()");
@@ -285,15 +300,14 @@ public partial class PerfumeStoreDbContext : DbContext {
         });
 
         modelBuilder.Entity<Person>()
-                    .HasMany(p => p.Debts)
-                    .WithOne(d => d.Person)
-                    .HasForeignKey(d => d.PersonId);
+            .HasMany(p => p.Debts)
+            .WithOne(d => d.Person)
+            .HasForeignKey(d => d.PersonId);
 
         modelBuilder.Entity<Person>().UseTpcMappingStrategy();
 
         modelBuilder.Entity<Customer>().ToTable("Customers");
         modelBuilder.Entity<Supplier>().ToTable("Suppliers");
-
 
         OnModelCreatingPartial(modelBuilder);
     }

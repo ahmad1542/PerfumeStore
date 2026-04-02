@@ -1,6 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace PerfumeStore.Domain.Entities;
 
 public class ReceiptVoucher {
@@ -12,15 +9,16 @@ public class ReceiptVoucher {
 
     public string? Notes { get; set; }
 
-    public Guid CustomerId { get; set; }
-
-    public long? SalesInvoiceID { get; set; }
+    public Guid? CustomerId { get; set; }
+    public Guid? PersonId { get; set; }
 
     public int MoneyAccountID { get; set; }
 
-    public Customer Customer { get; set; } = null!;
+    public Customer? Customer { get; set; }
+    public Person? Person { get; set; }
 
     public MoneyAccount MoneyAccount { get; set; } = null!;
 
-    public SalesInvoice? SalesInvoice { get; set; }
+    public ICollection<ReceiptVoucherSalesInvoice> AppliedSalesInvoices { get; set; } = new List<ReceiptVoucherSalesInvoice>();
+    public ICollection<ReceiptVoucherDebt> AppliedPersonDebts { get; set; } = new List<ReceiptVoucherDebt>();
 }

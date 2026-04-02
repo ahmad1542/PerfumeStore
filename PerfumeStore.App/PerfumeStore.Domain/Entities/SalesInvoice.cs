@@ -1,4 +1,4 @@
-﻿namespace PerfumeStore.Domain.Entities;
+namespace PerfumeStore.Domain.Entities;
 
 public class SalesInvoice {
     public long ID { get; set; }
@@ -10,14 +10,14 @@ public class SalesInvoice {
     public Guid? CustomerId { get; set; }
 
     public Customer? Customer { get; set; }
-    public decimal AmountPaid {  get; set; }
+    public decimal AmountPaid { get; set; }
 
     public Debt? Debt { get; set; }
-    
+
     public int? MoneyAccountId { get; set; }
     public MoneyAccount? MoneyAccount { get; set; }
 
-    public ICollection<ReceiptVoucher> ReceiptVouchers { get; private set; } = new List<ReceiptVoucher>();
+    public ICollection<ReceiptVoucherSalesInvoice> ReceiptVoucherSalesInvoices { get; private set; } = new List<ReceiptVoucherSalesInvoice>();
 
     public ICollection<SalesInvoiceItem> SalesInvoiceItems { get; private set; } = new List<SalesInvoiceItem>();
 }

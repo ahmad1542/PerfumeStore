@@ -1,7 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
-
 namespace PerfumeStore.Domain.Entities;
 
 public class PaymentVoucher {
@@ -14,10 +10,12 @@ public class PaymentVoucher {
     public string? Notes { get; set; }
 
     public Guid SupplierId { get; set; }
-    public long? PurchaseInvoiceID { get; set; }
+
     public int MoneyAccountID { get; set; }
 
     public MoneyAccount MoneyAccount { get; set; } = null!;
-    public PurchaseInvoice? PurchaseInvoice { get; set; }
+
     public Supplier Supplier { get; set; } = null!;
+
+    public ICollection<PaymentVoucherPurchaseInvoice> AppliedPurchaseInvoices { get; set; } = new List<PaymentVoucherPurchaseInvoice>();
 }

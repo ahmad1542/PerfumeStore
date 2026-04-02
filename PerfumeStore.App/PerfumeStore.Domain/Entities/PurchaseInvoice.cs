@@ -1,6 +1,3 @@
-﻿using System;
-using System.Collections.Generic;
-
 namespace PerfumeStore.Domain.Entities;
 
 public class PurchaseInvoice {
@@ -19,7 +16,8 @@ public class PurchaseInvoice {
 
     public int? MoneyAccountId { get; set; }
     public MoneyAccount? MoneyAccount { get; set; }
-    public ICollection<PaymentVoucher> PaymentVouchers { get; private set; } = new List<PaymentVoucher>();
+
+    public ICollection<PaymentVoucherPurchaseInvoice> PaymentVoucherPurchaseInvoices { get; private set; } = new List<PaymentVoucherPurchaseInvoice>();
 
     public ICollection<PurchaseInvoiceItem> PurchaseInvoiceItems { get; private set; } = new List<PurchaseInvoiceItem>();
 }

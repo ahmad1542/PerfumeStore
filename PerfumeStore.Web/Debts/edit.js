@@ -1,33 +1,41 @@
 async function initPage() {
   try {
-    await fillPeopleSelect("PersonId", "https://localhost:7209/api/Persons");
+    await fillDebtPartiesSelect("PersonId");
   } catch (e) {
     console.error(e);
   }
 }
 
-async function fillPeopleSelect(selectId, apiUrl) {
+async function fillDebtPartiesSelect(selectId) {
   const el = $(selectId);
   if (!el) return;
 
-  el.innerHTML = `<option value="">-- Select --</option>`;
-  let list = [];
-  try {
-    list = await apiGetJson(apiUrl);
-  } catch {
-    list = [];
-  }
+  el.innerHTML = `<option value="">-- Select Person / Supplier --</option>`;
 
-  (Array.isArray(list) ? list : []).forEach((p) => {
+  let persons = [];
+  let suppliers = [];
+
+  try { persons = await apiGetJson("https://localhost:7209/api/Persons"); } catch { persons = []; }
+  try { suppliers = await apiGetJson("https://localhost:7209/api/Suppliers"); } catch { suppliers = []; }
+
+  const seen = new Set();
+  const items = [];
+
+  (Array.isArray(persons) ? persons : []).forEach((p) => items.push({ ...p, _partyType: "Person" }));
+  (Array.isArray(suppliers) ? suppliers : []).forEach((s) => items.push({ ...s, _partyType: "Supplier" }));
+
+  items.forEach((p) => {
     const id = p.id ?? p.ID ?? p.Id ?? "";
-    if (!id) return;
+    if (!id || seen.has(id)) return;
+    seen.add(id);
 
     const name = p.name ?? p.Name ?? "";
     const phone = p.phone ?? p.Phone ?? "";
+    const type = p._partyType || "Person";
 
     const opt = document.createElement("option");
     opt.value = id;
-    opt.textContent = name ? `${name}${phone ? ` (${phone})` : ""}` : (phone || id);
+    opt.textContent = `${type} - ${name ? `${name}${phone ? ` (${phone})` : ""}` : (phone || id)}`;
     el.appendChild(opt);
   });
 }
@@ -110,7 +118,7 @@ function validateBody(body) {
     (body.PersonId ? 1 : 0);
 
   if (linksCount === 0)
-    return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person.";
+    return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person / Supplier.";
 
   if (linksCount > 1)
     return "Only one link is allowed. Clear the other fields and try again.";
@@ -131,7 +139,6 @@ async function initEdit() {
     return;
   }
 
-  // load dropdown first (so we can set selected value)
   if (typeof initPage === "function") await initPage();
 
   setMsg("pageMsg", "Loading...", false);
@@ -139,7 +146,6 @@ async function initEdit() {
   try {
     const item = await apiGetJson(`${API}/${encodeURIComponent(id)}`);
 
-    // Try many casing variants to be safe
     const amount = item.amount ?? item.Amount ?? "";
     const salesId = item.salesInvoiceId ?? item.SalesInvoiceId ?? item.salesinvoiceid ?? "";
     const purchaseId = item.purchaseInvoiceId ?? item.PurchaseInvoiceId ?? item.purchaseinvoiceid ?? "";
@@ -165,7 +171,6 @@ async function initEdit() {
     return;
   }
 
-  // enforce one-link behavior after values are set
   wireExclusiveLinkInputs();
 
   const btn = $("btnSave");

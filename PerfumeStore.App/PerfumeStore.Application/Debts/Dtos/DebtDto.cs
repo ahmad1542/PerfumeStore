@@ -1,4 +1,4 @@
-﻿namespace PerfumeStore.Application.Debts.Dtos {
+namespace PerfumeStore.Application.Debts.Dtos {
     public class DebtDto {
         public int Id { get; set; }
 
@@ -11,5 +11,6 @@
         public Guid? PersonId { get; set; }
         public string? PersonPhone { get; set; }
         public string? PersonName { get; set; }
+        public string? PartyType { get; set; }
     }
 }
