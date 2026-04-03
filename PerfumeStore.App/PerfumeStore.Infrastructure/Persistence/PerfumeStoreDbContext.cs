@@ -25,7 +25,6 @@ public partial class PerfumeStoreDbContext : DbContext {
     public virtual DbSet<PurchaseInvoice> PurchaseInvoices { get; set; }
     public virtual DbSet<ReceiptVoucher> ReceiptVouchers { get; set; }
     public virtual DbSet<ReceiptVoucherSalesInvoice> ReceiptVoucherSalesInvoices { get; set; }
-    public virtual DbSet<ReceiptVoucherDebt> ReceiptVoucherDebts { get; set; }
     public virtual DbSet<SalesInvoiceItem> SalesInvoiceItems { get; set; }
     public virtual DbSet<SalesInvoice> SalesInvoices { get; set; }
     public virtual DbSet<Supplier> Suppliers { get; set; }
@@ -110,6 +109,9 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .HasForeignKey(d => d.MoneyAccountID)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_PaymentVouchers_MoneyAccounts1");
+
+            entity.Property(x => x.ID)
+                .ValueGeneratedOnAdd();
 
             entity.HasOne(d => d.Supplier).WithMany(p => p.PaymentVouchers)
                 .HasForeignKey(d => d.SupplierId)
@@ -230,23 +232,6 @@ public partial class PerfumeStoreDbContext : DbContext {
                 .HasConstraintName("FK_ReceiptVoucherSalesInvoices_SalesInvoices");
 
             entity.HasIndex(e => new { e.ReceiptVoucherId, e.SalesInvoiceId }).IsUnique();
-        });
-
-        modelBuilder.Entity<ReceiptVoucherDebt>(entity => {
-            entity.HasKey(e => e.ID);
-            entity.Property(e => e.AppliedAmount).HasColumnType("decimal(18, 2)");
-
-            entity.HasOne(d => d.ReceiptVoucher).WithMany(p => p.AppliedPersonDebts)
-                .HasForeignKey(d => d.ReceiptVoucherId)
-                .OnDelete(DeleteBehavior.Cascade)
-                .HasConstraintName("FK_ReceiptVoucherDebts_ReceiptVouchers");
-
-            entity.HasOne(d => d.Debt).WithMany(p => p.ReceiptVoucherDebts)
-                .HasForeignKey(d => d.DebtId)
-                .OnDelete(DeleteBehavior.Restrict)
-                .HasConstraintName("FK_ReceiptVoucherDebts_Debts");
-
-            entity.HasIndex(e => new { e.ReceiptVoucherId, e.DebtId }).IsUnique();
         });
 
         modelBuilder.Entity<SalesInvoiceItem>(entity => {

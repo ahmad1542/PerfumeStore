@@ -11,8 +11,7 @@ public class ReceiptVouchersProfile : Profile {
             .ForMember(d => d.Customer, opt => opt.Ignore())
             .ForMember(d => d.Person, opt => opt.Ignore())
             .ForMember(d => d.MoneyAccount, opt => opt.Ignore())
-            .ForMember(d => d.AppliedSalesInvoices, opt => opt.Ignore())
-            .ForMember(d => d.AppliedPersonDebts, opt => opt.Ignore());
+            .ForMember(d => d.AppliedSalesInvoices, opt => opt.Ignore());
 
         CreateMap<CreateReceiptVoucherSalesApplicationDto, ReceiptVoucherSalesInvoice>()
             .ForMember(d => d.ID, opt => opt.Ignore())
@@ -20,18 +19,11 @@ public class ReceiptVouchersProfile : Profile {
             .ForMember(d => d.ReceiptVoucher, opt => opt.Ignore())
             .ForMember(d => d.SalesInvoice, opt => opt.Ignore());
 
-        CreateMap<CreateReceiptVoucherDebtApplicationDto, ReceiptVoucherDebt>()
-            .ForMember(d => d.ID, opt => opt.Ignore())
-            .ForMember(d => d.ReceiptVoucherId, opt => opt.Ignore())
-            .ForMember(d => d.ReceiptVoucher, opt => opt.Ignore())
-            .ForMember(d => d.Debt, opt => opt.Ignore());
-
         CreateMap<ReceiptVoucher, ReceiptVoucherDto>()
             .ForMember(d => d.PartyName, opt => opt.MapFrom(s => s.Customer != null ? s.Customer.Name : (s.Person != null ? s.Person.Name : null)))
             .ForMember(d => d.ReceiptForType, opt => opt.MapFrom(s => s.CustomerId.HasValue ? "customer" : "person"))
             .ForMember(d => d.MoneyAccountName, opt => opt.MapFrom(s => s.MoneyAccount.AccountName))
-            .ForMember(d => d.AppliedInvoicesCount, opt => opt.MapFrom(s => s.AppliedSalesInvoices.Count))
-            .ForMember(d => d.AppliedDebtsCount, opt => opt.MapFrom(s => s.AppliedPersonDebts.Count));
+            .ForMember(d => d.AppliedInvoicesCount, opt => opt.MapFrom(s => s.AppliedSalesInvoices.Count));
 
         CreateMap<ReceiptVoucher, ReceiptVoucherDetailsDto>()
             .ForMember(d => d.PartyName, opt => opt.MapFrom(s => s.Customer != null ? s.Customer.Name : (s.Person != null ? s.Person.Name : null)))
@@ -47,13 +39,6 @@ public class ReceiptVouchersProfile : Profile {
                         AppliedAmount = s.AppliedAmount,
                         Notes = s.SalesInvoice.Notes
                     })
-                    .Concat(src.AppliedPersonDebts.Select(d => new ReceiptVoucherApplicationDetailsDto {
-                        ApplicationType = "personDebt",
-                        DebtId = d.DebtId,
-                        ItemDate = d.Debt.CreatedAt,
-                        AppliedAmount = d.AppliedAmount,
-                        Notes = d.Debt.Notes
-                    }))
                     .OrderBy(x => x.ItemDate)
                     .ToList();
             });

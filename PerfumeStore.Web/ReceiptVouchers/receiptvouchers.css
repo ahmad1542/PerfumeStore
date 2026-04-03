@@ -1,54 +1,54 @@
 .navbar {
   background: linear-gradient(90deg, #0e1833, #0b1220);
   padding: 14px 0;
-  border-bottom: 1px solid rgba(255,255,255,.06);
+  border-bottom: 1px solid rgba(255, 255, 255, .06);
 }
 
 .navbar-container {
-  max-width: 1200px;
+  max-width: 1300px;
   padding: 0 16px;
   display: flex;
   align-items: center;
-  gap: 18px;
+  gap: 0px;
 }
 
 .navbar-brand {
   font-size: 1.25rem;
   font-weight: 900;
   color: #e8eefc;
-  letter-spacing: 0.2px;
+  letter-spacing: 0.35px;
 }
 
 .navbar-links {
   display: flex;
   align-items: center;
   gap: 18px;
-  flex-wrap: wrap;
 }
 
 .navbar-links a {
-  color: rgba(232,238,252,.70);
+  color: rgba(232, 238, 252, .70);
   text-decoration: none;
   font-weight: 700;
   padding: 8px 10px;
   border-radius: 12px;
   border: 1px solid transparent;
-  transition: background .15s ease, color .15s ease, border-color .15s ease;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
 }
 
 .navbar-links a:hover {
   color: #ffffff;
-  background: rgba(255,255,255,.06);
-  border-color: rgba(255,255,255,.10);
+  background: rgba(255, 255, 255, .06);
+  border-color: rgba(255, 255, 255, .10);
 }
 
 .navbar-links a.active {
   color: #eaf7ff;
-  background: rgba(97,218,251,.14);
-  border-color: rgba(97,218,251,.20);
+  background: rgba(97, 218, 251, .14);
+  border-color: rgba(97, 218, 251, .20);
 }
 
 .receiptvouchers-table {
+  text-align: left;
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;

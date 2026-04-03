@@ -32,9 +32,8 @@ public class CreateReceiptVoucherCommandHandler(
 
         var receiptVoucher = mapper.Map<ReceiptVoucher>(request);
         var salesApplications = mapper.Map<List<ReceiptVoucherSalesInvoice>>(request.SalesApplications);
-        var personDebtApplications = mapper.Map<List<ReceiptVoucherDebt>>(request.PersonDebtApplications);
 
-        var id = await receiptVouchersRepository.AddAsync(receiptVoucher, salesApplications, personDebtApplications);
+        var id = await receiptVouchersRepository.AddAsync(receiptVoucher, salesApplications);
 
         account.CurrentBalance += request.Amount;
         await moneyAccountsRepository.SaveChangesAsync();

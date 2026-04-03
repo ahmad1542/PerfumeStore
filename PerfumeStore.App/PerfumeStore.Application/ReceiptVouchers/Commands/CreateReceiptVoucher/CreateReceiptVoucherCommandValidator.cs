@@ -39,10 +39,6 @@ public class CreateReceiptVoucherCommandValidator : AbstractValidator<CreateRece
             RuleFor(x => x)
                 .Must(x => x.SalesApplications.Select(a => a.SalesInvoiceId).Distinct().Count() == x.SalesApplications.Count)
                 .WithMessage("The same sales invoice cannot be selected more than once.");
-
-            RuleFor(x => x.PersonDebtApplications)
-                .Must(x => x == null || x.Count == 0)
-                .WithMessage("Person debt applications are not allowed for customer receipt vouchers.");
         });
 
         When(x => x.ReceiptForType == "person", () => {
@@ -53,28 +49,9 @@ public class CreateReceiptVoucherCommandValidator : AbstractValidator<CreateRece
                 .Must(x => !x.HasValue)
                 .WithMessage("Customer must be empty when receipt is for person debts.");
 
-            RuleFor(x => x.PersonDebtApplications)
-                .NotEmpty().WithMessage("At least one person debt must be selected.");
-
-            RuleForEach(x => x.PersonDebtApplications).ChildRules(app => {
-                app.RuleFor(x => x.DebtId)
-                    .GreaterThan(0).WithMessage("Debt is required.");
-
-                app.RuleFor(x => x.AppliedAmount)
-                    .GreaterThan(0).WithMessage("Applied amount must be greater than zero.");
-            });
-
-            RuleFor(x => x)
-                .Must(x => x.PersonDebtApplications.Select(a => a.DebtId).Distinct().Count() == x.PersonDebtApplications.Count)
-                .WithMessage("The same debt cannot be selected more than once.");
-
             RuleFor(x => x.SalesApplications)
                 .Must(x => x == null || x.Count == 0)
                 .WithMessage("Sales invoice applications are not allowed for person receipt vouchers.");
         });
-
-        RuleFor(x => x)
-            .Must(x => Math.Abs((x.SalesApplications?.Sum(a => a.AppliedAmount) ?? 0) + (x.PersonDebtApplications?.Sum(a => a.AppliedAmount) ?? 0) - x.Amount) < 0.01m)
-            .WithMessage("Voucher amount must equal the total applied amount.");
     }
 }

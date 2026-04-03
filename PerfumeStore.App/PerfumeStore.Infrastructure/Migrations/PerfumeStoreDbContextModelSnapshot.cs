@@ -148,14 +148,15 @@ namespace PerfumeStore.Infrastructure.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("ExpenseType");
+                    b.ToTable("ExpenseType", (string)null);
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Inventory", b =>
@@ -235,7 +236,10 @@ namespace PerfumeStore.Infrastructure.Migrations
             modelBuilder.Entity("PerfumeStore.Domain.Entities.PaymentVoucher", b =>
                 {
                     b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
 
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 2)");
@@ -253,9 +257,6 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<long?>("PurchaseInvoiceID")
-                        .HasColumnType("bigint");
-
                     b.Property<Guid>("SupplierId")
                         .HasColumnType("uniqueidentifier");
 
@@ -263,11 +264,36 @@ namespace PerfumeStore.Infrastructure.Migrations
 
                     b.HasIndex("MoneyAccountID");
 
-                    b.HasIndex("PurchaseInvoiceID");
-
                     b.HasIndex("SupplierId");
 
                     b.ToTable("PaymentVouchers");
+                });
+
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.PaymentVoucherPurchaseInvoice", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+
+                    b.Property<decimal>("AppliedAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<long>("PaymentVoucherId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("PurchaseInvoiceId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("PurchaseInvoiceId");
+
+                    b.HasIndex("PaymentVoucherId", "PurchaseInvoiceId")
+                        .IsUnique();
+
+                    b.ToTable("PaymentVoucherPurchaseInvoices");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Person", b =>
@@ -465,7 +491,7 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.Property<decimal>("Amount")
                         .HasColumnType("decimal(18, 2)");
 
-                    b.Property<Guid>("CustomerId")
+                    b.Property<Guid?>("CustomerId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("Date")
@@ -481,8 +507,8 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .HasMaxLength(250)
                         .HasColumnType("nvarchar(250)");
 
-                    b.Property<long?>("SalesInvoiceID")
-                        .HasColumnType("bigint");
+                    b.Property<Guid?>("PersonId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("ID");
 
@@ -490,9 +516,36 @@ namespace PerfumeStore.Infrastructure.Migrations
 
                     b.HasIndex("MoneyAccountID");
 
-                    b.HasIndex("SalesInvoiceID");
+                    b.HasIndex("PersonId");
 
                     b.ToTable("ReceiptVouchers");
+                });
+
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.ReceiptVoucherSalesInvoice", b =>
+                {
+                    b.Property<long>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bigint");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("ID"));
+
+                    b.Property<decimal>("AppliedAmount")
+                        .HasColumnType("decimal(18, 2)");
+
+                    b.Property<long>("ReceiptVoucherId")
+                        .HasColumnType("bigint");
+
+                    b.Property<long>("SalesInvoiceId")
+                        .HasColumnType("bigint");
+
+                    b.HasKey("ID");
+
+                    b.HasIndex("SalesInvoiceId");
+
+                    b.HasIndex("ReceiptVoucherId", "SalesInvoiceId")
+                        .IsUnique();
+
+                    b.ToTable("ReceiptVoucherSalesInvoices");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.SalesInvoice", b =>
@@ -649,21 +702,36 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_PaymentVouchers_MoneyAccounts1");
 
-                    b.HasOne("PerfumeStore.Domain.Entities.PurchaseInvoice", "PurchaseInvoice")
-                        .WithMany("PaymentVouchers")
-                        .HasForeignKey("PurchaseInvoiceID")
-                        .HasConstraintName("FK_PaymentVouchers_PurchaseInvoices1");
-
                     b.HasOne("PerfumeStore.Domain.Entities.Supplier", "Supplier")
                         .WithMany("PaymentVouchers")
                         .HasForeignKey("SupplierId")
-                        .IsRequired();
+                        .IsRequired()
+                        .HasConstraintName("FK_PaymentVouchers_Suppliers1");
 
                     b.Navigation("MoneyAccount");
 
-                    b.Navigation("PurchaseInvoice");
-
                     b.Navigation("Supplier");
+                });
+
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.PaymentVoucherPurchaseInvoice", b =>
+                {
+                    b.HasOne("PerfumeStore.Domain.Entities.PaymentVoucher", "PaymentVoucher")
+                        .WithMany("AppliedPurchaseInvoices")
+                        .HasForeignKey("PaymentVoucherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_PaymentVoucherPurchaseInvoices_PaymentVouchers");
+
+                    b.HasOne("PerfumeStore.Domain.Entities.PurchaseInvoice", "PurchaseInvoice")
+                        .WithMany("PaymentVoucherPurchaseInvoices")
+                        .HasForeignKey("PurchaseInvoiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_PaymentVoucherPurchaseInvoices_PurchaseInvoices");
+
+                    b.Navigation("PaymentVoucher");
+
+                    b.Navigation("PurchaseInvoice");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Product", b =>
@@ -726,7 +794,6 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.HasOne("PerfumeStore.Domain.Entities.Customer", "Customer")
                         .WithMany("ReceiptVouchers")
                         .HasForeignKey("CustomerId")
-                        .IsRequired()
                         .HasConstraintName("FK_ReceiptVouchers_Customers1");
 
                     b.HasOne("PerfumeStore.Domain.Entities.MoneyAccount", "MoneyAccount")
@@ -735,14 +802,35 @@ namespace PerfumeStore.Infrastructure.Migrations
                         .IsRequired()
                         .HasConstraintName("FK_ReceiptVouchers_MoneyAccounts1");
 
-                    b.HasOne("PerfumeStore.Domain.Entities.SalesInvoice", "SalesInvoice")
-                        .WithMany("ReceiptVouchers")
-                        .HasForeignKey("SalesInvoiceID")
-                        .HasConstraintName("FK_ReceiptVouchers_SalesInvoices1");
+                    b.HasOne("PerfumeStore.Domain.Entities.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .HasConstraintName("FK_ReceiptVouchers_Persons1");
 
                     b.Navigation("Customer");
 
                     b.Navigation("MoneyAccount");
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.ReceiptVoucherSalesInvoice", b =>
+                {
+                    b.HasOne("PerfumeStore.Domain.Entities.ReceiptVoucher", "ReceiptVoucher")
+                        .WithMany("AppliedSalesInvoices")
+                        .HasForeignKey("ReceiptVoucherId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("FK_ReceiptVoucherSalesInvoices_ReceiptVouchers");
+
+                    b.HasOne("PerfumeStore.Domain.Entities.SalesInvoice", "SalesInvoice")
+                        .WithMany("ReceiptVoucherSalesInvoices")
+                        .HasForeignKey("SalesInvoiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired()
+                        .HasConstraintName("FK_ReceiptVoucherSalesInvoices_SalesInvoices");
+
+                    b.Navigation("ReceiptVoucher");
 
                     b.Navigation("SalesInvoice");
                 });
@@ -806,6 +894,11 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.Navigation("ReceiptVouchers");
                 });
 
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.PaymentVoucher", b =>
+                {
+                    b.Navigation("AppliedPurchaseInvoices");
+                });
+
             modelBuilder.Entity("PerfumeStore.Domain.Entities.Person", b =>
                 {
                     b.Navigation("Debts");
@@ -829,16 +922,22 @@ namespace PerfumeStore.Infrastructure.Migrations
                 {
                     b.Navigation("Debt");
 
-                    b.Navigation("PaymentVouchers");
+                    b.Navigation("PaymentVoucherPurchaseInvoices");
 
                     b.Navigation("PurchaseInvoiceItems");
+                });
+
+            modelBuilder.Entity("PerfumeStore.Domain.Entities.ReceiptVoucher", b =>
+                {
+
+                    b.Navigation("AppliedSalesInvoices");
                 });
 
             modelBuilder.Entity("PerfumeStore.Domain.Entities.SalesInvoice", b =>
                 {
                     b.Navigation("Debt");
 
-                    b.Navigation("ReceiptVouchers");
+                    b.Navigation("ReceiptVoucherSalesInvoices");
 
                     b.Navigation("SalesInvoiceItems");
                 });

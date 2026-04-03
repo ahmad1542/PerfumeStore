@@ -20,5 +20,4 @@ public class ReceiptVoucher {
     public MoneyAccount MoneyAccount { get; set; } = null!;
 
     public ICollection<ReceiptVoucherSalesInvoice> AppliedSalesInvoices { get; set; } = new List<ReceiptVoucherSalesInvoice>();
-    public ICollection<ReceiptVoucherDebt> AppliedPersonDebts { get; set; } = new List<ReceiptVoucherDebt>();
 }

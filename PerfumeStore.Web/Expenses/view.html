@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>View Expense - Memento Perfume</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+
   <link rel="stylesheet" href="../assets/theme-dark.css" />
   <link rel="stylesheet" href="expenses.css" />
 </head>
+
 <body>
   <header class="navbar">
-  <div class="navbar-container">
-    <div class="navbar-brand">Memento Perfume</div>
-    <nav class="navbar-links">
+    <div class="navbar-container">
+      <div class="navbar-brand">Memento Perfume</div>
+      <nav class="navbar-links">
         <a href="../Dashboard/">Dashboard</a>
         <a href="../Debts/">Debts</a>
         <a href="../SalesInvoices/">Sales Invoices</a>
@@ -20,8 +26,8 @@
         <a href="../PaymentVouchers/">Payment Vouchers</a>
         <a href="../ReceiptVouchers/">Receipt Vouchers</a>
       </nav>
-  </div>
-</header>
+    </div>
+  </header>
 
   <main class="main-content">
     <div class="container">
@@ -35,11 +41,11 @@
 
       <div class="form-card">
         <div class="details-row cardx" style="padding:16px;">
-  <div style="font-weight:900;color:rgba(232,238,252,.75);">Field</div>
-  <div style="font-weight:900;color:rgba(232,238,252,.75);">Value</div>
-  <div id="details"></div>
-</div>
-<div id="pageMsg" class="hint"></div>
+          <div style="font-weight:900;color:rgba(232,238,252,.75);">Field</div>
+          <div style="font-weight:900;color:rgba(232,238,252,.75);">Value</div>
+          <div id="details"></div>
+        </div>
+        <div id="pageMsg" class="hint"></div>
       </div>
     </div>
   </main>
@@ -49,4 +55,5 @@
   <script src="view.js"></script>
   <script>loadView();</script>
 </body>
+
 </html>

@@ -6,9 +6,8 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Repositories;
 
 public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IReceiptVouchersRepository {
-    public async Task<long> AddAsync(ReceiptVoucher receiptVoucher, IEnumerable<ReceiptVoucherSalesInvoice> salesApplications, IEnumerable<ReceiptVoucherDebt> personDebtApplications) {
+    public async Task<long> AddAsync(ReceiptVoucher receiptVoucher, IEnumerable<ReceiptVoucherSalesInvoice> salesApplications) {
         var salesApplicationList = salesApplications.ToList();
-        var personDebtApplicationList = personDebtApplications.ToList();
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
 
@@ -47,37 +46,6 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
                 }
             }
 
-            foreach (var application in personDebtApplicationList) {
-                var debt = await dbContext.Debts
-                    .Include(x => x.Person)
-                    .FirstOrDefaultAsync(x => x.Id == application.DebtId);
-
-                if (debt == null) {
-                    throw new Exception($"Debt #{application.DebtId} was not found.");
-                }
-
-                if (!debt.PersonId.HasValue || debt.PersonId != receiptVoucher.PersonId || debt.SalesInvoiceId.HasValue || debt.PurchaseInvoiceId.HasValue) {
-                    throw new Exception($"Debt #{application.DebtId} does not belong to the selected person.");
-                }
-
-                if (debt.IsDeleted || debt.Amount <= 0) {
-                    throw new Exception($"Debt #{application.DebtId} has no remaining balance.");
-                }
-
-                if (application.AppliedAmount > debt.Amount) {
-                    throw new Exception($"Applied amount for debt #{application.DebtId} exceeds its remaining balance.");
-                }
-
-                application.ReceiptVoucherId = receiptVoucher.ID;
-                await dbContext.ReceiptVoucherDebts.AddAsync(application);
-
-                debt.Amount -= application.AppliedAmount;
-                if (debt.Amount <= 0) {
-                    debt.Amount = 0;
-                    debt.IsDeleted = true;
-                }
-            }
-
             await dbContext.SaveChangesAsync();
             await transaction.CommitAsync();
 
@@ -93,8 +61,7 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
             .Include(x => x.Customer)
             .Include(x => x.Person)
             .Include(x => x.MoneyAccount)
-            .Include(x => x.AppliedSalesInvoices)
-            .Include(x => x.AppliedPersonDebts);
+            .Include(x => x.AppliedSalesInvoices);
 
         if (!string.IsNullOrWhiteSpace(search)) {
             search = search.Trim();
@@ -108,8 +75,7 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
                 (x.Customer != null && x.Customer.Name.Contains(search)) ||
                 (x.Person != null && x.Person.Name.Contains(search)) ||
                 (x.Notes != null && x.Notes.Contains(search)) ||
-                x.AppliedSalesInvoices.Any(a => a.SalesInvoiceId.ToString().Contains(search)) ||
-                (isInt && x.AppliedPersonDebts.Any(a => a.DebtId == searchDebtId))
+                x.AppliedSalesInvoices.Any(a => a.SalesInvoiceId.ToString().Contains(search))
             );
         }
 
@@ -123,9 +89,6 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
             .Include(x => x.MoneyAccount)
             .Include(x => x.AppliedSalesInvoices)
                 .ThenInclude(x => x.SalesInvoice)
-            .Include(x => x.AppliedPersonDebts)
-                .ThenInclude(x => x.Debt)
-                    .ThenInclude(x => x.Person)
             .FirstOrDefaultAsync(x => x.ID == id);
     }
 

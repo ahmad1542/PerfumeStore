@@ -11,15 +11,9 @@ public class CreateReceiptVoucherCommand : IRequest<long> {
     public decimal Amount { get; set; }
     public string? Notes { get; set; }
     public List<CreateReceiptVoucherSalesApplicationDto> SalesApplications { get; set; } = [];
-    public List<CreateReceiptVoucherDebtApplicationDto> PersonDebtApplications { get; set; } = [];
 }
 
 public class CreateReceiptVoucherSalesApplicationDto {
     public long SalesInvoiceId { get; set; }
-    public decimal AppliedAmount { get; set; }
-}
-
-public class CreateReceiptVoucherDebtApplicationDto {
-    public int DebtId { get; set; }
     public decimal AppliedAmount { get; set; }
 }
