@@ -19,8 +19,6 @@ namespace PerfumeStore.Application.MoneyTransactions.Commands.UpdateMoneyTransac
             if (from is null) throw new NotFoundException(nameof(MoneyAccount), request.FromMoneyAccountID.ToString());
             if (to is null) throw new NotFoundException(nameof(MoneyAccount), request.ToMoneyAccountID.ToString());
 
-            if (from.CurrentBalance < request.TransferAmount) throw new BusinessRuleException("Insufficient balance");
-
             from.CurrentBalance -= request.TransferAmount;
             to.CurrentBalance += request.TransferAmount;
 

@@ -29,11 +29,6 @@ async function createItem() {
       setMsg('pageMsg', 'Transfer amount must be greater than 0.', true);
       return;
     }
-    const fromBal = getSelectedBalance('FromMoneyAccountID');
-    if (fromBal != null && body.TransferAmount > fromBal) {
-      setMsg('pageMsg', `Insufficient balance. Available: ${fromBal}`, true);
-      return;
-    }
 
     await apiSendJson(API, 'POST', body);
     window.location.href = 'index.html';

@@ -22,10 +22,6 @@ public class CreatePaymentVoucherCommandHandler(
             throw new Exception("Selected money account was not found.");
         }
 
-        if (account.CurrentBalance < request.Amount) {
-            throw new Exception("The selected money account does not have enough balance.");
-        }
-
         var totalApplied = request.Applications.Sum(x => x.AppliedAmount);
         if (Math.Abs(totalApplied - request.Amount) >= 0.01m) {
             throw new Exception("Voucher amount must equal the total applied amount.");
