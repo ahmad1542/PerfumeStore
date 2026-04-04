@@ -50,7 +50,7 @@ public class ReceiptVouchersProfile : Profile {
 
         CreateMap<Debt, OpenPersonDebtDto>()
             .ForMember(d => d.DebtId, opt => opt.MapFrom(s => s.Id))
-            .ForMember(d => d.CreatedAt, opt => opt.MapFrom(s => s.CreatedAt))
+            .ForMember(d => d.Date, opt => opt.MapFrom(s => s.Date))
             .ForMember(d => d.RemainingAmount, opt => opt.MapFrom(s => s.Amount))
             .ForMember(d => d.PersonName, opt => opt.MapFrom(s => s.Person != null ? s.Person.Name : null));
     }

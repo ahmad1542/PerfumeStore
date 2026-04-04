@@ -42,21 +42,33 @@
       <div class="form-card">
         <form id="form" action="#" method="post">
           <div class="form-group">
+            <label for="Date">Date <span class="req">*</span></label>
+            <input id="Date" type="date" placeholder="Date" required />
+          </div>
+          <br>
+          <div class="form-group">
             <label for="Amount">Amount <span class="req">*</span></label>
             <input id="Amount" type="number" placeholder="Amount" required />
           </div>
+          <br>
           <div class="form-group">
-            <label for="SalesInvoiceId">Sales Invoice ID</label>
-            <input id="SalesInvoiceId" type="text" placeholder="Sales Invoice ID" />
+            <label for="PersonId">Person / Supplier <span class="req">*</span></label>
+            <select id="PersonId" class="search-input" required></select>
           </div>
+          <br>
           <div class="form-group">
-            <label for="PurchaseInvoiceId">Purchase Invoice ID</label>
-            <input id="PurchaseInvoiceId" type="text" placeholder="Purchase Invoice ID" />
+            <label for="direction">Direction <span class="req">*</span></label><br>
+            <select id="direction" class="search-input" required>
+              <option value="1">They owe me</option>
+              <option value="2">I owe them</option>
+            </select>
           </div>
+          <br>
           <div class="form-group">
-            <label for="PersonId">Person / Supplier</label>
-            <select id="PersonId" class="search-input"></select>
+            <label for="moneyAccount">Money Account <span class="req">*</span></label><br>
+            <select id="moneyAccount" class="search-input" required></select>
           </div>
+          <br>
           <div class="form-group">
             <label for="Notes">Notes</label>
             <textarea id="Notes" rows="4" placeholder="Notes..."></textarea>

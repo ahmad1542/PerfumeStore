@@ -8,6 +8,7 @@ public class CreateReceiptVoucherCommand : IRequest<long> {
     public Guid? CustomerId { get; set; }
     public Guid? PersonId { get; set; }
     public int MoneyAccountID { get; set; }
+    public int? DebtId { get; set; }
     public decimal Amount { get; set; }
     public string? Notes { get; set; }
     public List<CreateReceiptVoucherSalesApplicationDto> SalesApplications { get; set; } = [];

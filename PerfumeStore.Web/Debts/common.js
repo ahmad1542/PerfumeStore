@@ -11,4 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (typeof loadList === "function") loadList(searchBox.value);
     }, 350);
   });
+  $("ShowSettled")?.addEventListener("change", () => {
+    loadList($("searchInput")?.value || "");
+  });
 });

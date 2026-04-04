@@ -41,7 +41,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
             IQueryable<PurchaseInvoice> query = dbContext.PurchaseInvoices
                 .Include(p => p.Supplier)
                 .Include(p => p.Debt)
-                                .Include(p => p.PurchaseInvoiceItems);
+                .Include(p => p.PurchaseInvoiceItems);
 
             if (fromDate.HasValue) {
                 var from = fromDate.Value.Date;

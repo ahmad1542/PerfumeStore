@@ -31,9 +31,11 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                 .ForMember(d => d.Debt, opt => opt.MapFrom((src, dest) =>
                     (src.HasDebt && src.DebtAmount.HasValue && src.DebtAmount.Value > 0)
                         ? new Debt {
+                            Date = src.Date,
                             Amount = src.DebtAmount.Value,
                             Notes = src.DebtNotes,
                             PersonId = src.CustomerId,
+                            Direction = 1,
                             SalesInvoice = dest
                         }
                         : null

@@ -1,17 +1,15 @@
 function buildBodyFromForm() {
+  
+  const Date = $('Date').value || null;
   const amount = Number($("Amount").value || 0);
 
-  const salesInvoiceIdRaw = $("SalesInvoiceId").value?.trim() || "";
-  const purchaseInvoiceIdRaw = $("PurchaseInvoiceId").value?.trim() || "";
   const personIdRaw = $("PersonId").value?.trim() || "";
 
-  const salesInvoiceId = salesInvoiceIdRaw ? Number(salesInvoiceIdRaw) : null;
-  const purchaseInvoiceId = purchaseInvoiceIdRaw ? Number(purchaseInvoiceIdRaw) : null;
-
   return {
+    Date: Date,
     Amount: amount,
-    SalesInvoiceId: Number.isFinite(salesInvoiceId) ? salesInvoiceId : null,
-    PurchaseInvoiceId: Number.isFinite(purchaseInvoiceId) ? purchaseInvoiceId : null,
+    moneyAccountId: parseInt($("moneyAccount").value),
+    direction: parseInt($("direction").value),
     PersonId: personIdRaw || null,
     Notes: $("Notes").value || null
   };
@@ -20,22 +18,13 @@ function buildBodyFromForm() {
 function validateBody(body) {
   if (!body.Amount || body.Amount <= 0) return "Amount is required and must be greater than 0.";
 
-  const linksCount =
-    (body.SalesInvoiceId ? 1 : 0) +
-    (body.PurchaseInvoiceId ? 1 : 0) +
-    (body.PersonId ? 1 : 0);
+  const linksCount = (body.PersonId ? 1 : 0)
 
   if (linksCount === 0)
     return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person / Supplier.";
 
-  if (linksCount > 1)
-    return "Only one link is allowed. Clear the other fields and try again.";
-
-  if ($("SalesInvoiceId").value.trim() && !body.SalesInvoiceId)
-    return "Sales Invoice ID must be a valid number.";
-
-  if ($("PurchaseInvoiceId").value.trim() && !body.PurchaseInvoiceId)
-    return "Purchase Invoice ID must be a valid number.";
+  if (body.moneyAccountId && isNaN(body.moneyAccountId))
+    return "Money Account ID must be a valid number.";
 
   return null;
 }
@@ -68,61 +57,27 @@ async function createItem() {
 async function initPage() {
   try {
     await fillDebtPartiesSelect("PersonId");
+    await fillMoneyAccounts("moneyAccount");
   } catch (e) {
     console.error(e);
   }
-
-  wireExclusiveLinkInputs();
 }
 
-function wireExclusiveLinkInputs() {
-  const sales = $("SalesInvoiceId");
-  const purchase = $("PurchaseInvoiceId");
-  const person = $("PersonId");
-
-  function apply() {
-    const salesVal = sales.value.trim();
-    const purchaseVal = purchase.value.trim();
-    const personVal = person.value.trim();
-
-    let active = "";
-    if (salesVal) active = "sales";
-    else if (purchaseVal) active = "purchase";
-    else if (personVal) active = "person";
-
-    if (!active) {
-      sales.disabled = false;
-      purchase.disabled = false;
-      person.disabled = false;
-      return;
-    }
-
-    if (active === "sales") {
-      purchase.value = "";
-      person.value = "";
-      sales.disabled = false;
-      purchase.disabled = true;
-      person.disabled = true;
-    } else if (active === "purchase") {
-      sales.value = "";
-      person.value = "";
-      sales.disabled = true;
-      purchase.disabled = false;
-      person.disabled = true;
-    } else if (active === "person") {
-      sales.value = "";
-      purchase.value = "";
-      sales.disabled = true;
-      purchase.disabled = true;
-      person.disabled = false;
-    }
-  }
-
-  sales.addEventListener("input", apply);
-  purchase.addEventListener("input", apply);
-  person.addEventListener("change", apply);
-
-  apply();
+async function fillMoneyAccounts(selectId) {
+  const el = $(selectId);
+  if (!el) return;
+  el.innerHTML = `<option value="">-- Select Account --</option>`;
+  let list = [];
+  try { list = await apiGetJson("https://localhost:7209/api/MoneyAccounts"); } catch { list = []; }
+  (Array.isArray(list) ? list : []).forEach(a => {
+    const id = a.id ?? a.ID ?? a.Id ?? "";
+    const name = a.accountName ?? a.AccountName ?? ("Account #" + id);
+    if (id === "") return;
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = name;
+    el.appendChild(opt);
+  });
 }
 
 async function fillDebtPartiesSelect(selectId) {

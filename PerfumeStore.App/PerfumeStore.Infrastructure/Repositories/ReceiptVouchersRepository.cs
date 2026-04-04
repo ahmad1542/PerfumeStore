@@ -6,7 +6,7 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Repositories;
 
 public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IReceiptVouchersRepository {
-    public async Task<long> AddAsync(ReceiptVoucher receiptVoucher, IEnumerable<ReceiptVoucherSalesInvoice> salesApplications) {
+    public async Task<long> AddAsync(ReceiptVoucher receiptVoucher, IEnumerable<ReceiptVoucherSalesInvoice> salesApplications, int? debtId = null) {
         var salesApplicationList = salesApplications.ToList();
 
         await using var transaction = await dbContext.Database.BeginTransactionAsync();
@@ -43,6 +43,27 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
                 if (invoice.Debt.Amount <= 0) {
                     invoice.Debt.Amount = 0;
                     invoice.Debt.IsDeleted = true;
+                }
+            }
+
+            if (debtId.HasValue) {
+                var debt = await dbContext.Debts
+                    .FirstOrDefaultAsync(x => x.Id == debtId.Value);
+
+                if (debt == null)
+                    throw new Exception($"Debt #{debtId.Value} not found.");
+
+                if (debt.IsDeleted || debt.Amount <= 0)
+                    throw new Exception("Debt already settled.");
+
+                if (receiptVoucher.Amount > debt.Amount)
+                    throw new Exception("Amount exceeds debt.");
+
+                debt.Amount -= receiptVoucher.Amount;
+
+                if (debt.Amount <= 0) {
+                    debt.Amount = 0;
+                    debt.IsDeleted = true;
                 }
             }
 
@@ -105,7 +126,7 @@ public class ReceiptVouchersRepository(PerfumeStoreDbContext dbContext) : IRecei
         return await dbContext.Debts
             .Include(x => x.Person)
             .Where(x => x.PersonId == personId && x.SalesInvoiceId == null && x.PurchaseInvoiceId == null && !x.IsDeleted && x.Amount > 0)
-            .OrderBy(x => x.CreatedAt)
+            .OrderBy(x => x.Date)
             .ThenBy(x => x.Id)
             .ToListAsync();
     }

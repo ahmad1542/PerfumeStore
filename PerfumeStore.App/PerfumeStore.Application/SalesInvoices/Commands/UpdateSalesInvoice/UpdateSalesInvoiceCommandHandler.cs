@@ -54,6 +54,7 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
 
             if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0) {
                 if (salesInvoice.Debt != null) {
+                    salesInvoice.Debt.Date = request.Date;
                     salesInvoice.Debt.Amount = request.DebtAmount.Value;
                     salesInvoice.Debt.Notes = request.DebtNotes;
                     salesInvoice.Debt.PersonId = request.CustomerId;

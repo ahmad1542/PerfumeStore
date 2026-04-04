@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Amount</th><th>Type</th><th>PersonPhone</th><th>PersonName</th><th>SalesInvoiceId</th><th>PurchaseInvoiceId</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Amount</th><th>Type</th><th>PersonName</th><th>Sales/Purchase InvoiceId</th><th>Direction</th><th>Status</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -16,10 +16,12 @@ async function loadList(searchText = "") {
 
   setMsg("pageMsg", "Loading...", false);
 
+  const includeSettled = $("ShowSettled")?.checked || false;
+
   const url =
     searchText && searchText.trim().length > 0
-      ? `${API}?search=${encodeURIComponent(searchText.trim())}`
-      : API;
+      ? `${API}?search=${encodeURIComponent(searchText.trim())}&includeSettled=${includeSettled}`
+      : `${API}?includeSettled=${includeSettled}`;
 
   let list = [];
   try {
@@ -54,22 +56,35 @@ async function loadList(searchText = "") {
   list.forEach((x) => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
+    const rawDate = x.date ?? x.Date ?? '';
+    cells.push(escapeHtml(formatDateOnly(rawDate)));
     cells.push(escapeHtml(x.amount ?? x.Amount ?? 0));
     cells.push(escapeHtml(x.partyType ?? x.PartyType ?? '-'));
-    cells.push(escapeHtml(x.personPhone ?? x.PersonPhone ?? '-'));
     cells.push(escapeHtml(x.personName ?? x.PersonName ?? '-'));
-    cells.push(escapeHtml(x.salesInvoiceId ?? x.SalesInvoiceId ?? '-'));
-    cells.push(escapeHtml(x.purchaseInvoiceId ?? x.PurchaseInvoiceId ?? '-'));
+    cells.push(escapeHtml(x.salesInvoiceId ?? x.SalesInvoiceId ?? x.purchaseInvoiceId ?? x.PurchaseInvoiceId ?? '-'));
+    cells.push(escapeHtml(x.direction === 1 ? "Receivable" : "Payable"));
+    cells.push(escapeHtml(x.isDeleted ? "Settled" : "Open"));
 
     const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${escapeHtml(id)}</td>
-      ${cells.map(c => `<td>${c}</td>`).join("")}
-      <td class="actions-cell">
-        <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>
-        <a class="btn-edit" href="edit.html?id=${encodeURIComponent(id)}">Edit</a>
-      </td>
-    `;
+    if (!x.isDeleted) {
+      tr.innerHTML = `
+        <td>${escapeHtml(id)}</td>
+        ${cells.map(c => `<td>${c}</td>`).join("")}
+        <td class="actions-cell">
+          <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>
+          <a class="btn-edit" href="edit.html?id=${encodeURIComponent(id)}">Edit</a>
+        </td>
+      `;
+    }
+    else {
+      tr.innerHTML = `
+        <td>${escapeHtml(id)}</td>
+        ${cells.map(c => `<td>${c}</td>`).join("")}
+        <td class="actions-cell">
+          <a class="btn-edit" href="view.html?id=${encodeURIComponent(id)}">View</a>
+        </td>
+      `;
+    }
     tbody.appendChild(tr);
   });
 }

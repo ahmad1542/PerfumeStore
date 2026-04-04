@@ -155,7 +155,7 @@ async function loadOpenItems() {
     const notes = x.notes ?? x.Notes ?? '';
     const itemDate = formatDateOnly(type === 'customer'
       ? (x.invoiceDate ?? x.InvoiceDate ?? '')
-      : (x.createdAt ?? x.CreatedAt ?? ''));
+      : (x.date ?? x.Date ?? ''));
 
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -265,6 +265,7 @@ function buildBodyFromForm() {
     customerId: receiptForType === 'customer' ? ($('CustomerId').value || null) : null,
     personId: receiptForType === 'person' ? ($('PersonId').value || null) : null,
     moneyAccountID: Number($('MoneyAccountID').value || 0),
+    debtId: receiptForType === 'person' ? (applications.personDebtApplications[0]?.debtId ?? null) : null,
     amount: Number($('Amount').value || 0),
     notes: $('Notes').value || null,
     salesApplications: applications.salesApplications,
@@ -298,6 +299,11 @@ async function createItem() {
 
     if (body.receiptForType === 'person' && !body.personId) {
       setMsg('pageMsg', 'Person or supplier is required', true);
+      return;
+    }
+
+    if (body.receiptForType === 'person' && (body.personDebtApplications || []).length > 1) {
+      setMsg('pageMsg', 'Only one debt can be selected for person receipt voucher', true);
       return;
     }
 

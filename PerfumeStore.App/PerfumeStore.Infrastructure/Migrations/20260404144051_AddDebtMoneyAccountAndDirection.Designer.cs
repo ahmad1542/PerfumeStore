@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfumeStore.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using PerfumeStore.Infrastructure.Persistence;
 namespace PerfumeStore.Infrastructure.Migrations
 {
     [DbContext(typeof(PerfumeStoreDbContext))]
-    partial class PerfumeStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260404144051_AddDebtMoneyAccountAndDirection")]
+    partial class AddDebtMoneyAccountAndDirection
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,9 +67,6 @@ namespace PerfumeStore.Infrastructure.Migrations
                     b.Property<string>("CreatedBy")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("Date")
-                        .HasColumnType("datetime2");
 
                     b.Property<int>("Direction")
                         .HasColumnType("int");

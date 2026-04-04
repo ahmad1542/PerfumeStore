@@ -66,7 +66,7 @@ async function loadList(searchText = "") {
 
   setMsg("pageMsg", `Loaded ${list.length} record(s).`);
 
-  list.forEach((x, index) => {
+  list.forEach(x => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
     const rawDate = x.date ?? x.Date ?? '';

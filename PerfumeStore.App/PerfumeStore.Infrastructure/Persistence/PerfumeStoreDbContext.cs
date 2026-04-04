@@ -284,6 +284,14 @@ public partial class PerfumeStoreDbContext : DbContext {
             entity.HasIndex(e => e.Name).IsUnique();
         });
 
+        modelBuilder.Entity<Debt>(entity => {
+            entity.HasKey(e => e.Id);
+            entity.HasOne(d => d.MoneyAccount)
+                .WithMany()
+                .HasForeignKey(d => d.MoneyAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+        });
+
         modelBuilder.Entity<Person>()
             .HasMany(p => p.Debts)
             .WithOne(d => d.Person)

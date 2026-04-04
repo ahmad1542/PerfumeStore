@@ -18,8 +18,8 @@ namespace PerfumeStore.API.Controllers {
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<DebtDto>>> GetAll([FromQuery] string? search) {
-            var debts = await mediator.Send(new GetAllDebtsQuery(search));
+        public async Task<ActionResult<IEnumerable<DebtDto>>> GetAll([FromQuery] string? search, [FromQuery] bool includeSettled= false) {
+            var debts = await mediator.Send(new GetAllDebtsQuery(search, includeSettled));
             return Ok(debts);
         }
 

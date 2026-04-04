@@ -3,27 +3,14 @@ using MediatR;
 using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
+using System.Security.Principal;
 
 namespace PerfumeStore.Application.Debts.Commands.UpdateDebt {
-    public class UpdateDebtCommandHandler(IDebtsRepository debtsRepository, IMapper mapper) : IRequestHandler<UpdateDebtCommand> {
+    public class UpdateDebtCommandHandler(IDebtsRepository debtsRepository, IMoneyAccountsRepository moneyAccountsRepository, IMapper mapper) : IRequestHandler<UpdateDebtCommand> {
         public async Task Handle(UpdateDebtCommand request, CancellationToken cancellationToken) {
             var debt = await debtsRepository.GetByIdAsync(request.Id);
             if (debt is null) {
                 throw new NotFoundException(nameof(Debt), request.Id.ToString());
-            }
-
-            if (request.SalesInvoiceId.HasValue) {
-                var exists = await debtsRepository.CheckIfSalesInvoiceExist(request.SalesInvoiceId.Value);
-                if (!exists) {
-                    throw new NotFoundException(nameof(SalesInvoice), request.SalesInvoiceId.Value.ToString());
-                }
-            }
-
-            if (request.PurchaseInvoiceId.HasValue) {
-                var exists = await debtsRepository.CheckIfPurchaseInvoiceExist(request.PurchaseInvoiceId.Value);
-                if (!exists) {
-                    throw new NotFoundException(nameof(PurchaseInvoice), request.PurchaseInvoiceId.Value.ToString());
-                }
             }
 
             if (request.PersonId.HasValue) {
@@ -32,9 +19,18 @@ namespace PerfumeStore.Application.Debts.Commands.UpdateDebt {
                     throw new NotFoundException(nameof(Person), request.PersonId.Value.ToString());
                 }
             }
+            var account = await moneyAccountsRepository.GetByIdAsync(request.MoneyAccountId);
+
+            if (account == null)
+                throw new Exception("Money account not found");
 
             mapper.Map(request, debt);
             await debtsRepository.SaveChangesAsync();
+            if (request.Direction == 1) // Receivable (I gave money)
+                account.CurrentBalance -= request.Amount;
+            else if (request.Direction == 2) // Payable (I received money)
+                account.CurrentBalance += request.Amount;
+            await moneyAccountsRepository.SaveChangesAsync();
         }
     }
 }

@@ -53,6 +53,7 @@ namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoi
 
             if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0) {
                 if (purchaseInvoice.Debt != null) {
+                    purchaseInvoice.Debt.Date = request.Date;
                     purchaseInvoice.Debt.Amount = request.DebtAmount.Value;
                     purchaseInvoice.Debt.Notes = request.DebtNotes;
                     purchaseInvoice.Debt.PersonId = request.SupplierId;

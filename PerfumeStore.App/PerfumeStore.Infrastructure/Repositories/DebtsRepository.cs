@@ -12,12 +12,14 @@ namespace PerfumeStore.Infrastructure.Repositories {
             return debt.Id;
         }
 
-        public async Task<IEnumerable<Debt>> GetAllAsync(string? search = null) {
+        public async Task<IEnumerable<Debt>> GetAllAsync(bool includeSettled, string? search = null) {
             IQueryable<Debt> query = dbContext.Debts
                 .Include(d => d.Person)
                 .Include(d => d.PurchaseInvoice)
-                .Include(d => d.SalesInvoice)
-                .Where(d => !d.IsDeleted);
+                .Include(d => d.SalesInvoice);
+
+            if (!includeSettled)
+                query = query.Where(d => !d.IsDeleted);
 
             if (!string.IsNullOrWhiteSpace(search)) {
                 search = search.Trim();
@@ -41,7 +43,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
                 .Include(d => d.Person)
                 .Include(d => d.SalesInvoice)
                 .Include(d => d.PurchaseInvoice)
-                .FirstOrDefaultAsync(d => d.Id == id && !d.IsDeleted);
+                .FirstOrDefaultAsync(d => d.Id == id);
 
             return debt;
         }
