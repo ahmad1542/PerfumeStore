@@ -13,16 +13,34 @@ namespace PerfumeStore.Application.MoneyTransactions.Commands.UpdateMoneyTransac
             if (moneyTransaction is null)
                 throw new NotFoundException(nameof(MoneyTransaction), request.ID.ToString());
 
-            var from = await moneyAccountsRepository.GetByIdAsync(request.FromMoneyAccountID);
-            var to = await moneyAccountsRepository.GetByIdAsync(request.ToMoneyAccountID);
+            var oldFrom = await moneyAccountsRepository.GetByIdAsync(moneyTransaction.FromMoneyAccountID);
+            var oldTo = await moneyAccountsRepository.GetByIdAsync(moneyTransaction.ToMoneyAccountID);
 
-            if (from is null) throw new NotFoundException(nameof(MoneyAccount), request.FromMoneyAccountID.ToString());
-            if (to is null) throw new NotFoundException(nameof(MoneyAccount), request.ToMoneyAccountID.ToString());
+            if (oldFrom is null)
+                throw new NotFoundException(nameof(MoneyAccount), moneyTransaction.FromMoneyAccountID.ToString());
 
-            from.CurrentBalance -= request.TransferAmount;
-            to.CurrentBalance += request.TransferAmount;
+            if (oldTo is null)
+                throw new NotFoundException(nameof(MoneyAccount), moneyTransaction.ToMoneyAccountID.ToString());
+
+            var newFrom = await moneyAccountsRepository.GetByIdAsync(request.FromMoneyAccountID);
+            var newTo = await moneyAccountsRepository.GetByIdAsync(request.ToMoneyAccountID);
+
+            if (newFrom is null)
+                throw new NotFoundException(nameof(MoneyAccount), request.FromMoneyAccountID.ToString());
+
+            if (newTo is null)
+                throw new NotFoundException(nameof(MoneyAccount), request.ToMoneyAccountID.ToString());
+
+            // Reverse old transaction effect
+            oldFrom.CurrentBalance += moneyTransaction.TransferAmount;
+            oldTo.CurrentBalance -= moneyTransaction.TransferAmount;
+
+            // Apply new transaction effect
+            newFrom.CurrentBalance -= request.TransferAmount;
+            newTo.CurrentBalance += request.TransferAmount;
 
             mapper.Map(request, moneyTransaction);
+
             await moneyAccountsRepository.SaveChangesAsync();
             await moneyTransactionsRepository.SaveChangesAsync();
         }
