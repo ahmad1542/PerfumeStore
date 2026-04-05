@@ -18,7 +18,7 @@ namespace PerfumeStore.Application.Debts.Commands.CreateDebt {
             var account = await moneyAccountsRepository.GetByIdAsync(request.MoneyAccountId);
             
             if (account == null)
-                throw new Exception("Money account not found");
+                throw new NotFoundException(nameof(MoneyAccount), request.MoneyAccountId.ToString());
 
             var debt = mapper.Map<Debt>(request);
             var id = await debtsRepository.AddAsync(debt);

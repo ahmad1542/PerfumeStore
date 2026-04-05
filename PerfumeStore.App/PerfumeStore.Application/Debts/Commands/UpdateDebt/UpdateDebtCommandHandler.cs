@@ -3,7 +3,6 @@ using MediatR;
 using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
-using System.Security.Principal;
 
 namespace PerfumeStore.Application.Debts.Commands.UpdateDebt {
     public class UpdateDebtCommandHandler(IDebtsRepository debtsRepository, IMoneyAccountsRepository moneyAccountsRepository, IMapper mapper) : IRequestHandler<UpdateDebtCommand> {
@@ -20,9 +19,19 @@ namespace PerfumeStore.Application.Debts.Commands.UpdateDebt {
                 }
             }
             var account = await moneyAccountsRepository.GetByIdAsync(request.MoneyAccountId);
+            MoneyAccount? oldAccount = null;
+            if (debt.Amount > 0 && debt.MoneyAccountId.HasValue)
+                oldAccount = await moneyAccountsRepository.GetByIdAsync((int)debt.MoneyAccountId);
 
             if (account == null)
-                throw new Exception("Money account not found");
+                throw new NotFoundException(nameof(MoneyAccount), request.MoneyAccountId.ToString());
+            if (oldAccount == null)
+                throw new NotFoundException(nameof(MoneyAccount), debt.MoneyAccountId.ToString()!);
+
+            if (debt.Direction == 1) // Receivable (I gave money)
+                oldAccount.CurrentBalance += debt.Amount;
+            else if (debt.Direction == 2) // Payable (I received money)
+                oldAccount.CurrentBalance -= debt.Amount;
 
             mapper.Map(request, debt);
             await debtsRepository.SaveChangesAsync();
