@@ -1,6 +1,7 @@
 using AutoMapper;
 using MediatR;
 using PerfumeStore.Domain.Entities;
+using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
 
 namespace PerfumeStore.Application.ReceiptVouchers.Commands.CreateReceiptVoucher;
@@ -10,9 +11,29 @@ public class CreateReceiptVoucherCommandHandler(
     IMoneyAccountsRepository moneyAccountsRepository,
     ICustomersRepository customersRepository,
     IPersonsRepository personsRepository,
+    IDebtsRepository debtsRepository,
     IMapper mapper) : IRequestHandler<CreateReceiptVoucherCommand, long> {
 
     public async Task<long> Handle(CreateReceiptVoucherCommand request, CancellationToken cancellationToken) {
+        if (request.ReceiptForType == "person") {
+            var debt = await debtsRepository.GetByIdAsync(request.DebtId!.Value);
+
+            if (debt == null)
+                throw new NotFoundException(nameof(Debt), request.DebtId.Value.ToString());
+
+            if (debt.IsDeleted)
+                throw new Exception("Selected debt is deleted.");
+
+            if (debt.PersonId != request.PersonId)
+                throw new Exception("Selected debt does not belong to the selected person.");
+
+            if (debt.Amount <= 0)
+                throw new Exception("Selected debt has no remaining amount.");
+
+            if (request.Amount > debt.Amount)
+                throw new Exception("Receipt amount cannot exceed the remaining debt amount.");
+        }
+
         if (request.ReceiptForType == "customer") {
             var customer = await customersRepository.GetByIdAsync(request.CustomerId!.Value);
             if (customer == null) {

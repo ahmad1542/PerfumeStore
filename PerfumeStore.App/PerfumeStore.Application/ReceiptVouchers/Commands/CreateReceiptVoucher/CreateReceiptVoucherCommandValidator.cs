@@ -45,6 +45,9 @@ public class CreateReceiptVoucherCommandValidator : AbstractValidator<CreateRece
             RuleFor(x => x.PersonId)
                 .NotEmpty().WithMessage("Person is required.");
 
+            RuleFor(x => x.DebtId)
+                .NotEmpty().WithMessage("Debt is required for person receipt vouchers.");
+
             RuleFor(x => x.CustomerId)
                 .Must(x => !x.HasValue)
                 .WithMessage("Customer must be empty when receipt is for person debts.");
@@ -52,6 +55,10 @@ public class CreateReceiptVoucherCommandValidator : AbstractValidator<CreateRece
             RuleFor(x => x.SalesApplications)
                 .Must(x => x == null || x.Count == 0)
                 .WithMessage("Sales invoice applications are not allowed for person receipt vouchers.");
+
+            RuleFor(x => x.Amount)
+                .GreaterThan(0)
+                .WithMessage("Amount must be greater than zero.");
         });
     }
 }
