@@ -8,7 +8,7 @@ namespace PerfumeStore.Application.Debts.Dtos {
         public decimal Amount { get; set; }
         public string? Notes { get; set; }
         public int MoneyAccountId { get; set; }
-        public int Direction { get; set; } // 1 receivable, 2 payable
+        public DebtDirection Direction { get; set; } // 1 receivable, 2 payable
 
         public long? SalesInvoiceId { get; set; }
         public long? PurchaseInvoiceId { get; set; }

@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using PerfumeStore.Domain.Entities;
 
 namespace PerfumeStore.Application.Debts.Commands.CreateDebt {
     public class CreateDebtCommand : IRequest<int> {
@@ -7,7 +8,7 @@ namespace PerfumeStore.Application.Debts.Commands.CreateDebt {
         public string? Notes { get; set; }
 
         public int MoneyAccountId { get; set; }
-        public int Direction { get; set; } // 1 receivable, 2 payable
+        public DebtDirection Direction { get; set; } // 1 receivable, 2 payable
 
         public Guid? PersonId { get; set; }
     }

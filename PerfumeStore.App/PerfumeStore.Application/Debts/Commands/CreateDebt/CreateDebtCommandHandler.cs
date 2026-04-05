@@ -23,9 +23,9 @@ namespace PerfumeStore.Application.Debts.Commands.CreateDebt {
             var debt = mapper.Map<Debt>(request);
             var id = await debtsRepository.AddAsync(debt);
 
-            if (request.Direction == 1) // Receivable (I gave money)
+            if (request.Direction == DebtDirection.Receivable) // Receivable (I gave money)
                 account.CurrentBalance -= request.Amount;
-            else if (request.Direction == 2) // Payable (I received money)
+            else if (request.Direction == DebtDirection.Payable) // Payable (I received money)
                 account.CurrentBalance += request.Amount;
             await moneyAccountsRepository.SaveChangesAsync();
             return id;

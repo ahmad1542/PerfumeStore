@@ -28,16 +28,16 @@ namespace PerfumeStore.Application.Debts.Commands.UpdateDebt {
             if (oldAccount == null)
                 throw new NotFoundException(nameof(MoneyAccount), debt.MoneyAccountId.ToString()!);
 
-            if (debt.Direction == 1) // Receivable (I gave money)
+            if (debt.Direction == DebtDirection.Receivable) // Receivable (I gave money)
                 oldAccount.CurrentBalance += debt.Amount;
-            else if (debt.Direction == 2) // Payable (I received money)
+            else if (debt.Direction == DebtDirection.Payable) // Payable (I received money)
                 oldAccount.CurrentBalance -= debt.Amount;
 
             mapper.Map(request, debt);
             await debtsRepository.SaveChangesAsync();
-            if (request.Direction == 1) // Receivable (I gave money)
+            if (request.Direction == DebtDirection.Receivable) // Receivable (I gave money)
                 account.CurrentBalance -= request.Amount;
-            else if (request.Direction == 2) // Payable (I received money)
+            else if (request.Direction == DebtDirection.Payable) // Payable (I received money)
                 account.CurrentBalance += request.Amount;
             await moneyAccountsRepository.SaveChangesAsync();
         }

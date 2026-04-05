@@ -35,7 +35,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                             Amount = src.DebtAmount.Value,
                             Notes = src.DebtNotes,
                             PersonId = src.CustomerId,
-                            Direction = 1,
+                            Direction = DebtDirection.Receivable,
                             SalesInvoice = dest
                         }
                         : null

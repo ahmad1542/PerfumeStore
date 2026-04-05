@@ -17,9 +17,14 @@
 
         public int? MoneyAccountId { get; set; }
         public MoneyAccount? MoneyAccount { get; set; }
-            
-        public int Direction { get; set; } // 1 = Receivable, 2 = Payable
+          
+        public DebtDirection Direction { get; set; }
         public bool IsDeleted { get; set; } = false;
+    }
+
+    public enum DebtDirection {
+        Receivable = 1, // I gave money / someone owes me
+        Payable = 2     // I received money / I owe someone
     }
 
 }
