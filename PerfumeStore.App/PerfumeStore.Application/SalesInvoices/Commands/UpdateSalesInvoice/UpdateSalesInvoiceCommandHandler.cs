@@ -58,12 +58,15 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
                     salesInvoice.Debt.Amount = request.DebtAmount.Value;
                     salesInvoice.Debt.Notes = request.DebtNotes;
                     salesInvoice.Debt.PersonId = request.CustomerId;
+                    salesInvoice.Debt.Direction = DebtDirection.Receivable;
                     salesInvoice.Debt.SalesInvoiceId = salesInvoice.ID;
                 } else {
                     salesInvoice.Debt = new Debt {
+                        Date = request.Date,
                         Amount = request.DebtAmount.Value,
                         Notes = request.DebtNotes,
                         PersonId = request.CustomerId,
+                        Direction = DebtDirection.Receivable,
                         SalesInvoiceId = salesInvoice.ID
                     };
                 }
