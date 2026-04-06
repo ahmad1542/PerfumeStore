@@ -21,7 +21,7 @@ public class ReceiptVouchersController(IMediator mediator) : ControllerBase {
     [HttpGet("{id:long}")]
     public async Task<ActionResult<ReceiptVoucherDetailsDto?>> GetById([FromRoute] long id) {
         var item = await mediator.Send(new GetReceiptVoucherByIdQuery(id));
-        return item == null ? NotFound() : Ok(item);
+        return Ok(item);
     }
 
     [HttpGet("open-sales-invoices/{customerId:guid}")]
