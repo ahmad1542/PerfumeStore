@@ -1,5 +1,5 @@
 (function () {
-  const DEFAULT_LOCAL_API = "https://localhost:7209";
+  const DEFAULT_LOCAL_API = "https://localhost:7209/api";
 
   function getApiBaseUrl() {
     // 1) allow manual override from window

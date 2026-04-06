@@ -1,6 +1,6 @@
 async function initPage() {
   try {
-    await fillPeopleSelect("CustomerId", "https://localhost:7209/api/Customers");
+    await fillPeopleSelect("CustomerId", window.API_ENDPOINTS.customers);
     await fillMoneyAccounts("MoneyAccountId");
     setupInvoiceItems();
     wireDebtAndPaymentRules();
@@ -47,7 +47,7 @@ async function fillMoneyAccounts(selectId) {
 
   let list = [];
   try {
-    list = await apiGetJson("https://localhost:7209/api/MoneyAccounts");
+    list = await apiGetJson(window.API_ENDPOINTS.moneyAccounts);
   } catch {
     list = [];
   }
@@ -72,7 +72,7 @@ async function fillProductsToElement(selectEl) {
 
   let list = [];
   try {
-    list = await apiGetJson("https://localhost:7209/api/Products");
+    list = await apiGetJson(window.API_ENDPOINTS.products);
   } catch {
     list = [];
   }

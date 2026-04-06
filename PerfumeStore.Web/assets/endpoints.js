@@ -1,6 +1,7 @@
 window.API_ENDPOINTS = {
   brands: `${window.APP_CONFIG.API_BASE_URL}/Brands`,
   categories: `${window.APP_CONFIG.API_BASE_URL}/ProductCategories`,
+  productCategories: `${window.APP_CONFIG.API_BASE_URL}/ProductCategories`,
   customers: `${window.APP_CONFIG.API_BASE_URL}/Customers`,
   suppliers: `${window.APP_CONFIG.API_BASE_URL}/Suppliers`,
   persons: `${window.APP_CONFIG.API_BASE_URL}/Persons`,
@@ -14,5 +15,6 @@ window.API_ENDPOINTS = {
   moneyAccounts: `${window.APP_CONFIG.API_BASE_URL}/MoneyAccounts`,
   moneyTransactions: `${window.APP_CONFIG.API_BASE_URL}/MoneyTransactions`,
   paymentVouchers: `${window.APP_CONFIG.API_BASE_URL}/PaymentVouchers`,
-  receiptVouchers: `${window.APP_CONFIG.API_BASE_URL}/ReceiptVouchers`
+  receiptVouchers: `${window.APP_CONFIG.API_BASE_URL}/ReceiptVouchers`,
+  dashboard: `${window.APP_CONFIG.API_BASE_URL}/Dashboard`
 };

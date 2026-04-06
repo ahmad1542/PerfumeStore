@@ -37,7 +37,7 @@ async function fillCustomers() {
 
   el.innerHTML = `<option value="">-- Select Customer --</option>`;
   let list = [];
-  try { list = await apiGetJson('https://localhost:7209/api/Customers'); } catch { list = []; }
+  try { list = await apiGetJson(window.API_ENDPOINTS.customers); } catch { list = []; }
 
   (Array.isArray(list) ? list : []).forEach(c => {
     const id = c.id ?? c.ID ?? '';
@@ -59,8 +59,8 @@ async function fillDebtParties() {
   el.innerHTML = `<option value="">-- Select Person / Supplier --</option>`;
   let persons = [];
   let suppliers = [];
-  try { persons = await apiGetJson('https://localhost:7209/api/Persons'); } catch { persons = []; }
-  try { suppliers = await apiGetJson('https://localhost:7209/api/Suppliers'); } catch { suppliers = []; }
+  try { persons = await apiGetJson(window.API_ENDPOINTS.persons); } catch { persons = []; }
+  try { suppliers = await apiGetJson(window.API_ENDPOINTS.suppliers); } catch { suppliers = []; }
 
   const seen = new Set();
   const items = [];
@@ -88,7 +88,7 @@ async function fillMoneyAccounts() {
 
   el.innerHTML = `<option value="">-- Select Account --</option>`;
   let list = [];
-  try { list = await apiGetJson('https://localhost:7209/api/MoneyAccounts'); } catch { list = []; }
+  try { list = await apiGetJson(window.API_ENDPOINTS.moneyAccounts); } catch { list = []; }
 
   (Array.isArray(list) ? list : []).forEach(a => {
     const id = a.id ?? a.ID ?? '';

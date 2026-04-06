@@ -15,8 +15,8 @@ async function fillDebtPartiesSelect(selectId) {
   let persons = [];
   let suppliers = [];
 
-  try { persons = await apiGetJson("https://localhost:7209/api/Persons"); } catch { persons = []; }
-  try { suppliers = await apiGetJson("https://localhost:7209/api/Suppliers"); } catch { suppliers = []; }
+  try { persons = await apiGetJson(window.API_ENDPOINTS.persons); } catch { persons = []; }
+  try { suppliers = await apiGetJson(window.API_ENDPOINTS.suppliers); } catch { suppliers = []; }
 
   const seen = new Set();
   const items = [];

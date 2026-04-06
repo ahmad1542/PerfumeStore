@@ -10,7 +10,7 @@ async function fillSuppliers() {
 
   el.innerHTML = `<option value="">-- Select Supplier --</option>`;
   let list = [];
-  try { list = await apiGetJson('https://localhost:7209/api/Suppliers'); } catch { list = []; }
+  try { list = await apiGetJson(window.API_ENDPOINTS.suppliers); } catch { list = []; }
 
   (Array.isArray(list) ? list : []).forEach(s => {
     const id = s.id ?? s.ID ?? '';
@@ -31,7 +31,7 @@ async function fillMoneyAccounts() {
 
   el.innerHTML = `<option value="">-- Select Account --</option>`;
   let list = [];
-  try { list = await apiGetJson('https://localhost:7209/api/MoneyAccounts'); } catch { list = []; }
+  try { list = await apiGetJson(window.API_ENDPOINTS.moneyAccounts); } catch { list = []; }
 
   (Array.isArray(list) ? list : []).forEach(a => {
     const id = a.id ?? a.ID ?? '';

@@ -68,7 +68,7 @@ async function fillMoneyAccounts(selectId) {
   if (!el) return;
   el.innerHTML = `<option value="">-- Select Account --</option>`;
   let list = [];
-  try { list = await apiGetJson("https://localhost:7209/api/MoneyAccounts"); } catch { list = []; }
+  try { list = await apiGetJson(window.API_ENDPOINTS.moneyAccounts); } catch { list = []; }
   (Array.isArray(list) ? list : []).forEach(a => {
     const id = a.id ?? a.ID ?? a.Id ?? "";
     const name = a.accountName ?? a.AccountName ?? ("Account #" + id);
@@ -89,8 +89,8 @@ async function fillDebtPartiesSelect(selectId) {
   let persons = [];
   let suppliers = [];
 
-  try { persons = await apiGetJson("https://localhost:7209/api/Persons"); } catch { persons = []; }
-  try { suppliers = await apiGetJson("https://localhost:7209/api/Suppliers"); } catch { suppliers = []; }
+  try { persons = await apiGetJson(window.API_ENDPOINTS.persons); } catch { persons = []; }
+  try { suppliers = await apiGetJson(window.API_ENDPOINTS.suppliers); } catch { suppliers = []; }
 
   const seen = new Set();
   const items = [];
