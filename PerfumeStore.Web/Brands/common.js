@@ -1,5 +1,5 @@
 // API base for this module
-const BRANDS_API = "https://localhost:7209/api/Brands";
+const BRANDS_API = window.API_ENDPOINTS.brands;
 
 // 7) Wire search input to reload brands
 document.addEventListener("DOMContentLoaded", () => {

@@ -1,6 +1,6 @@
-const API = "https://localhost:7209/api/Expenses";
-const EXPENSE_TYPES_API = "https://localhost:7209/api/ExpenseTypes";
-const MONEY_ACCOUNTS_API = "https://localhost:7209/api/MoneyAccounts";
+const API = window.API_ENDPOINTS.expenses;
+const EXPENSE_TYPES_API = window.API_ENDPOINTS.expenseTypes;
+const MONEY_ACCOUNTS_API = window.API_ENDPOINTS.moneyAccounts;
 
 document.addEventListener("DOMContentLoaded", async () => {
   const searchBox = $("searchInput");

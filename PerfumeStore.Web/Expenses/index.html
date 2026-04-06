@@ -40,13 +40,13 @@
         </div>
 
         <div class="list-tools">
-          
+
           <div class="expense-type-dropdown-wrap">
             <button type="button" id="expenseTypeDropdownBtn" class="expense-type-dropdown-btn">
               <span id="expenseTypeDropdownText">All expense types</span>
               <i class="bi bi-chevron-down"></i>
             </button>
-            
+
             <div id="expenseTypeDropdownMenu" class="expense-type-dropdown-menu hidden">
               <div class="expense-type-dropdown-header">
                 <label class="checkbox-filter-item expense-type-all-option">
@@ -54,11 +54,11 @@
                   <span>All expense types</span>
                 </label>
               </div>
-              
+
               <div id="expenseTypeFilters" class="expense-type-dropdown-list"></div>
             </div>
           </div>
-          
+
           <input id="searchInput" class="search-input" type="text" placeholder="Search..." />
           <input id="fromDateInput" class="search-input date-filter-input" type="date" />
           <input id="toDateInput" class="search-input date-filter-input" type="date" />
@@ -84,6 +84,8 @@
     </div>
   </main>
 
+  <script src="../assets/api-config.js"></script>
+  <script src="../assets/endpoints.js"></script>
   <script src="../assets/common.js"></script>
   <script src="common.js"></script>
   <script src="expenses.js"></script>

@@ -1,4 +1,4 @@
-const API = "https://localhost:7209/api/Inventory";
+const API = window.API_ENDPOINTS.inventory;
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchBox = $("searchInput");

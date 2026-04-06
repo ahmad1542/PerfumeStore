@@ -1,4 +1,4 @@
-const API = "https://localhost:7209/api/MoneyTransactions";
+const API = window.API_ENDPOINTS.moneyTransactions;
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchBox = $("searchInput");

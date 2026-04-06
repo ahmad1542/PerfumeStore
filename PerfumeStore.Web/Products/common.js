@@ -1,3 +1,3 @@
-const PRODUCTS_API = "https://localhost:7209/api/Products";
-const BRANDS_API = "https://localhost:7209/api/Brands";
-const CATEGORIES_API = "https://localhost:7209/api/ProductCategories"; 
+const PRODUCTS_API = window.API_ENDPOINTS.products;
+const BRANDS_API = window.API_ENDPOINTS.brands;
+const CATEGORIES_API = window.API_ENDPOINTS.productCategories; 

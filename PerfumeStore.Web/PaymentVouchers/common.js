@@ -1,5 +1,5 @@
 // API base for this module
-const API = "https://localhost:7209/api/PaymentVouchers";
+const API = window.API_ENDPOINTS.paymentVouchers;
 
 // Wire search input to reload list (same pattern as Brands)
 document.addEventListener("DOMContentLoaded", () => {

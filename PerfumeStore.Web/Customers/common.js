@@ -1,4 +1,4 @@
-const API = "https://localhost:7209/api/Customers";
+const API = window.API_ENDPOINTS.customers;
 
 document.addEventListener("DOMContentLoaded", () => {
   const searchBox = $("searchInput");
