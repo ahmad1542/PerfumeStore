@@ -31,8 +31,12 @@ namespace PerfumeStore.Infrastructure.Repositories {
         public async Task SaveChangesAsync() => await dbContext.SaveChangesAsync();
 
         public async Task Update(Brand brand) {
-            if (await dbContext.Brands.AnyAsync(e => e.Name == brand.Name) == true)
+            bool isDuplicate = await dbContext.Brands
+                .AnyAsync(e => e.Name == brand.Name && e.ID != brand.ID);
+
+            if (isDuplicate)
                 return;
+
             await SaveChangesAsync();
         }
     }
