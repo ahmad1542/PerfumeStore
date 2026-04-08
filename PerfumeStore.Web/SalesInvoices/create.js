@@ -30,7 +30,7 @@ async function createItem() {
     }
 
     await apiSendJson(API, 'POST', body);
-    window.location.href = 'index.html';
+    setMsg("pageMsg", "Sales invoice created successfully.");
   } catch (e) {
     const validationMsg = getFriendlyMessage(e);
 
