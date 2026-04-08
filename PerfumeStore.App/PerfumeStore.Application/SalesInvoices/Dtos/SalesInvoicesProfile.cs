@@ -29,7 +29,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                 .ForMember(d => d.ReceiptVoucherSalesInvoices, opt => opt.Ignore())
                 .ForMember(d => d.SalesInvoiceItems, opt => opt.Ignore())
                 .ForMember(d => d.Debt, opt => opt.MapFrom((src, dest) =>
-                    (src.HasDebt && src.DebtAmount.HasValue && src.DebtAmount.Value > 0)
+                    (src.HasDebt && src.DebtAmount.HasValue && src.DebtAmount.Value > 0 && src.CustomerId.HasValue)
                         ? new Debt {
                             Date = src.Date,
                             Amount = src.DebtAmount.Value,

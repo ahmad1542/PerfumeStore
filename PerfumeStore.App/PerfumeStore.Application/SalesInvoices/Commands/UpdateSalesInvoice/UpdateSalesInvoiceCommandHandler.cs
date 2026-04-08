@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using MediatR;
+﻿using MediatR;
 using PerfumeStore.Domain.Entities;
 using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
@@ -12,6 +11,9 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
 
             if (salesInvoice == null)
                 throw new NotFoundException(nameof(SalesInvoice), request.ID.ToString());
+
+            if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0 && !request.CustomerId.HasValue)
+                throw new BusinessRuleException("Customer is required when creating or updating a debt for a sales invoice.");
 
             var oldAmountPaid = salesInvoice.AmountPaid;
             var oldMoneyAccountId = salesInvoice.MoneyAccountId;

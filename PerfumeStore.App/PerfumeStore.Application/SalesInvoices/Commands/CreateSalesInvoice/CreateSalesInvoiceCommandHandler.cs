@@ -1,11 +1,15 @@
 ﻿using AutoMapper;
 using MediatR;
 using PerfumeStore.Domain.Entities;
+using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
 
 namespace PerfumeStore.Application.SalesInvoices.Commands.CreateSalesInvoice {
     public class CreateSalesInvoiceCommandHandler(ISalesInvoicesRepository salesInvoicesRepository, IMoneyAccountsRepository moneyAccountsRepository, IMapper mapper) : IRequestHandler<CreateSalesInvoiceCommand, long> {
         public async Task<long> Handle(CreateSalesInvoiceCommand request, CancellationToken cancellationToken) {
+            if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0 && !request.CustomerId.HasValue)
+                throw new BusinessRuleException("Customer is required when creating a debt for a sales invoice.");
+
             var salesInvoice = mapper.Map<SalesInvoice>(request);
 
             MoneyAccount? account = null;

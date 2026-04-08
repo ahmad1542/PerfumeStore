@@ -18,6 +18,17 @@ async function createItem() {
   setMsg('pageMsg', 'Saving...', false);
   try {
     const body = buildBodyFromForm();
+
+    if (body.HasDebt && Number(body.DebtAmount || 0) > 0 && !body.CustomerId) {
+      setMsg(
+        'pageMsg',
+        'Customer must be selected when the sales invoice has debt.',
+        true
+      );
+      $('CustomerId')?.focus();
+      return;
+    }
+
     await apiSendJson(API, 'POST', body);
     window.location.href = 'index.html';
   } catch (e) {
@@ -46,7 +57,18 @@ async function fillMoneyAccounts(selectId) {
     opt.value = id;
     opt.textContent = name;
     el.appendChild(opt);
+    if (name == "Safe") {
+      const toggledElement = $("debt-group");
+      const hasDebtCheckbox = $("HasDebt");
+      if (hasDebtCheckbox) hasDebtCheckbox.checked = false;
+      toggledElement.style.display = "none";
+      const moneyAccountSelect = $(selectId);
+      if (moneyAccountSelect) {
+        moneyAccountSelect.value = id;
+      }
+    }
   });
+
 }
 
 async function initPage() {
@@ -62,6 +84,22 @@ async function initPage() {
     const debtAmount = $("DebtAmount");
     const debtNotes = $("DebtNotes");
     const customerId = $("CustomerId");
+    const customerStar = $("customerRequiredStar");
+
+    function applyDebtCustomerRules() {
+      const hasDebt = !!hasDebtCheckbox?.checked;
+      const debtValue = Number(debtAmount?.value || 0);
+
+      const isRequired = hasDebt && debtValue > 0;
+
+      if (customerId) {
+        customerId.required = isRequired;
+      }
+
+      if (customerStar) {
+        customerStar.style.display = isRequired ? "inline" : "none";
+      }
+    }
 
     function applyAmountPaidRules() {
       const amount = Number(amountPaidInput?.value || 0);
@@ -80,10 +118,20 @@ async function initPage() {
           hasDebtCheckbox.checked = true;
         }
 
-        if (toggledElement) toggledElement.style.display = "block";
+        if (toggledElement) {
+          toggledElement.style.display = "block";
+          debtAmount.disabled = false;
+          debtNotes.disabled = false;
+        }
         if (debtAmount) debtAmount.required = true;
         if (customerId) customerId.required = true;
       }
+
+      applyDebtCustomerRules();
+    }
+
+    if (debtAmount) {
+      debtAmount.addEventListener("input", applyDebtCustomerRules);
     }
 
     if (amountPaidInput) {
@@ -113,10 +161,12 @@ async function initPage() {
           if (debtAmount) debtAmount.value = "";
           if (debtNotes) debtNotes.value = "";
         }
+        applyDebtCustomerRules();
       });
     }
 
     applyAmountPaidRules();
+    applyDebtCustomerRules();
   } catch (e) { console.error(e); }
 }
 

@@ -52,6 +52,13 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
                     .Must(x => !x.HasValue || x.Value == 0)
                     .WithMessage("Debt amount should not be provided when HasDebt is false.");
             });
+
+            When(x => x.HasDebt && x.DebtAmount.HasValue && x.DebtAmount.Value > 0, () => {
+                RuleFor(x => x.CustomerId)
+                    .NotNull()
+                    .WithMessage("Customer must be selected when the sales invoice has debt.");
+            });
+
         }
     }
 }

@@ -97,6 +97,22 @@ function wireDebtAndPaymentRules() {
   const debtGroup = $("debt-group");
   const debtAmountInput = $("DebtAmount");
   const debtNotesInput = $("DebtNotes");
+  const customerSelect = $("CustomerId");
+  const customerStar = $("customerRequiredStar");
+
+  function applyCustomerDebtRules() {
+    const hasDebt = !!hasDebtCheckbox?.checked;
+    const debtValue = Number(debtAmountInput?.value || 0);
+    const isRequired = hasDebt && debtValue > 0;
+
+    if (customerSelect) {
+      customerSelect.required = isRequired;
+    }
+
+    if (customerStar) {
+      customerStar.style.display = isRequired ? "inline" : "none";
+    }
+  }
 
   function applyRules() {
     const amountPaid = Number(amountPaidInput?.value || 0);
@@ -128,6 +144,7 @@ function wireDebtAndPaymentRules() {
         debtNotesInput.disabled = false;
       }
 
+      applyCustomerDebtRules();
       return;
     }
 
@@ -156,6 +173,8 @@ function wireDebtAndPaymentRules() {
         debtNotesInput.value = "";
       }
     }
+
+    applyCustomerDebtRules();
   }
 
   if (amountPaidInput) {
@@ -164,6 +183,10 @@ function wireDebtAndPaymentRules() {
 
   if (hasDebtCheckbox) {
     hasDebtCheckbox.addEventListener("change", applyRules);
+  }
+
+  if (debtAmountInput) {
+    debtAmountInput.addEventListener("input", applyCustomerDebtRules);
   }
 
   applyRules();
@@ -425,6 +448,17 @@ async function updateItem(id) {
 
   try {
     const body = buildBodyFromForm();
+
+    if (body.HasDebt && Number(body.DebtAmount || 0) > 0 && !body.CustomerId) {
+      setMsg(
+        "pageMsg",
+        "Customer must be selected when the sales invoice has debt.",
+        true
+      );
+      $("CustomerId")?.focus();
+      return;
+    }
+
     await apiSendJson(`${API}/${encodeURIComponent(id)}`, "PATCH", body);
     window.location.href = "index.html";
   } catch (e) {
