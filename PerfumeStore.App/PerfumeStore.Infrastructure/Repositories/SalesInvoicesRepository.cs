@@ -70,7 +70,7 @@ namespace PerfumeStore.Infrastructure.Repositories {
                 );
             }
 
-            return await query.ToListAsync();
+            return await query.OrderByDescending(x => x.Date).ThenByDescending(x => x.ID).ToListAsync();
         }
 
         public async Task<SalesInvoice?> GetByIdAsync(long id) {
