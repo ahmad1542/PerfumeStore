@@ -163,10 +163,23 @@ async function updateItem(id) {
   setMsg('pageMsg', 'Saving...', false);
   try {
     const body = buildBodyFromForm();
+
+    if (body.Quantity < 0) {
+      setMsg('pageMsg', 'Quantity cannot be negative.', true);
+      $('Quantity')?.focus();
+      return;
+    }
+
     await apiSendJson(`${API}/${encodeURIComponent(id)}`, 'PATCH', body);
     window.location.href = 'index.html';
   } catch (e) {
-    setMsg('pageMsg', 'Update failed. Check API and payload.', true);
+    const validationMsg = getFriendlyMessage(e);
+
+    setMsg(
+      'pageMsg',
+      validationMsg ?? 'Update failed. Check API and payload.',
+      true
+    );
     console.error(e);
   }
 }
