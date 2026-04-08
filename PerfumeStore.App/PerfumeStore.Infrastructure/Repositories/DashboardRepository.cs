@@ -1,10 +1,10 @@
 using Microsoft.EntityFrameworkCore;
-using PerfumeStore.Application.Dashboard;
 using PerfumeStore.Application.Dashboard.Dtos;
+using PerfumeStore.Application.Dashboard.Interfaces;
 using PerfumeStore.Infrastructure.Persistence;
 
 namespace PerfumeStore.Infrastructure.Repositories {
-    public class DashboardRepository(PerfumeStoreDbContext dbContext) : IDashboardRepository {
+    public class DashboardRepository(PerfumeStoreDbContext dbContext) : IDashboardService {
         public async Task<DashboardDto> GetAsync() {
             var now = DateTime.Now;
             var monthStart = new DateTime(now.Year, now.Month, 1);

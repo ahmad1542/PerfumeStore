@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using PerfumeStore.Application.Dashboard;
+using PerfumeStore.Application.Dashboard.Interfaces;
 using PerfumeStore.Domain.Repositories;
 using PerfumeStore.Infrastructure.Persistence;
 using PerfumeStore.Infrastructure.Repositories;
@@ -29,7 +29,7 @@ namespace PerfumeStore.Infrastructure.Extensions {
             services.AddScoped<IDebtsRepository, DebtsRepository>();
             services.AddScoped<IExpensesRepository, ExpensesRepository>();
             services.AddScoped<IExpenseTypesRepository, ExpenseTypesRepository>();
-            services.AddScoped<IDashboardRepository, DashboardRepository>();
+            services.AddScoped<IDashboardService, DashboardRepository>();
         }
 
     }
