@@ -17,7 +17,7 @@ async function addBrand() {
             },
             body: JSON.stringify({
                 name: name,
-                description: desc
+                BrandDescription: desc
             })
         });
 
