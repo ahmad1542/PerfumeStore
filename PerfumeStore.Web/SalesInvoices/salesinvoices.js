@@ -1,7 +1,7 @@
 function setTableHeader() {
   const thead = $("tableHead");
   if (!thead) return;
-  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer Name</th><th>AmountPaid</th><th>Debt Amount</th><th>Products Count</th><th style="text-align:right;">Actions</th></tr>`;
+  thead.innerHTML = `<tr><th>#</th><th>Date</th><th>Customer Name</th><th>AmountPaid</th><th>Debt Amount</th><th>Products</th><th style="text-align:right;">Actions</th></tr>`;
 }
 
 async function loadList(searchText = "") {
@@ -74,7 +74,19 @@ async function loadList(searchText = "") {
     cells.push(escapeHtml((x.customerName ?? x.CustomerName ?? x.customer?.name ?? x.Customer?.Name ?? '-')));
     cells.push(escapeHtml(x.amountPaid ?? x.AmountPaid ?? 0));
     cells.push(escapeHtml((x.debtAmount ?? x.DebtAmount ?? x.debt?.amount ?? x.Debt?.Amount ?? 0)));
-    cells.push(escapeHtml((x.productsCount ?? x.ProductsCount ?? 0)));
+    const productNames =
+      x.productNames ??
+      x.ProductNames ??
+      x.products?.map(p => p.productName ?? p.ProductName ?? p.name ?? p.Name).filter(Boolean) ??
+      [];
+
+    cells.push(
+      escapeHtml(
+        Array.isArray(productNames) && productNames.length > 0
+          ? productNames.join(', ')
+          : '-'
+      )
+    );
 
     const tr = document.createElement("tr");
     tr.innerHTML = `

@@ -41,7 +41,8 @@ namespace PerfumeStore.Infrastructure.Repositories {
             IQueryable<SalesInvoice> query = dbContext.SalesInvoices
                 .Include(p => p.Customer)
                 .Include(p => p.Debt)
-                                .Include(p => p.SalesInvoiceItems);
+                .Include(p => p.SalesInvoiceItems)
+                    .ThenInclude(i => i.Product);
 
             if (fromDate.HasValue) {
                 var from = fromDate.Value.Date;
@@ -77,7 +78,9 @@ namespace PerfumeStore.Infrastructure.Repositories {
             var salesInvoice = await dbContext.SalesInvoices
                 .Include(p => p.Customer)
                 .Include(p => p.Debt)
-                                .Include(p => p.SalesInvoiceItems).ThenInclude(i => i.Product).FirstOrDefaultAsync(s => s.ID == id);
+                .Include(p => p.SalesInvoiceItems)
+                    .ThenInclude(i => i.Product)
+                .FirstOrDefaultAsync(s => s.ID == id);
 
             return salesInvoice;
         }

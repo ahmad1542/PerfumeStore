@@ -15,5 +15,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
         public decimal? DebtAmount { get; set; }
 
         public int ProductsCount { get; set; }
+
+        public List<string> ProductNames { get; set; } = [];
     }
 }

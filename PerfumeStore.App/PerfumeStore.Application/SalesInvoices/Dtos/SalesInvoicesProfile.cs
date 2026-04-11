@@ -10,8 +10,14 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
             CreateMap<SalesInvoice, SalesInvoiceDto>()
                 .ForMember(d => d.CustomerName, opt => opt.MapFrom(s => s.Customer != null ? s.Customer.Name : null))
                 .ForMember(d => d.DebtAmount, opt => opt.MapFrom(s => s.Debt != null && !s.Debt.IsDeleted ? s.Debt.Amount : 0))
-                .ForMember(d => d.ProductsCount, opt => opt.MapFrom(s => s.SalesInvoiceItems != null ? s.SalesInvoiceItems.Count : 0));
-
+                .ForMember(d => d.ProductsCount, opt => opt.MapFrom(s => s.SalesInvoiceItems != null ? s.SalesInvoiceItems.Count : 0))
+                .ForMember(d => d.ProductNames, opt => opt.MapFrom(s =>
+                    s.SalesInvoiceItems != null
+                        ? s.SalesInvoiceItems
+                            .Where(i => i.Product != null && !string.IsNullOrWhiteSpace(i.Product.Name))
+                            .Select(i => i.Product!.Name)
+                            .Distinct()
+                        : new List<string>() ));
 
             CreateMap<SalesInvoiceItem, SalesInvoiceItemDetailsDto>()
                 .ForMember(d => d.ProductName, opt => opt.MapFrom(s => s.Product != null ? s.Product.Name : null));
@@ -40,6 +46,7 @@ namespace PerfumeStore.Application.SalesInvoices.Dtos {
                         }
                         : null
                 ));
+
             CreateMap<UpdateSalesInvoiceCommand, SalesInvoice>()
                 .ForMember(d => d.ID, opt => opt.Ignore())
                 .ForMember(d => d.Customer, opt => opt.Ignore())
