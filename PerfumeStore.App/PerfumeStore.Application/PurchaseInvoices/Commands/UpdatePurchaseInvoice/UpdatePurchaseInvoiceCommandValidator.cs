@@ -3,6 +3,10 @@
 namespace PerfumeStore.Application.PurchaseInvoices.Commands.UpdatePurchaseInvoice {
     public class UpdatePurchaseInvoiceCommandValidator : AbstractValidator<UpdatePurchaseInvoiceCommand> {
         public UpdatePurchaseInvoiceCommandValidator() {
+            RuleFor(x => x.SupplierId)
+                .NotNull()
+                .WithMessage("You must choose a Supplier.");
+
             RuleFor(x => x.Notes)
                 .MaximumLength(250)
                 .WithMessage("Sales invoice notes must be less than 250 characters.");

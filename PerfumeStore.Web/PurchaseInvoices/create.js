@@ -61,7 +61,6 @@ async function initPage() {
     const toggledElement = $("debt-group");
     const debtAmount = $("DebtAmount");
     const debtNotes = $("DebtNotes");
-    const supplierId = $("SupplierId");
 
     function applyAmountPaidRules() {
       const amount = Number(amountPaidInput?.value || 0);
@@ -82,7 +81,6 @@ async function initPage() {
 
         if (toggledElement) toggledElement.style.display = "block";
         if (debtAmount) debtAmount.required = true;
-        if (customerId) customerId.required = true;
       }
     }
 
@@ -98,18 +96,15 @@ async function initPage() {
           this.checked = true;
           if (toggledElement) toggledElement.style.display = "block";
           if (debtAmount) debtAmount.required = true;
-          if (supplierId) supplierId.required = true;
           return;
         }
 
         if (this.checked) {
           if (debtAmount) debtAmount.required = true;
           if (toggledElement) toggledElement.style.display = "block";
-          if (supplierId) supplierId.required = true;
         } else {
           if (toggledElement) toggledElement.style.display = "none";
           if (debtAmount) debtAmount.required = false;
-          if (supplierId) supplierId.required = false;
           if (debtAmount) debtAmount.value = "";
           if (debtNotes) debtNotes.value = "";
         }
