@@ -54,7 +54,8 @@ async function loadList(searchText = "") {
   list.forEach((x, index) => {
     const id = x.id ?? x.ID ?? x.Id ?? '';
     const cells = [];
-    cells.push(escapeHtml(x.date ?? x.Date ?? ''));
+    const rawDate = x.date ?? x.Date ?? '';
+    cells.push(escapeHtml(formatDateOnly(rawDate)));
     cells.push(escapeHtml((x.fromMoneyAccountName ?? x.fromMoneyAccountID ?? x.FromMoneyAccountID ?? '-')));
     cells.push(escapeHtml((x.toMoneyAccountName ?? x.toMoneyAccountID ?? x.ToMoneyAccountID ?? '-')));
     cells.push(escapeHtml(x.transferAmount ?? x.TransferAmount ?? 0));
