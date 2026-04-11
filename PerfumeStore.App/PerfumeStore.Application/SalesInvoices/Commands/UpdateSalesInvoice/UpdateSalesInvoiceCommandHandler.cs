@@ -4,7 +4,10 @@ using PerfumeStore.Domain.Exceptions;
 using PerfumeStore.Domain.Repositories;
 
 namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
-    public class UpdateSalesInvoiceCommandHandler(ISalesInvoicesRepository salesInvoicesRepository, IDebtsRepository debtsRepository, IMoneyAccountsRepository moneyAccountsRepository) : IRequestHandler<UpdateSalesInvoiceCommand> {
+    public class UpdateSalesInvoiceCommandHandler(ISalesInvoicesRepository salesInvoicesRepository,
+        IDebtsRepository debtsRepository,
+        IMoneyAccountsRepository moneyAccountsRepository,
+        IInventoryRepository inventoryRepository) : IRequestHandler<UpdateSalesInvoiceCommand> {
         public async Task Handle(UpdateSalesInvoiceCommand request, CancellationToken cancellationToken) {
 
             var salesInvoice = await salesInvoicesRepository.GetByIdAsync(request.ID);
@@ -14,6 +17,16 @@ namespace PerfumeStore.Application.SalesInvoices.Commands.UpdateSalesInvoice {
 
             if (request.HasDebt && request.DebtAmount.HasValue && request.DebtAmount.Value > 0 && !request.CustomerId.HasValue)
                 throw new BusinessRuleException("Customer is required when creating or updating a debt for a sales invoice.");
+
+            foreach (KeyValuePair<int, int> kvp in request.Products) {
+                var inventory = await inventoryRepository.GetByIdAsync(kvp.Key);
+                if (inventory != null) {
+                    if (inventory.Quantity < kvp.Value)
+                        throw new BusinessRuleException($"Not enough stock for product id {kvp.Key}. Available: {inventory.Quantity}, requested: {kvp.Value}");
+                } else {
+                    throw new NotFoundException(nameof(Domain.Entities.Inventory), kvp.Key.ToString());
+                }
+            }
 
             var oldAmountPaid = salesInvoice.AmountPaid;
             var oldMoneyAccountId = salesInvoice.MoneyAccountId;
