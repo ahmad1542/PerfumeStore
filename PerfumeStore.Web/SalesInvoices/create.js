@@ -1,3 +1,5 @@
+window._productPrices = {};
+
 function buildBodyFromForm() {
   const body = {};
   body['Date'] = $('Date').value || null;
@@ -208,7 +210,12 @@ async function fillProductsToElement(selectEl) {
   (Array.isArray(list) ? list : []).forEach(p => {
     const id = p.id ?? p.ID ?? "";
     const name = p.name ?? p.Name ?? ("Product #" + id);
+    const salePrice = Number(p.salePrice ?? p.SalePrice ?? 0);
+
     if (id === "") return;
+
+    window._productPrices[id] = salePrice;
+
     const opt = document.createElement("option");
     opt.value = id;
     opt.textContent = name;
@@ -277,4 +284,23 @@ function rebuildItemsFromUI() {
   window._items = items;
   const msg = $("itemsMsg");
   if (msg) msg.textContent = items.length ? `${items.length} item(s) ready.` : "No items selected yet.";
+
+  updateAmountPaidFromItems();
+}
+
+function updateAmountPaidFromItems() {
+  const amountPaidInput = $("AmountPaid");
+  if (!amountPaidInput) return;
+
+  const items = window._items || [];
+
+  const total = items.reduce((sum, item) => {
+    const price = Number(window._productPrices?.[item.productId] || 0);
+    const qty = Number(item.qty || 0);
+    return sum + (price * qty);
+  }, 0);
+
+  amountPaidInput.value = total > 0 ? total : "";
+
+  amountPaidInput.dispatchEvent(new Event("input", { bubbles: true }));
 }

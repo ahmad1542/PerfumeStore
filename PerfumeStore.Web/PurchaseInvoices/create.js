@@ -134,6 +134,10 @@ async function initPage() {
 
     if (Number(amountPaidInput?.value || 0) > 0) {
       applyAmountPaidRules();
+    } else {
+      moneyAccountSelect.disabled = true;
+      moneyAccountSelect.required = false;
+      moneyAccountSelect.value = "";
     }
   } catch (e) { console.error(e); }
 }
