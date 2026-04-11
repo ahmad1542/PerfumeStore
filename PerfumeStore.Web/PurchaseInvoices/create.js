@@ -61,6 +61,19 @@ async function initPage() {
     const toggledElement = $("debt-group");
     const debtAmount = $("DebtAmount");
     const debtNotes = $("DebtNotes");
+    const supplierId = $("SupplierId");
+
+    if (hasDebtCheckbox) hasDebtCheckbox.checked = false;
+    if (toggledElement) toggledElement.style.display = "none";
+    if (debtAmount) {
+      debtAmount.required = false;
+      debtAmount.disabled = true;
+      debtAmount.value = "";
+    }
+    if (debtNotes) {
+      debtNotes.disabled = true;
+      debtNotes.value = "";
+    }
 
     function applyAmountPaidRules() {
       const amount = Number(amountPaidInput?.value || 0);
@@ -79,6 +92,11 @@ async function initPage() {
           hasDebtCheckbox.checked = true;
         }
 
+        if (toggledElement) {
+          toggledElement.style.display = "block";
+          debtAmount.disabled = false;
+          debtNotes.disabled = false;
+        }
         if (toggledElement) toggledElement.style.display = "block";
         if (debtAmount) debtAmount.required = true;
       }
@@ -96,22 +114,27 @@ async function initPage() {
           this.checked = true;
           if (toggledElement) toggledElement.style.display = "block";
           if (debtAmount) debtAmount.required = true;
+          if (supplierId) supplierId.required = true;
           return;
         }
 
         if (this.checked) {
           if (debtAmount) debtAmount.required = true;
           if (toggledElement) toggledElement.style.display = "block";
+          if (supplierId) supplierId.required = true;
         } else {
           if (toggledElement) toggledElement.style.display = "none";
           if (debtAmount) debtAmount.required = false;
+          if (supplierId) supplierId.required = false;
           if (debtAmount) debtAmount.value = "";
           if (debtNotes) debtNotes.value = "";
         }
       });
     }
 
-    applyAmountPaidRules();
+    if (Number(amountPaidInput?.value || 0) > 0) {
+      applyAmountPaidRules();
+    }
   } catch (e) { console.error(e); }
 }
 
