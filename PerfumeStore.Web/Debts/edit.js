@@ -1,9 +1,27 @@
 async function initPage() {
   try {
     await fillDebtPartiesSelect("PersonId");
+    await fillMoneyAccounts("moneyAccount");
   } catch (e) {
     console.error(e);
   }
+}
+
+async function fillMoneyAccounts(selectId) {
+  const el = $(selectId);
+  if (!el) return;
+  el.innerHTML = `<option value="">-- Select Account --</option>`;
+  let list = [];
+  try { list = await apiGetJson(window.API_ENDPOINTS.moneyAccounts); } catch { list = []; }
+  (Array.isArray(list) ? list : []).forEach(a => {
+    const id = a.id ?? a.ID ?? a.Id ?? "";
+    const name = a.accountName ?? a.AccountName ?? ("Account #" + id);
+    if (id === "") return;
+    const opt = document.createElement("option");
+    opt.value = id;
+    opt.textContent = name;
+    el.appendChild(opt);
+  });
 }
 
 async function fillDebtPartiesSelect(selectId) {
@@ -40,94 +58,27 @@ async function fillDebtPartiesSelect(selectId) {
   });
 }
 
-function wireExclusiveLinkInputs() {
-  const sales = $("SalesInvoiceId");
-  const purchase = $("PurchaseInvoiceId");
-  const person = $("PersonId");
-
-  function apply() {
-    const salesVal = sales?.value?.trim() || "";
-    const purchaseVal = purchase?.value?.trim() || "";
-    const personVal = person?.value?.trim() || "";
-
-    let active = "";
-    if (salesVal) active = "sales";
-    else if (purchaseVal) active = "purchase";
-    else if (personVal) active = "person";
-
-    if (!active) {
-      if (sales) sales.disabled = false;
-      if (purchase) purchase.disabled = false;
-      if (person) person.disabled = false;
-      return;
-    }
-
-    if (active === "sales") {
-      if (purchase) purchase.value = "";
-      if (person) person.value = "";
-      if (sales) sales.disabled = false;
-      if (purchase) purchase.disabled = true;
-      if (person) person.disabled = true;
-    } else if (active === "purchase") {
-      if (sales) sales.value = "";
-      if (person) person.value = "";
-      if (sales) sales.disabled = true;
-      if (purchase) purchase.disabled = false;
-      if (person) person.disabled = true;
-    } else if (active === "person") {
-      if (sales) sales.value = "";
-      if (purchase) purchase.value = "";
-      if (sales) sales.disabled = true;
-      if (purchase) purchase.disabled = true;
-      if (person) person.disabled = false;
-    }
-  }
-
-  if (sales) sales.addEventListener("input", apply);
-  if (purchase) purchase.addEventListener("input", apply);
-  if (person) person.addEventListener("change", apply);
-
-  apply();
-}
-
 function buildBodyFromForm() {
-  const amount = Number($("Amount").value || 0);
-
-  const salesRaw = $("SalesInvoiceId")?.value?.trim() || "";
-  const purchaseRaw = $("PurchaseInvoiceId")?.value?.trim() || "";
+  const date = $("Date")?.value || null;
+  const amount = Number($("Amount")?.value || 0);
   const personIdRaw = $("PersonId")?.value?.trim() || "";
 
-  const salesId = salesRaw ? Number(salesRaw) : null;
-  const purchaseId = purchaseRaw ? Number(purchaseRaw) : null;
-
   return {
+    Date: date,
     Amount: amount,
-    SalesInvoiceId: Number.isFinite(salesId) ? salesId : null,
-    PurchaseInvoiceId: Number.isFinite(purchaseId) ? purchaseId : null,
+    moneyAccountId: parseInt($("moneyAccount")?.value),
+    direction: parseInt($("direction")?.value),
     PersonId: personIdRaw || null,
     Notes: $("Notes")?.value || null
   };
 }
 
 function validateBody(body) {
+  if (!body.Date) return "Date is required.";
   if (!body.Amount || body.Amount <= 0) return "Amount is required and must be greater than 0.";
-
-  const linksCount =
-    (body.SalesInvoiceId ? 1 : 0) +
-    (body.PurchaseInvoiceId ? 1 : 0) +
-    (body.PersonId ? 1 : 0);
-
-  if (linksCount === 0)
-    return "Please link the debt to exactly one: Sales Invoice ID OR Purchase Invoice ID OR Person / Supplier.";
-
-  if (linksCount > 1)
-    return "Only one link is allowed. Clear the other fields and try again.";
-
-  if ($("SalesInvoiceId").value.trim() && !body.SalesInvoiceId)
-    return "Sales Invoice ID must be a valid number.";
-
-  if ($("PurchaseInvoiceId").value.trim() && !body.PurchaseInvoiceId)
-    return "Purchase Invoice ID must be a valid number.";
+  if (!body.PersonId) return "Please select a Person / Supplier.";
+  if (!body.moneyAccountId || isNaN(body.moneyAccountId)) return "Money Account is required.";
+  if (!body.direction || isNaN(body.direction)) return "Direction is required.";
 
   return null;
 }
@@ -146,32 +97,34 @@ async function initEdit() {
   try {
     const item = await apiGetJson(`${API}/${encodeURIComponent(id)}`);
 
+    const date = item.date ?? item.Date ?? "";
     const amount = item.amount ?? item.Amount ?? "";
-    const salesId = item.salesInvoiceId ?? item.SalesInvoiceId ?? item.salesinvoiceid ?? "";
-    const purchaseId = item.purchaseInvoiceId ?? item.PurchaseInvoiceId ?? item.purchaseinvoiceid ?? "";
     const personId = item.personId ?? item.PersonId ?? item.personid ?? "";
     const notes = item.notes ?? item.Notes ?? "";
+    const direction = item.direction ?? item.Direction ?? "";
+    const moneyAccountId = item.moneyAccountId ?? item.MoneyAccountId ?? item.moneyaccountid ?? "";
 
+    if ($("Date")) {
+      $("Date").value = date ? String(date).split("T")[0] : "";
+    }
     if ($("Amount")) $("Amount").value = amount;
-    if ($("SalesInvoiceId")) $("SalesInvoiceId").value = salesId ?? "";
-    if ($("PurchaseInvoiceId")) $("PurchaseInvoiceId").value = purchaseId ?? "";
     if ($("PersonId")) $("PersonId").value = personId ?? "";
     if ($("Notes")) $("Notes").value = notes ?? "";
+    if ($("direction")) $("direction").value = String(direction ?? "");
+    if ($("moneyAccount")) $("moneyAccount").value = String(moneyAccountId ?? "");
 
     setMsg("pageMsg", "");
   } catch (e) {
     const validationMsg = getFriendlyMessage(e);
 
     setMsg(
-      'pageMsg',
+      "pageMsg",
       validationMsg ?? "Failed to load record from API.",
       true
     );
     console.error(e);
     return;
   }
-
-  wireExclusiveLinkInputs();
 
   const btn = $("btnSave");
   if (btn) btn.addEventListener("click", () => updateItem(id));
@@ -193,7 +146,7 @@ async function updateItem(id) {
     const validationMsg = getFriendlyMessage(e);
 
     setMsg(
-      'pageMsg',
+      "pageMsg",
       validationMsg ?? "Update failed. Check API and payload.",
       true
     );
