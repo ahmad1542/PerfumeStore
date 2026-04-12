@@ -33,6 +33,7 @@ async function createItem() {
 
     await apiSendJson(API, 'POST', body);
     setMsg("pageMsg", "Sales invoice created successfully.");
+    window.location.href = 'index.html';
   } catch (e) {
     const validationMsg = getFriendlyMessage(e);
 
@@ -75,6 +76,9 @@ async function fillMoneyAccounts(selectId) {
 
 async function initPage() {
   try {
+    const today = new Date().toISOString().split('T')[0];
+    if ($('Date') && !$('Date').value) $('Date').value = today;
+
     await fillPeopleSelect('CustomerId', window.API_ENDPOINTS.customers);
     fillMoneyAccounts('MoneyAccountId');
     setupInvoiceItems();

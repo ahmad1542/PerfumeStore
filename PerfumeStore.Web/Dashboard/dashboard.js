@@ -6,7 +6,7 @@ let salesPurchasesChart = null;
 let profitChart = null;
 let brandChart = null;
 
-const fmtMoney = (n) => '$' + Number(n ?? 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+const fmtMoney = (n) => '₪' + Number(n ?? 0).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
 const formatDate = (dateStr) => {
   if (!dateStr) return '';
   const date = new Date(dateStr);
